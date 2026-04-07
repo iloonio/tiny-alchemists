@@ -5,14 +5,14 @@ using UnityEngine.InputSystem;
 public class PlayerInteraction : MonoBehaviour
 {
     [Header("References")]
-    [Tooltip("拿东西的位置 (放在相机子物体下)")]
+    [Tooltip("The location for taking the item (placed under the camera object)")]
     [SerializeField] private Transform holdPoint;
 
-    [Tooltip("玩家的第一人称相机 (用于射线检测)")]
+    [Tooltip("The player's first-person camera (used for ray detection)")]
     [SerializeField] private Transform playerCamera;
 
     [Header("Pick-up & Throw")]
-    [Tooltip("手有多长 (能抓多远的东西)")]
+    [Tooltip("How long is your arm (how far can you grab something)?")]
     [SerializeField] private float pickupDistance = 3f;
     [SerializeField] private float throwForce = 6f;
     [SerializeField] private float throwUpForce = 3f;
@@ -37,7 +37,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (playerCamera == null)
         {
-            Debug.LogError("请在 Inspector 面板中把 PlayerCamera 拖给 PlayerInteraction!");
+            Debug.LogError("In the Inspector panel, drag PlayerCamera to PlayerInteraction!");
             return;
         }
 
