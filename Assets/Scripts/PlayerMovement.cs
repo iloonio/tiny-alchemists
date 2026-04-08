@@ -26,10 +26,11 @@ public class PlayerMovementFPS : MonoBehaviour
     // ���� Status Effect Integration ����
     private StatusEffectManager _status;
 
-    void Awake()
+    // We need to enable specific actions for the player 
+    void Start()
     {
         _playerBody = GetComponent<Rigidbody>();
-        _playerBody.freezeRotation = true;
+        _status = GetComponent<StatusEffectManager>();
 
         _status = GetComponent<StatusEffectManager>();
 
@@ -80,12 +81,14 @@ public class PlayerMovementFPS : MonoBehaviour
             lookY += _status.cameraJitter.y * Time.deltaTime;
         }
 
+       // 1. Vertical Rotation (Up/Down) - Rotates the Camera only
         _xRotation -= lookY;
         _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);
         playerCamera.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
 
         transform.Rotate(Vector3.up * lookX);
     }
+
 
     private void HandleMovement()
     {
@@ -95,8 +98,8 @@ public class PlayerMovementFPS : MonoBehaviour
             _playerBody.linearVelocity = new Vector3(0f, _playerBody.linearVelocity.y, 0f);
             return;
         }
-
-        Vector3 moveDir = transform.right * _moveInput.x + transform.forward * _moveInput.y;
+        
+        Vector3 moveDir = transform.forward * _moveInput.y + transform.right * _moveInput.x;
 
         // ���� On-Fire: sporadic forced forward movement ����
         if (_status != null && _status.sporadicForward > 0f)
@@ -104,8 +107,11 @@ public class PlayerMovementFPS : MonoBehaviour
             moveDir += transform.forward * _status.sporadicForward;
         }
 
-        Vector3 newVelocity = new Vector3(moveDir.x * moveSpeed, _playerBody.linearVelocity.y, moveDir.z * moveSpeed);
-        _playerBody.linearVelocity = newVelocity;
+        Vector3 targetVelocity = moveDir * moveSpeed;
+
+        _playerBody.linearVelocity = new Vector3(targetVelocity.x,
+                                                 _playerBody.linearVelocity.y, 
+                                                 targetVelocity.z);
     }
 
     private void OnCollisionStay(Collision collision)
