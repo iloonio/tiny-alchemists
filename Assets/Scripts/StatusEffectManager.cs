@@ -2,15 +2,13 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-/// <summary>
 /// Attach to any GameObject that can receive status effects (Players, environment objects).
-/// For Players: also requires PlayerMovementFPS on the same object.
+/// For Players: also requires PlayerMovement on the same object.
 /// 
 /// UNITY SETUP:
 ///   - Tag players as "Player"
 ///   - Tag burnable props as "Flammable" (and add FlammableObject.cs to them)
 ///   - Attach this component to every Player prefab
-/// </summary>
 public class StatusEffectManager : MonoBehaviour
 {
     // ── Public state flags (read by PlayerMovementFPS / PlayerInteraction) ──
@@ -54,11 +52,8 @@ public class StatusEffectManager : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
     }
 
-    // ──────────────────────────────────────────────
-    //  PUBLIC API – called by Potion.ExplodeEffect
-    // ──────────────────────────────────────────────
 
-    /// <summary>Apply the On-Fire effect. Safe to call on players or environment objects.</summary>
+    // Apply the On-Fire effect. Safe to call on players or environment objects.
     public void ApplyFire(float overrideDuration = -1f)
     {
         float dur = overrideDuration > 0 ? overrideDuration : fireDuration;
@@ -76,7 +71,7 @@ public class StatusEffectManager : MonoBehaviour
         _fireRoutine = StartCoroutine(FireRoutine(dur));
     }
 
-    /// <summary>Apply the Crystallized effect. Only meaningful on players.</summary>
+    // Apply the Crystallized effect. Only meaningful on players.
     public void ApplyCrystal(float overrideDuration = -1f)
     {
         float dur = overrideDuration > 0 ? overrideDuration : crystalDuration;
@@ -84,9 +79,6 @@ public class StatusEffectManager : MonoBehaviour
         _crystalRoutine = StartCoroutine(CrystalRoutine(dur));
     }
 
-    // ──────────────────────────────────────────────
-    //  COROUTINES
-    // ──────────────────────────────────────────────
 
     private IEnumerator FireRoutine(float duration)
     {

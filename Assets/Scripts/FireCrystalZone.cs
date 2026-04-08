@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
 /// Spawned by the Fire+Crystal potion. Creates a burning AOE zone that
 /// sets fire to anything inside for its duration, then self-destructs.
 ///
@@ -10,7 +9,6 @@ using UnityEngine;
 ///   - This is instantiated at runtime by Potion.ExplodeEffect.
 ///   - No manual setup needed; the Potion script creates a primitive sphere,
 ///     adds this component, and configures it.
-/// </summary>
 public class FireCrystalZone : MonoBehaviour
 {
     public float duration = 5f;
