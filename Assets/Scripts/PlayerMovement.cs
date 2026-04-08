@@ -21,24 +21,29 @@ public class PlayerMovementFPS : MonoBehaviour
     private float _xRotation = 0f;
     private bool _isGrounded;
 
+    // ©¤©¤ Status Effect Integration ©¤©¤
+    private StatusEffectManager _status;
+
     void Awake()
     {
         _rb = GetComponent<Rigidbody>();
-        
         _rb.freezeRotation = true;
 
-        
+        _status = GetComponent<StatusEffectManager>();
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
-    
+    // ©¤©¤ Input callbacks ©¤©¤
     public void OnMove(InputAction.CallbackContext ctx) => _moveInput = ctx.ReadValue<Vector2>();
     public void OnLook(InputAction.CallbackContext ctx) => _lookInput = ctx.ReadValue<Vector2>();
 
     public void OnJump(InputAction.CallbackContext ctx)
     {
-        
+        // Block jump when crystallized
+        if (_status != null && _status.IsCrystallized) return;
+
         if (ctx.performed && _isGrounded)
         {
             _rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
@@ -47,13 +52,11 @@ public class PlayerMovementFPS : MonoBehaviour
 
     void Update()
     {
-        
         HandleLook();
     }
 
     void FixedUpdate()
     {
-        
         HandleMovement();
     }
 
@@ -64,29 +67,43 @@ public class PlayerMovementFPS : MonoBehaviour
         float lookX = _lookInput.x * mouseSensitivity * Time.deltaTime;
         float lookY = _lookInput.y * mouseSensitivity * Time.deltaTime;
 
-       
+        // ©¤©¤ On-Fire jitter: add random offset to mouse look ©¤©¤
+        if (_status != null && _status.IsOnFire)
+        {
+            lookX += _status.cameraJitter.x * Time.deltaTime;
+            lookY += _status.cameraJitter.y * Time.deltaTime;
+        }
+
         _xRotation -= lookY;
-        _xRotation = Mathf.Clamp(_xRotation, -90f, 90f); 
+        _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);
         playerCamera.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
 
-        
         transform.Rotate(Vector3.up * lookX);
     }
 
     private void HandleMovement()
     {
-        
+        // ©¤©¤ Crystallized: zero out horizontal velocity, let gravity pull down ©¤©¤
+        if (_status != null && _status.IsCrystallized)
+        {
+            _rb.linearVelocity = new Vector3(0f, _rb.linearVelocity.y, 0f);
+            return;
+        }
+
         Vector3 moveDir = transform.right * _moveInput.x + transform.forward * _moveInput.y;
 
-        
-        Vector3 newVelocity = new Vector3(moveDir.x * moveSpeed, _rb.linearVelocity.y, moveDir.z * moveSpeed);
+        // ©¤©¤ On-Fire: sporadic forced forward movement ©¤©¤
+        if (_status != null && _status.sporadicForward > 0f)
+        {
+            moveDir += transform.forward * _status.sporadicForward;
+        }
 
+        Vector3 newVelocity = new Vector3(moveDir.x * moveSpeed, _rb.linearVelocity.y, moveDir.z * moveSpeed);
         _rb.linearVelocity = newVelocity;
     }
-   
+
     private void OnCollisionStay(Collision collision)
     {
-        
         _isGrounded = true;
     }
 

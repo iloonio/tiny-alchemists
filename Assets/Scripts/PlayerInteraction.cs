@@ -21,11 +21,22 @@ public class PlayerInteraction : MonoBehaviour
     private Ingredient _heldIngredient;
     private Potion _heldPotion;
 
+    // ── Status Effect Integration ──
+    private StatusEffectManager _status;
+
     public bool IsHolding => _heldIngredient != null || _heldPotion != null;
+
+    void Awake()
+    {
+        _status = GetComponent<StatusEffectManager>();
+    }
 
     public void OnInteract(InputAction.CallbackContext ctx)
     {
         if (!ctx.performed) return;
+
+        // ── Block all interaction while crystallized ──
+        if (_status != null && _status.IsCrystallized) return;
 
         if (IsHolding)
             ThrowItem();
@@ -43,15 +54,13 @@ public class PlayerInteraction : MonoBehaviour
 
         Ray ray = new Ray(playerCamera.position, playerCamera.forward);
 
-        
         if (Physics.Raycast(ray, out RaycastHit hit, pickupDistance))
-        {   
+        {
             if (hit.collider.CompareTag("Ingredient"))
             {
                 Ingredient ing = hit.collider.GetComponent<Ingredient>();
                 if (ing != null && !ing.IsHeld) GrabIngredient(ing);
             }
-            
             else if (hit.collider.CompareTag("Potion"))
             {
                 Potion pot = hit.collider.GetComponent<Potion>();
@@ -70,7 +79,6 @@ public class PlayerInteraction : MonoBehaviour
     {
         _heldPotion = pot;
 
-        
         Rigidbody potRb = pot.GetComponent<Rigidbody>();
         Collider potCol = pot.GetComponent<Collider>();
 
@@ -84,7 +92,6 @@ public class PlayerInteraction : MonoBehaviour
 
     private void ThrowItem()
     {
-        
         Vector3 force = playerCamera.forward * throwForce + Vector3.up * throwUpForce;
 
         if (_heldIngredient != null)
@@ -104,7 +111,7 @@ public class PlayerInteraction : MonoBehaviour
             potRb.linearVelocity = Vector3.zero;
             potRb.AddForce(force, ForceMode.Impulse);
 
-            _heldPotion.OnPickedUp(); 
+            _heldPotion.OnPickedUp();
             _heldPotion = null;
         }
     }
