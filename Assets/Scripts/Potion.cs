@@ -1,14 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Updated Potion script with full ExplodeEffect implementation.
-///
-/// UNITY SETUP:
-///   - Tag players as "Player"
-///   - Tag burnable environment objects as "Flammable"
-///   - The Crystal Cube platform is spawned at runtime as a primitive;
-///     no prefab needed unless you want a custom mesh.
-/// </summary>
 [RequireComponent(typeof(Rigidbody))]
 public class Potion : MonoBehaviour
 {
@@ -63,9 +54,6 @@ public class Potion : MonoBehaviour
         }
     }
 
-    // ──────────────────────────────────────────────
-    //  CORE EFFECT LOGIC
-    // ──────────────────────────────────────────────
 
     private void ExplodeEffect(Collision collision)
     {
@@ -144,14 +132,6 @@ public class Potion : MonoBehaviour
         }
     }
 
-    // ──────────────────────────────────────────────
-    //  SPAWNING HELPERS
-    // ──────────────────────────────────────────────
-
-    /// <summary>
-    /// Spawns a temporary crystal cube at the hit location.
-    /// The cube has a collider so players can stand on it.
-    /// </summary>
     private void SpawnCrystalPlatform(Vector3 position)
     {
         GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -169,9 +149,6 @@ public class Potion : MonoBehaviour
         Debug.Log($"<color=cyan>[Crystal]</color> Platform spawned at {position}, lasts {crystalPlatformDuration}s");
     }
 
-    /// <summary>
-    /// Spawns a FireCrystalZone AOE sphere that burns everything inside.
-    /// </summary>
     private void SpawnFireCrystalZone(Vector3 position)
     {
         GameObject zone = GameObject.CreatePrimitive(PrimitiveType.Sphere);

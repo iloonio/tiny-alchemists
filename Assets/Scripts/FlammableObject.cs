@@ -1,15 +1,13 @@
 using System.Collections;
 using UnityEngine;
 
-/// <summary>
 /// Attach to any environment prop that can catch fire and be destroyed.
 /// 
 /// UNITY SETUP:
 ///   - Tag the GameObject as "Flammable"
 ///   - Add a Collider (can be trigger or solid)
-///   - Optionally add a Renderer so it turns orange when burning
 ///   - Nearby Flammable objects within spreadRadius will also ignite
-/// </summary>
+
 public class FlammableObject : MonoBehaviour
 {
     [Tooltip("Time in seconds before this object is destroyed after igniting")]
