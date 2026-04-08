@@ -4,18 +4,20 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovementFPS : MonoBehaviour
 {
-    [Header("Movement (Based on Meeting Notes)")]
-    [Tooltip("Strictly 3 Unity Units per second")]
-    public float moveSpeed = 3f;
+    [Header("Settings")]
+    [Tooltip("Strictly 3 Unity Units per second")] public float moveSpeed = 3f;
+    [Tooltip("Optional jump force")] public float jumpForce = 5f;
+    public float mouseSensitivity = 15f;    
 
-    [Tooltip("Optional jump force")]
-    public float jumpForce = 5f;
-
-    [Header("First Person Look")]
+    [Header("References")]
     public Transform playerCamera;
-    public float mouseSensitivity = 15f;
+    
 
-    private Rigidbody _rb;
+    // Private fields for player stuff
+    private InputAction moveAction;
+    private InputAction jumpAction;
+    private InputAction lookAction;
+    private Rigidbody _playerBody;
     private Vector2 _moveInput;
     private Vector2 _lookInput;
     private float _xRotation = 0f;
@@ -24,37 +26,35 @@ public class PlayerMovementFPS : MonoBehaviour
     // ���� Status Effect Integration ����
     private StatusEffectManager _status;
 
-    void Awake()
+    // We need to enable specific actions for the player 
+    void Start()
     {
-        _rb = GetComponent<Rigidbody>();
-        _rb.freezeRotation = true;
-
+        _playerBody = GetComponent<Rigidbody>();
         _status = GetComponent<StatusEffectManager>();
+
+        moveAction = InputSystem.actions.FindAction("Move");
+        jumpAction = InputSystem.actions.FindAction("Jump");
+        lookAction = InputSystem.actions.FindAction("Look");
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
-    // ���� Input callbacks ����
-    public void OnMove(InputAction.CallbackContext ctx) => _moveInput = ctx.ReadValue<Vector2>();
-    public void OnLook(InputAction.CallbackContext ctx) => _lookInput = ctx.ReadValue<Vector2>();
 
-    public void OnJump(InputAction.CallbackContext ctx)
-    {
-        // Block jump when crystallized
-        if (_status != null && _status.IsCrystallized) return;
-
-        if (ctx.performed && _isGrounded)
-        {
-            _rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        }
-    }
-
+    // Update runs every frame. Do cheap operations here. 
     void Update()
     {
+        _moveInput = moveAction.ReadValue<Vector2>();
+
+        if (jumpAction.WasPressedThisFrame() && _isGrounded)
+        {
+            _playerBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+        
         HandleLook();
     }
 
+    // FixedUpdate runs every fixed framerate frame. 
     void FixedUpdate()
     {
         HandleMovement();
@@ -62,7 +62,9 @@ public class PlayerMovementFPS : MonoBehaviour
 
     private void HandleLook()
     {
+        // Read mouse delta (the movement since the last frame)
         if (playerCamera == null) return;
+        _lookInput = lookAction.ReadValue<Vector2>();
 
         float lookX = _lookInput.x * mouseSensitivity * Time.deltaTime;
         float lookY = _lookInput.y * mouseSensitivity * Time.deltaTime;
@@ -74,23 +76,26 @@ public class PlayerMovementFPS : MonoBehaviour
             lookY += _status.cameraJitter.y * Time.deltaTime;
         }
 
+       // 1. Vertical Rotation (Up/Down) - Rotates the Camera only
         _xRotation -= lookY;
         _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);
         playerCamera.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
 
+        // 2. Horizontal Rotation (Left/Right) - Rotates the entire Player
         transform.Rotate(Vector3.up * lookX);
     }
+
 
     private void HandleMovement()
     {
         // ���� Crystallized: zero out horizontal velocity, let gravity pull down ����
         if (_status != null && _status.IsCrystallized)
         {
-            _rb.linearVelocity = new Vector3(0f, _rb.linearVelocity.y, 0f);
+            _playerBody.linearVelocity = new Vector3(0f, _playerBody.linearVelocity.y, 0f);
             return;
         }
-
-        Vector3 moveDir = transform.right * _moveInput.x + transform.forward * _moveInput.y;
+        
+        Vector3 moveDir = transform.forward * _moveInput.y + transform.right * _moveInput.x;
 
         // ���� On-Fire: sporadic forced forward movement ����
         if (_status != null && _status.sporadicForward > 0f)
@@ -98,8 +103,11 @@ public class PlayerMovementFPS : MonoBehaviour
             moveDir += transform.forward * _status.sporadicForward;
         }
 
-        Vector3 newVelocity = new Vector3(moveDir.x * moveSpeed, _rb.linearVelocity.y, moveDir.z * moveSpeed);
-        _rb.linearVelocity = newVelocity;
+        Vector3 targetVelocity = moveDir * moveSpeed;
+
+        _playerBody.linearVelocity = new Vector3(targetVelocity.x,
+                                                 _playerBody.linearVelocity.y, 
+                                                 targetVelocity.z);
     }
 
     private void OnCollisionStay(Collision collision)
