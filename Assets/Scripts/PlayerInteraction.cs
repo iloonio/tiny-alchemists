@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-
+[RequireComponent(typeof(StatusEffectManager))]
 public class PlayerInteraction : MonoBehaviour
 {
     [Header("References")]
@@ -17,7 +17,7 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private float throwForce = 6f;
     [SerializeField] private float throwUpForce = 3f;
 
-
+    private InputAction _interactAction;
     private Ingredient _heldIngredient;
     private Potion _heldPotion;
 
@@ -26,11 +26,27 @@ public class PlayerInteraction : MonoBehaviour
 
     public bool IsHolding => _heldIngredient != null || _heldPotion != null;
 
-    void Awake()
+    void Start()
     {
         _status = GetComponent<StatusEffectManager>();
+
+        _interactAction = InputSystem.actions.FindAction("Interact");
     }
 
+    void Update()
+    {
+        if(!_interactAction.WasPressedThisFrame()) return;
+
+        // ── Block all interaction while crystallized ──
+        if (_status != null && _status.IsCrystallized) return; 
+
+        if (IsHolding)
+            ThrowItem();
+        else
+            TryPickUp();
+    }
+
+/*
     public void OnInteract(InputAction.CallbackContext ctx)
     {
         if (!ctx.performed) return;
@@ -43,6 +59,7 @@ public class PlayerInteraction : MonoBehaviour
         else
             TryPickUp();
     }
+    */
 
     private void TryPickUp()
     {

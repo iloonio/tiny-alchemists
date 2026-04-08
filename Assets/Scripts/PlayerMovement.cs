@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(StatusEffectManager))]
 public class PlayerMovementFPS : MonoBehaviour
 {
     [Header("Settings")]
@@ -14,9 +15,9 @@ public class PlayerMovementFPS : MonoBehaviour
     
 
     // Private fields for player stuff
-    private InputAction moveAction;
-    private InputAction jumpAction;
-    private InputAction lookAction;
+    private InputAction _moveAction;
+    private InputAction _jumpAction;
+    private InputAction _lookAction;
     private Rigidbody _playerBody;
     private Vector2 _moveInput;
     private Vector2 _lookInput;
@@ -32,30 +33,24 @@ public class PlayerMovementFPS : MonoBehaviour
         _playerBody = GetComponent<Rigidbody>();
         _status = GetComponent<StatusEffectManager>();
 
-        _status = GetComponent<StatusEffectManager>();
+        _moveAction = InputSystem.actions.FindAction("Move");
+        _jumpAction = InputSystem.actions.FindAction("Jump");
+        _lookAction = InputSystem.actions.FindAction("Look");
+
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
-    // ���� Input callbacks ����
-    public void OnMove(InputAction.CallbackContext ctx) => _moveInput = ctx.ReadValue<Vector2>();
-    public void OnLook(InputAction.CallbackContext ctx) => _lookInput = ctx.ReadValue<Vector2>();
-
-    public void OnJump(InputAction.CallbackContext ctx)
-    {
-        // Block jump when crystallized
-        if (_status != null && _status.IsCrystallized) return;
-
-        if (ctx.performed && _isGrounded)
-        {
-            _playerBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        }
-    }
-
     // Update runs every frame. Do cheap operations here. 
     void Update()
     {
+        _moveInput = _moveAction.ReadValue<Vector2>();
+        if (_jumpAction.WasPressedThisFrame() && _isGrounded)
+        {
+          _playerBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);  
+        }
+
         HandleLook();
     }
 
@@ -69,7 +64,7 @@ public class PlayerMovementFPS : MonoBehaviour
     {
         // Read mouse delta (the movement since the last frame)
         if (playerCamera == null) return;
-        _lookInput = lookAction.ReadValue<Vector2>();
+        _lookInput = _lookAction.ReadValue<Vector2>();
 
         float lookX = _lookInput.x * mouseSensitivity * Time.deltaTime;
         float lookY = _lookInput.y * mouseSensitivity * Time.deltaTime;
