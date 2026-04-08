@@ -21,7 +21,7 @@ public class PlayerMovementFPS : MonoBehaviour
     private float _xRotation = 0f;
     private bool _isGrounded;
 
-    // ©¤©¤ Status Effect Integration ©¤©¤
+    // ï¿½ï¿½ï¿½ï¿½ Status Effect Integration ï¿½ï¿½ï¿½ï¿½
     private StatusEffectManager _status;
 
     void Awake()
@@ -35,7 +35,7 @@ public class PlayerMovementFPS : MonoBehaviour
         Cursor.visible = false;
     }
 
-    // ©¤©¤ Input callbacks ©¤©¤
+    // ï¿½ï¿½ï¿½ï¿½ Input callbacks ï¿½ï¿½ï¿½ï¿½
     public void OnMove(InputAction.CallbackContext ctx) => _moveInput = ctx.ReadValue<Vector2>();
     public void OnLook(InputAction.CallbackContext ctx) => _lookInput = ctx.ReadValue<Vector2>();
 
@@ -67,7 +67,7 @@ public class PlayerMovementFPS : MonoBehaviour
         float lookX = _lookInput.x * mouseSensitivity * Time.deltaTime;
         float lookY = _lookInput.y * mouseSensitivity * Time.deltaTime;
 
-        // ©¤©¤ On-Fire jitter: add random offset to mouse look ©¤©¤
+        // ï¿½ï¿½ï¿½ï¿½ On-Fire jitter: add random offset to mouse look ï¿½ï¿½ï¿½ï¿½
         if (_status != null && _status.IsOnFire)
         {
             lookX += _status.cameraJitter.x * Time.deltaTime;
@@ -83,7 +83,7 @@ public class PlayerMovementFPS : MonoBehaviour
 
     private void HandleMovement()
     {
-        // ©¤©¤ Crystallized: zero out horizontal velocity, let gravity pull down ©¤©¤
+        // ï¿½ï¿½ï¿½ï¿½ Crystallized: zero out horizontal velocity, let gravity pull down ï¿½ï¿½ï¿½ï¿½
         if (_status != null && _status.IsCrystallized)
         {
             _rb.linearVelocity = new Vector3(0f, _rb.linearVelocity.y, 0f);
@@ -92,7 +92,7 @@ public class PlayerMovementFPS : MonoBehaviour
 
         Vector3 moveDir = transform.right * _moveInput.x + transform.forward * _moveInput.y;
 
-        // ©¤©¤ On-Fire: sporadic forced forward movement ©¤©¤
+        // ï¿½ï¿½ï¿½ï¿½ On-Fire: sporadic forced forward movement ï¿½ï¿½ï¿½ï¿½
         if (_status != null && _status.sporadicForward > 0f)
         {
             moveDir += transform.forward * _status.sporadicForward;
