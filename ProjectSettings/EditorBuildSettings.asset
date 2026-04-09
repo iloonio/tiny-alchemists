@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/Scenes/MultiplayerTest.unity
     guid: 18c12964fd562f257ad534759232c972
   - enabled: 1
-    path: Assets/Widgets/Scenes/WidgetsQuickstart.unity
+    path: Assets/Scenes/SessionLobby.unity
     guid: 0e6de992add765365929b7a888b0b55f
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 94cf9939022fe2d4d88a3fbd33b3d40c, type: 3}
