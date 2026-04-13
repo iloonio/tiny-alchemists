@@ -1,14 +1,10 @@
-// ═══════════════════════════════════════════════════════════════
-//  IngredientData.cs — Central data definitions for Alchemy
+//  IngredientData.cs
 //  Contains ALL enums and the PotionRecipe data class.
-//  No MonoBehaviour here — pure data.
-// ═══════════════════════════════════════════════════════════════
+
 
 using System.Collections.Generic;
 
-/// <summary>
-/// Every ingredient in the game. The first three are Bases, the rest are Modifiers.
-/// </summary>
+// Every ingredient in the game. The first three are Bases, the rest are Modifiers.
 public enum IngredientType
 {
     // ── Bases (max 1 per potion) ──
@@ -25,9 +21,7 @@ public enum IngredientType
     Sparkle
 }
 
-/// <summary>
-/// Quick category check so we don't scatter magic numbers everywhere.
-/// </summary>
+// Quick category check so we don't scatter magic numbers everywhere.
 public enum IngredientCategory { Base, Modifier }
 
 public static class IngredientHelper
@@ -45,17 +39,14 @@ public static class IngredientHelper
         }
     }
 }
-
-/// <summary>
-/// Immutable snapshot of what's inside a potion.
-/// Created by the Cauldron, stored on Potion, read by delivery mechanisms.
-/// </summary>
+// Immutable snapshot of what's inside a potion.
+// Created by the Cauldron, stored on Potion, read by delivery mechanisms.
 public class PotionRecipe
 {
-    /// <summary>Null means "no base" → instant explosion delivery.</summary>
+    // Null means "no base" → instant explosion delivery.
     public readonly IngredientType? Base;
 
-    /// <summary>0-3 unique modifiers that stack.</summary>
+    // 0-3 unique modifiers that stack.
     public readonly List<IngredientType> Modifiers;
 
     public PotionRecipe(IngredientType? potionBase, List<IngredientType> modifiers)

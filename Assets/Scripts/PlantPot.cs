@@ -1,23 +1,12 @@
 using System.Collections;
 using UnityEngine;
 
-// ═══════════════════════════════════════════════════════════════
 //  PlantPot.cs — Farmable ingredient duplicator
 //
 //  STATE MACHINE:  Empty → Growing → Grown
 //    - Empty:   Accepts an ingredient thrown into it
 //    - Growing: Timer counts down (pauses when held by player)
 //    - Grown:   Player interacts to harvest 2x of the planted type
-//
-//  UNITY SETUP:
-//    - Tag as "PlantPot"
-//    - Add Rigidbody + Collider (solid, NOT trigger)
-//    - Add a CHILD object with a trigger Collider (like the Cauldron
-//      TriggerZone pattern) to catch thrown ingredients
-//    - Assign ingredientPrefabs array in Inspector — one prefab per
-//      IngredientType, indexed to match the enum order
-//    - Assign harvestSpawnPoint (empty child Transform above the pot)
-// ═══════════════════════════════════════════════════════════════
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collider))]
@@ -38,7 +27,6 @@ public class PlantPot : MonoBehaviour
     public GameObject[] ingredientPrefabs;
     public Transform harvestSpawnPoint;
 
-    // ── Internal ──
     public bool IsHeld { get; private set; }
     private IngredientType _plantedType;
     private float _growProgress;      // seconds elapsed
@@ -53,10 +41,7 @@ public class PlantPot : MonoBehaviour
         _col = GetComponent<Collider>();
     }
 
-    // ──────────────────────────────────────────────
     //  PICK-UP / DROP  (called by PlayerInteraction)
-    // ──────────────────────────────────────────────
-
     public void OnPickedUp(Transform holdPoint)
     {
         IsHeld = true;
@@ -92,11 +77,8 @@ public class PlantPot : MonoBehaviour
         }
     }
 
-    // ──────────────────────────────────────────────
-    //  PLANTING  (ingredient lands in child trigger)
-    // ──────────────────────────────────────────────
 
-    /// <summary>Called by child TriggerZone's OnTriggerEnter relay.</summary>
+    //  PLANTING  (ingredient lands in child trigger) Called by child TriggerZone's OnTriggerEnter relay.
     public void ReceiveIngredient(Ingredient ingredient)
     {
         if (_state != PotState.Empty || _harvestCooldown) return;
@@ -125,10 +107,8 @@ public class PlantPot : MonoBehaviour
         if (ing != null) ReceiveIngredient(ing);
     }
 
-    // ──────────────────────────────────────────────
-    //  GROWTH
-    // ──────────────────────────────────────────────
 
+    //  GROWTH
     private IEnumerator GrowRoutine()
     {
         while (_growProgress < growTime)
@@ -146,13 +126,9 @@ public class PlantPot : MonoBehaviour
         if (rend != null) rend.material.color = Color.green;
     }
 
-    // ──────────────────────────────────────────────
-    //  HARVEST  (called by PlayerInteraction raycast)
-    // ──────────────────────────────────────────────
 
-    /// <summary>
-    /// Spawns 2 copies of the planted ingredient. Returns true if harvest succeeded.
-    /// </summary>
+    //  HARVEST  (called by PlayerInteraction raycast)
+    // Spawns 2 copies of the planted ingredient. Returns true if harvest succeeded.
     public bool TryHarvest()
     {
         if (_state != PotState.Grown) return false;
@@ -170,7 +146,7 @@ public class PlantPot : MonoBehaviour
         {
             Vector3 offset = new Vector3(Random.Range(-0.3f, 0.3f), 0.2f * i, Random.Range(-0.3f, 0.3f));
             GameObject spawned = Instantiate(ingredientPrefabs[prefabIndex], spawnPos + offset, Quaternion.identity);
-            // Give them a little pop
+            // Give a little pop
             Rigidbody rb = spawned.GetComponent<Rigidbody>();
             if (rb != null) rb.AddForce(Vector3.up * 2f + offset.normalized, ForceMode.Impulse);
         }

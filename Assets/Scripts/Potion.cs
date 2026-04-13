@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// ═══════════════════════════════════════════════════════════════
 //  Potion.cs — Potion vial that breaks on impact
 //
-//  GDD DELIVERY MATRIX:
+//  DELIVERY MATRIX:
 //    No Base  → ~3 unit radius instantaneous explosion, small knockback
 //    Cloud    → ~3 unit radius sphere, 120s
 //    Object   → ~2 unit length physics cube, 120s
@@ -13,10 +12,6 @@ using UnityEngine;
 //  GDD SIZE MODIFIER:
 //    Radius → ~5 units; Cube side → ~4 units
 //
-//  UNITY SETUP:
-//    - PotionPrefab: Rigidbody, Collider, Renderer, this script
-//    - Tag as "Potion"
-// ═══════════════════════════════════════════════════════════════
 
 [RequireComponent(typeof(Rigidbody))]
 public class Potion : MonoBehaviour
@@ -24,18 +19,18 @@ public class Potion : MonoBehaviour
     private PotionRecipe _recipe;
 
     [Header("Delivery: Radius (Cloud / Puddle / No-base)")]
-    public float baseRadius = 3f;           // GDD: ~3 units
-    public float sizedRadius = 5f;          // GDD: Size → ~5 units
+    public float baseRadius = 3f;           
+    public float sizedRadius = 5f;          
 
     [Header("Delivery: Cube (Object base)")]
-    public float baseCubeSize = 2f;         // GDD: ~2 unit length
-    public float sizedCubeSize = 4f;        // GDD: Size → ~4 units
+    public float baseCubeSize = 2f;         
+    public float sizedCubeSize = 4f;       
 
     [Header("Duration")]
-    public float deliveryDuration = 120f;   // GDD: 120s
+    public float deliveryDuration = 120f;   
 
     [Header("No-Base Burst")]
-    public float burstKnockback = 6f;       // GDD: "small knockback"
+    public float burstKnockback = 6f;       
 
     [Header("Break Threshold")]
     public float breakSpeed = 3f;
@@ -60,10 +55,8 @@ public class Potion : MonoBehaviour
         _rb.useGravity = true;
     }
 
-    // ──────────────────────────────────────────────
-    //  COLLISION → BREAK
-    // ──────────────────────────────────────────────
 
+    //  COLLISION → BREAK
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.relativeVelocity.magnitude < breakSpeed) return;
@@ -73,10 +66,8 @@ public class Potion : MonoBehaviour
         Destroy(gameObject);
     }
 
-    // ──────────────────────────────────────────────
-    //  EFFECT DISPATCH
-    // ──────────────────────────────────────────────
 
+    //  EFFECT DISPATCH
     private void ExplodeEffect(Vector3 hitPoint, Vector3 hitNormal, GameObject hitObj)
     {
         if (_recipe == null)
@@ -115,16 +106,14 @@ public class Potion : MonoBehaviour
         ApplyDirectHit(hitObj);
     }
 
-    // ──────────────────────────────────────────────
-    //  NO BASE: INSTANT BURST
-    // ──────────────────────────────────────────────
 
+    //  NO BASE: INSTANT BURST
     private void HandleInstantBurst(Vector3 center, float radius)
     {
         Debug.Log("<color=yellow>[Potion]</color> Instant burst!");
         Collider[] hits = Physics.OverlapSphere(center, radius);
 
-        // GDD: "~3 unit radius instantaneous explosion; small knockback" (even with no modifiers)
+        // 3 unit radius instantaneous explosion; small knockback" (even with no modifiers)
         foreach (var col in hits)
         {
             Rigidbody rb = col.GetComponent<Rigidbody>();
@@ -146,10 +135,7 @@ public class Potion : MonoBehaviour
         }
     }
 
-    // ──────────────────────────────────────────────
     //  DELIVERY SPAWNERS
-    // ──────────────────────────────────────────────
-
     private void SpawnZone(DeliveryShape shape, Vector3 position, Vector3 surfaceNormal, float radius)
     {
         PrimitiveType primitive = (shape == DeliveryShape.Cloud)
@@ -192,10 +178,7 @@ public class Potion : MonoBehaviour
         );
     }
 
-    // ──────────────────────────────────────────────
     //  VISUAL TINT
-    // ──────────────────────────────────────────────
-
     private void TintVial()
     {
         Renderer rend = GetComponent<Renderer>();

@@ -1,10 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
-// ═══════════════════════════════════════════════════════════════
 //  StatusEffectManager.cs — All status effects on a player
 //
-//  GDD FIRE on Player:
+//  FIRE on Player:
 //    - Move faster (speed multiplier)
 //    - Occasionally moved in random HORIZONTAL directions
 //    - Immune to miasma for ~5s
@@ -15,11 +14,6 @@ using UnityEngine;
 //
 //  BOUNCY on Player:
 //    - PhysicMaterial with high bounciness for duration
-//
-//  UNITY SETUP:
-//    - Attach to every Player prefab
-//    - Player needs tag "Player", Rigidbody, Collider
-// ═══════════════════════════════════════════════════════════════
 
 public class StatusEffectManager : MonoBehaviour
 {
@@ -30,12 +24,11 @@ public class StatusEffectManager : MonoBehaviour
     [HideInInspector] public bool IsBouncy;
     [HideInInspector] public bool IsMiasmaImmune;
 
-    // ── Fire: speed multiplier read by PlayerMovementFPS ──
+    // ── Fire: speed multiplier read by PlayerMovement ──
     [HideInInspector] public float fireSpeedMultiplier = 1f;
-    // ── Fire: random horizontal push read by PlayerMovementFPS ──
+    // ── Fire: random horizontal push read by PlayerMovement ──
     [HideInInspector] public Vector3 fireRandomPush;
 
-    // ── Tuning ──
     [Header("On-Fire Settings")]
     public float fireDuration = 5f;
     [Tooltip("Speed multiplier while on fire (GDD: move faster)")]
@@ -59,7 +52,6 @@ public class StatusEffectManager : MonoBehaviour
     [Header("Visuals (Optional)")]
     public GameObject crystalShellPrefab;
 
-    // ── Internal ──
     private Coroutine _fireRoutine;
     private Coroutine _crystalRoutine;
     private Coroutine _floatRoutine;
@@ -76,10 +68,7 @@ public class StatusEffectManager : MonoBehaviour
         if (_col != null) _originalPhysMat = _col.material;
     }
 
-    // ══════════════════════════════════════════
     //  PUBLIC API
-    // ══════════════════════════════════════════
-
     public void ApplyFire(float overrideDuration = -1f)
     {
         float dur = overrideDuration > 0 ? overrideDuration : fireDuration;
@@ -104,10 +93,9 @@ public class StatusEffectManager : MonoBehaviour
         _crystalRoutine = StartCoroutine(CrystalRoutine(dur));
     }
 
-    /// <summary>
-    /// Disable gravity for duration. No-base+Float = 5s one-shot.
-    /// Cloud+Float calls with -1 (permanent while in zone, re-applied each tick).
-    /// </summary>
+
+    // Disable gravity for duration. No-base+Float = 5s one-shot.
+    // Cloud+Float calls with -1 (permanent while in zone, re-applied each tick).
     public void ApplyFloat(float overrideDuration = -1f)
     {
         float dur = overrideDuration > 0 ? overrideDuration : floatDuration;
@@ -119,9 +107,7 @@ public class StatusEffectManager : MonoBehaviour
         _floatRoutine = StartCoroutine(FloatRoutine(dur));
     }
 
-    /// <summary>
-    /// Make the player bouncy for a duration.
-    /// </summary>
+    // Make the player bouncy for a duration.
     public void ApplyBouncy(float overrideDuration = -1f)
     {
         float dur = overrideDuration > 0 ? overrideDuration : bouncyDuration;
@@ -130,10 +116,8 @@ public class StatusEffectManager : MonoBehaviour
         if (_bouncyRoutine != null) StopCoroutine(_bouncyRoutine);
         _bouncyRoutine = StartCoroutine(BouncyRoutine(dur));
     }
-
-    // ══════════════════════════════════════════
+    
     //  COROUTINES
-    // ══════════════════════════════════════════
 
     // ── FIRE ──
     private IEnumerator FireRoutine(float duration)

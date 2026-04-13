@@ -1,12 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// ═══════════════════════════════════════════════════════════════
+
 //  MagneticRegistry.cs — Singleton that tracks magnetic entities
-//
-//  GDD: "Magnetic players and objects are pulled towards OTHER
-//  magnetic players and objects. The greater the mass, the
-//  stronger the force of attraction."
 //
 //  Any delivery zone/cube with Magnetic registers its targets.
 //  Every FixedUpdate, all registered entities pull toward each other.
@@ -15,9 +11,7 @@ using UnityEngine;
 //    Size+Magnetic  → increased mass → stronger pull (automatic)
 //    Bouncy+Magnetic → REPEL instead of attract
 //
-//  UNITY SETUP:
-//    - Auto-creates itself. No manual setup needed.
-// ═══════════════════════════════════════════════════════════════
+
 
 public class MagneticRegistry : MonoBehaviour
 {
@@ -48,9 +42,8 @@ public class MagneticRegistry : MonoBehaviour
     [Header("Tuning")]
     public float baseStrength = 10f;
 
-    /// <summary>
-    /// Register a Rigidbody as magnetic for a duration.
-    /// </summary>
+
+    // Register a Rigidbody as magnetic for a duration.
     /// <param name="rb">The Rigidbody to magnetize.</param>
     /// <param name="duration">-1 = permanent (until manually removed).</param>
     /// <param name="repels">True if Bouncy+Magnetic interaction → repels instead.</param>

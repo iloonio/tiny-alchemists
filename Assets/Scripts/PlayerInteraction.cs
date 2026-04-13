@@ -1,26 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// ═══════════════════════════════════════════════════════════════
-//  PlayerInteraction.cs — Handles pick-up, throw, and interact
-//
-//  Now supports:
+//  Supports:
 //    - Ingredients  (tag "Ingredient")  → pick up / throw
 //    - Potions      (tag "Potion")      → pick up / throw
 //    - Plant Pots   (tag "PlantPot")    → pick up / throw / harvest
 //    - Cauldron     (tag "Cauldron")    → manual brew
-//
-//  INTERACT PRIORITY (when not holding anything):
-//    1. If looking at Cauldron   → Brew
-//    2. If looking at PlantPot (Grown) → Harvest
-//    3. If looking at PlantPot  → Pick up
-//    4. If looking at Ingredient → Pick up
-//    5. If looking at Potion    → Pick up
-//
-//  UNITY SETUP:
-//    - Tag your objects: "Ingredient", "Potion", "PlantPot", "Cauldron"
-//    - Assign holdPoint (child of PlayerCamera) and playerCamera in Inspector
-// ═══════════════════════════════════════════════════════════════
 
 public class PlayerInteraction : MonoBehaviour
 {
@@ -33,12 +18,12 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private float throwForce = 6f;
     [SerializeField] private float throwUpForce = 1f;
 
-    // ── Currently held object (only one at a time) ──
+    // Currently held object (only one at a time)
     private Ingredient _heldIngredient;
     private Potion _heldPotion;
     private PlantPot _heldPot;
 
-    // ── Status Effect Integration ──
+    // Status Effect Integration
     private StatusEffectManager _status;
 
     public bool IsHolding => _heldIngredient != null || _heldPotion != null || _heldPot != null;
@@ -48,10 +33,8 @@ public class PlayerInteraction : MonoBehaviour
         _status = GetComponent<StatusEffectManager>();
     }
 
-    // ──────────────────────────────────────────────
+ 
     //  INPUT CALLBACK (wired via PlayerInput component)
-    // ──────────────────────────────────────────────
-
     public void OnInteract(InputAction.CallbackContext ctx)
     {
         if (!ctx.performed) return;
@@ -63,10 +46,7 @@ public class PlayerInteraction : MonoBehaviour
             TryInteract();
     }
 
-    // ──────────────────────────────────────────────
     //  INTERACT (not holding anything)
-    // ──────────────────────────────────────────────
-
     private void TryInteract()
     {
         if (playerCamera == null) return;
@@ -76,7 +56,7 @@ public class PlayerInteraction : MonoBehaviour
 
         GameObject target = hit.collider.gameObject;
 
-        // ── Cauldron: manual brew ──
+        // Cauldron: manual brew
         if (target.CompareTag("Cauldron"))
         {
             Cauldron cauldron = target.GetComponent<Cauldron>();
@@ -88,7 +68,7 @@ public class PlayerInteraction : MonoBehaviour
             }
         }
 
-        // ── PlantPot: harvest if grown, otherwise pick up ──
+        //  PlantPot: harvest if grown, otherwise pick up 
         if (target.CompareTag("PlantPot"))
         {
             PlantPot pot = target.GetComponent<PlantPot>();
@@ -104,7 +84,7 @@ public class PlayerInteraction : MonoBehaviour
             }
         }
 
-        // ── Ingredient ──
+        // Ingredient 
         if (target.CompareTag("Ingredient"))
         {
             Ingredient ing = target.GetComponent<Ingredient>();
@@ -115,7 +95,7 @@ public class PlayerInteraction : MonoBehaviour
             }
         }
 
-        // ── Potion ──
+        // Potion
         if (target.CompareTag("Potion"))
         {
             Potion pot = target.GetComponent<Potion>();
@@ -127,10 +107,8 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-    // ──────────────────────────────────────────────
-    //  GRAB METHODS
-    // ──────────────────────────────────────────────
 
+    //  GRAB METHODS
     private void GrabIngredient(Ingredient item)
     {
         _heldIngredient = item;
@@ -156,11 +134,8 @@ public class PlayerInteraction : MonoBehaviour
         _heldPot = pot;
         _heldPot.OnPickedUp(holdPoint);
     }
-
-    // ──────────────────────────────────────────────
+    
     //  THROW
-    // ──────────────────────────────────────────────
-
     private void ThrowItem()
     {
         Vector3 force = playerCamera.forward * throwForce + Vector3.up * throwUpForce;

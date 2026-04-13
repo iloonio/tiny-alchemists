@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-// ═══════════════════════════════════════════════════════════════
 //  Cauldron.cs — Manual-brew cauldron with validation
 //
 //  FLOW:
@@ -10,7 +9,7 @@ using UnityEngine;
 //    2. Player looks at cauldron, presses Interact → PlayerInteraction
 //       calls Brew()
 //    3. Validation runs:
-//       ✓ Valid   → Spawn 3 identical potions at SpawnPoint
+//       ✓ Valid   → Spawn 1 identical potions at SpawnPoint
 //       ✗ Invalid → Explode (AoE knockback + fire), empty cauldron
 //
 //  VALIDATION RULES:
@@ -18,13 +17,6 @@ using UnityEngine;
 //    - Max 1 of EACH IngredientType (no duplicates)
 //    - Max 1 Base ingredient
 //    - Max 3 Modifier ingredients
-//
-//  UNITY SETUP:
-//    - Tag the root Cauldron as "Cauldron" (for PlayerInteraction raycast)
-//    - Add Rigidbody (Is Kinematic) to root so child trigger works
-//    - Child "TriggerZone" has BoxCollider (IsTrigger = true)
-//    - Assign potionPrefab and potionSpawnPoint in Inspector
-// ═══════════════════════════════════════════════════════════════
 
 public class Cauldron : MonoBehaviour
 {
@@ -46,15 +38,11 @@ public class Cauldron : MonoBehaviour
     [Tooltip("Gentle upward pop force for spawned potions")]
     public float spawnPopForce = 2f;
 
-    // ── Internal ──
+  
     private List<IngredientType> _contents = new List<IngredientType>();
 
-    /// <summary>Read-only view so UI or debug can inspect contents.</summary>
-    public IReadOnlyList<IngredientType> Contents => _contents;
 
-    // ──────────────────────────────────────────────
-    //  INGREDIENT INTAKE
-    // ──────────────────────────────────────────────
+    public IReadOnlyList<IngredientType> Contents => _contents;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -75,14 +63,8 @@ public class Cauldron : MonoBehaviour
         Destroy(item.gameObject);
     }
 
-    // ──────────────────────────────────────────────
-    //  MANUAL BREW (called by PlayerInteraction)
-    // ──────────────────────────────────────────────
 
-    /// <summary>
-    /// Attempt to brew. Returns true if successful, false if exploded.
-    /// Called from PlayerInteraction when player presses Interact on Cauldron.
-    /// </summary>
+    //  BREW (called by PlayerInteraction)
     public bool Brew()
     {
         if (_contents.Count == 0)
@@ -94,14 +76,14 @@ public class Cauldron : MonoBehaviour
         string validation = Validate();
         if (validation != null)
         {
-            // ✗ INVALID
+            // INVALID
             Debug.Log($"<color=red>[Cauldron]</color> INVALID RECIPE: {validation}");
             Explode();
             _contents.Clear();
             return false;
         }
 
-        // ✓ VALID
+        // VALID
         PotionRecipe recipe = BuildRecipe();
         Debug.Log($"<color=cyan>[Cauldron]</color> Brewed {recipe}!");
 
@@ -110,11 +92,7 @@ public class Cauldron : MonoBehaviour
         return true;
     }
 
-    // ──────────────────────────────────────────────
     //  VALIDATION
-    // ──────────────────────────────────────────────
-
-    /// <summary>Returns null if valid, or an error message string if invalid.</summary>
     private string Validate()
     {
         // Rule: no duplicate ingredient types
@@ -143,10 +121,7 @@ public class Cauldron : MonoBehaviour
         return null; // valid
     }
 
-    // ──────────────────────────────────────────────
     //  RECIPE BUILDER
-    // ──────────────────────────────────────────────
-
     private PotionRecipe BuildRecipe()
     {
         IngredientType? potionBase = null;
@@ -162,11 +137,8 @@ public class Cauldron : MonoBehaviour
 
         return new PotionRecipe(potionBase, modifiers);
     }
-
-    // ──────────────────────────────────────────────
+    
     //  POTION SPAWNING
-    // ──────────────────────────────────────────────
-
     private void SpawnPotions(PotionRecipe recipe)
     {
         Vector3 spawnPos = potionSpawnPoint != null
@@ -186,7 +158,7 @@ public class Cauldron : MonoBehaviour
             Potion potion = obj.GetComponent<Potion>();
             potion.Initialize(recipe);
 
-            // Gentle pop
+            // pop
             Rigidbody rb = obj.GetComponent<Rigidbody>();
             if (rb != null)
             {
@@ -198,17 +170,14 @@ public class Cauldron : MonoBehaviour
         Debug.Log($"<color=cyan>[Cauldron]</color> Spawned {potionsToSpawn} potions.");
     }
 
-    // ──────────────────────────────────────────────
     //  EXPLOSION (Failed Recipe)
-    // ──────────────────────────────────────────────
-
     private void Explode()
     {
         Debug.Log("<color=red>[Cauldron]</color> BOOM! Failed recipe explosion!");
 
         Vector3 center = transform.position;
 
-        // 1) AoE Knockback
+        // AoE Knockback
         Collider[] hits = Physics.OverlapSphere(center, explosionRadius);
         foreach (var col in hits)
         {
@@ -219,7 +188,7 @@ public class Cauldron : MonoBehaviour
             }
         }
 
-        // 2) Set surrounding flammables/players on fire
+        // Set surrounding flammables/players on fire
         Collider[] fireHits = Physics.OverlapSphere(center, fireRadius);
         foreach (var col in fireHits)
         {

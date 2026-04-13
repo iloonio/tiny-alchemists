@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// ═══════════════════════════════════════════════════════════════
+
 //  PotionModifierHandler.cs — Applies modifier effects to targets
 //
-//  Now CONTEXT-AWARE: behavior differs based on delivery type.
+// Bbehavior differs based on delivery type.
 //  Handles all Special Interactions:
 //    Fire+Sparkle   → Repeated explosions with knockback
 //    Size+Magnetic  → Increased mass (automatic via heavier objects)
@@ -14,9 +14,7 @@ using UnityEngine;
 //    - Potion.cs (no-base instant burst, one-shot)
 //    - PotionDeliveryZone.cs (Cloud/Puddle, per-tick)
 //    - PotionDeliveryCube.cs (Object, per-tick for magnetic)
-// ═══════════════════════════════════════════════════════════════
 
-/// <summary>Context passed to the handler so it knows what delivery is calling.</summary>
 public enum DeliveryContext
 {
     InstantBurst,   // No base
@@ -27,16 +25,14 @@ public enum DeliveryContext
 
 public static class PotionModifierHandler
 {
-    /// <summary>
-    /// Apply all modifiers to hits. Context determines behavior differences.
-    /// </summary>
+    // Apply all modifiers to hits. Context determines behavior differences.
     public static void ApplyModifiers(
         Collider[] hits,
         List<IngredientType> modifiers,
         Vector3 zoneCenter,
         DeliveryContext context = DeliveryContext.InstantBurst)
     {
-        // ── Detect Special Interactions ──
+        // Detect Special Interactions
         bool hasFireSparkle = modifiers.Contains(IngredientType.Fire) && modifiers.Contains(IngredientType.Sparkle);
         bool hasBouncyMagnetic = modifiers.Contains(IngredientType.Bouncy) && modifiers.Contains(IngredientType.Magnetic);
 
@@ -72,19 +68,17 @@ public static class PotionModifierHandler
             }
         }
 
-        // ── Special Interaction: Fire + Sparkle ──
+        // Special Interaction: Fire + Sparkle
         if (hasFireSparkle)
         {
             ApplyFireSparkleExplosion(hits, zoneCenter);
         }
     }
 
-    // ══════════════════════════════════════════
-    //  INDIVIDUAL MODIFIERS
-    // ══════════════════════════════════════════
 
+    //  INDIVIDUAL MODIFIERS
+    
     // ── FIRE ──
-    // GDD: "ignites affected players and objects"
     // Player fire effect: faster movement, random horizontal push, miasma immunity
     private static void ApplyFire(Collider[] hits)
     {
@@ -103,7 +97,6 @@ public static class PotionModifierHandler
     }
 
     // ── FLOAT ──
-    // GDD: Different per delivery:
     //   No-base: "unaffected by gravity for ~5s" (one-shot duration)
     //   Cloud:   "affected players are unaffected by gravity" (continuous while in zone)
     //   Puddle:  "continuous force pushing away from puddle" (upward push)
@@ -142,7 +135,6 @@ public static class PotionModifierHandler
     }
 
     // ── BOUNCY ──
-    // GDD: Different per delivery:
     //   No-base: "increased knockback effect"
     //   Cloud:   "affected players are bouncy" (status effect)
     //   Puddle:  "surface is bouncy" (upward impulse on contact)
@@ -187,8 +179,6 @@ public static class PotionModifierHandler
     }
 
     // ── MAGNETIC ──
-    // GDD: "Magnetic players/objects are pulled towards OTHER magnetic players/objects.
-    //        The greater the mass, the stronger the force."
     // Special: Bouncy+Magnetic → repels instead
     private static void ApplyMagnetic(Collider[] hits, bool repels)
     {
@@ -203,16 +193,14 @@ public static class PotionModifierHandler
     }
 
     // ── SPARKLE ──
-    // GDD: "sparkle visual effect" (pure VFX)
     private static void ApplySparkle(Collider[] hits)
     {
         // TODO: Instantiate sparkle particle effects on targets
         // Placeholder: visual-only, no gameplay effect
     }
 
-    // ══════════════════════════════════════════
+
     //  SPECIAL INTERACTIONS
-    // ══════════════════════════════════════════
 
     // ── FIRE + SPARKLE: "repeated explosions with large flash and knockback" ──
     private static void ApplyFireSparkleExplosion(Collider[] hits, Vector3 center)

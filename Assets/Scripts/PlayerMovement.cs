@@ -21,7 +21,6 @@ public class PlayerMovementFPS : MonoBehaviour
     private float _xRotation = 0f;
     private bool _isGrounded;
 
-    // ── Status Effect Integration ──
     private StatusEffectManager _status;
 
     void Start()
@@ -75,7 +74,7 @@ public class PlayerMovementFPS : MonoBehaviour
 
     private void HandleMovement()
     {
-        // ── Crystallized: freeze horizontal, let gravity pull down ──
+        // Crystallized: freeze horizontal, let gravity pull down 
         if (_status != null && _status.IsCrystallized)
         {
             _playerBody.linearVelocity = new Vector3(0f, _playerBody.linearVelocity.y, 0f);
@@ -84,7 +83,7 @@ public class PlayerMovementFPS : MonoBehaviour
         
         Vector3 moveDir = transform.forward * _moveInput.y + transform.right * _moveInput.x;
 
-        // ── Fire: speed boost + random horizontal push ──
+        // Fire: speed boost + random horizontal push
         float speed = moveSpeed;
         if (_status != null && _status.IsOnFire)
         {
