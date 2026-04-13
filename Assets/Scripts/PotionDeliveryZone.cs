@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// ═══════════════════════════════════════════════════════════════
+
 //  PotionDeliveryZone.cs — Persistent AoE zone for Cloud & Puddle
 //
 //  Cloud = sphere trigger zone at impact point
@@ -13,7 +13,6 @@ using UnityEngine;
 //
 //  Puddle + Bouncy: the zone itself gets a bouncy PhysicsMaterial
 //  so things physically bounce off it on collision.
-// ═══════════════════════════════════════════════════════════════
 
 public enum DeliveryShape { Cloud, Puddle }
 

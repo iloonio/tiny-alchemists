@@ -2,10 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// ═══════════════════════════════════════════════════════════════
 //  PotionDeliveryCube.cs — Physics cube spawned by "Object" base
 //
-//  GDD specifics:
 //    Fire:     "ignites players touching cube AND objects within ~1 unit"
 //    Float:    "cube unaffected by gravity and has more drag"
 //    Bouncy:   "cube is bouncy" (PhysicsMaterial)
@@ -15,7 +13,6 @@ using UnityEngine;
 //  Special Interactions:
 //    Size+Magnetic: heavier mass → stronger attraction (automatic)
 //    Bouncy+Magnetic: cube repels magnetic objects
-// ═══════════════════════════════════════════════════════════════
 
 public class PotionDeliveryCube : MonoBehaviour
 {
@@ -24,7 +21,7 @@ public class PotionDeliveryCube : MonoBehaviour
     [HideInInspector] public List<IngredientType> modifiers;
 
     private float _tickInterval = 0.5f;
-    private float _fireRadius = 1f; // GDD: "objects within ~1 unit"
+    private float _fireRadius = 1f; 
     private bool _hasFire;
     private bool _hasMagnetic;
     private Rigidbody _rb;
@@ -75,7 +72,7 @@ public class PotionDeliveryCube : MonoBehaviour
             MagneticRegistry.Instance.Register(_rb, duration, repels);
         }
 
-        // ── Visual ──
+        
         Renderer rend = GetComponent<Renderer>();
         if (rend != null)
         {
@@ -121,7 +118,7 @@ public class PotionDeliveryCube : MonoBehaviour
         Destroy(gameObject);
     }
 
-    // ── Contact effects ──
+    // Contact effects 
     private void OnCollisionEnter(Collision collision)
     {
         // Fire: ignite players on touch
