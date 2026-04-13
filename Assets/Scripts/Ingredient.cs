@@ -1,31 +1,27 @@
 using UnityEngine;
 
-
-public enum IngredientType
-{
-    FireFlower,
-    CrystalFlower,
-    SparkleFlower
-}
-
-public enum PotionType
-{
-    FailedSludge,
-    Fire,
-    Crystal,
-    Sparkle,
-    Explosive,    // Fire + Sparkle
-    FireCrystal   // Fire + Crystal
-}
+// ═══════════════════════════════════════════════════════════════
+//  Ingredient.cs — A physical ingredient in the world
+//
+//  UNITY SETUP:
+//    - Tag as "Ingredient"
+//    - Set 'type' in Inspector (Cloud, Object, Puddle, Fire, etc.)
+//    - Needs Rigidbody + Collider (auto-added by RequireComponent)
+//    - Create one prefab per ingredient type for clarity
+// ═══════════════════════════════════════════════════════════════
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collider))]
-
 public class Ingredient : MonoBehaviour
 {
     [Header("Ingredient Data")]
-    public IngredientType type; 
+    [Tooltip("Which ingredient is this? Determines Base vs Modifier automatically.")]
+    public IngredientType type;
+
     public bool IsHeld { get; private set; }
+
+    /// <summary>Convenience accessor so other scripts can check category.</summary>
+    public IngredientCategory Category => IngredientHelper.GetCategory(type);
 
     private Rigidbody _rb;
     private Collider _col;

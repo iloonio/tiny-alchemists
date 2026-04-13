@@ -1,73 +1,135 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+// ═══════════════════════════════════════════════════════════════
+//  PlayerInteraction.cs — Handles pick-up, throw, and interact
+//
+//  Now supports:
+//    - Ingredients  (tag "Ingredient")  → pick up / throw
+//    - Potions      (tag "Potion")      → pick up / throw
+//    - Plant Pots   (tag "PlantPot")    → pick up / throw / harvest
+//    - Cauldron     (tag "Cauldron")    → manual brew
+//
+//  INTERACT PRIORITY (when not holding anything):
+//    1. If looking at Cauldron   → Brew
+//    2. If looking at PlantPot (Grown) → Harvest
+//    3. If looking at PlantPot  → Pick up
+//    4. If looking at Ingredient → Pick up
+//    5. If looking at Potion    → Pick up
+//
+//  UNITY SETUP:
+//    - Tag your objects: "Ingredient", "Potion", "PlantPot", "Cauldron"
+//    - Assign holdPoint (child of PlayerCamera) and playerCamera in Inspector
+// ═══════════════════════════════════════════════════════════════
 
 public class PlayerInteraction : MonoBehaviour
 {
     [Header("References")]
-    [Tooltip("The location for taking the item (placed under the camera object)")]
     [SerializeField] private Transform holdPoint;
-
-    [Tooltip("The player's first-person camera (used for ray detection)")]
     [SerializeField] private Transform playerCamera;
 
     [Header("Pick-up & Throw")]
-    [Tooltip("How long is your arm (how far can you grab something)?")]
     [SerializeField] private float pickupDistance = 3f;
     [SerializeField] private float throwForce = 6f;
-    [SerializeField] private float throwUpForce = 3f;
+    [SerializeField] private float throwUpForce = 1f;
 
-
+    // ── Currently held object (only one at a time) ──
     private Ingredient _heldIngredient;
     private Potion _heldPotion;
+    private PlantPot _heldPot;
 
     // ── Status Effect Integration ──
     private StatusEffectManager _status;
 
-    public bool IsHolding => _heldIngredient != null || _heldPotion != null;
+    public bool IsHolding => _heldIngredient != null || _heldPotion != null || _heldPot != null;
 
     void Awake()
     {
         _status = GetComponent<StatusEffectManager>();
     }
 
+    // ──────────────────────────────────────────────
+    //  INPUT CALLBACK (wired via PlayerInput component)
+    // ──────────────────────────────────────────────
+
     public void OnInteract(InputAction.CallbackContext ctx)
     {
         if (!ctx.performed) return;
-
-        // ── Block all interaction while crystallized ──
         if (_status != null && _status.IsCrystallized) return;
 
         if (IsHolding)
             ThrowItem();
         else
-            TryPickUp();
+            TryInteract();
     }
 
-    private void TryPickUp()
+    // ──────────────────────────────────────────────
+    //  INTERACT (not holding anything)
+    // ──────────────────────────────────────────────
+
+    private void TryInteract()
     {
-        if (playerCamera == null)
-        {
-            Debug.LogError("In the Inspector panel, drag PlayerCamera to PlayerInteraction!");
-            return;
-        }
+        if (playerCamera == null) return;
 
         Ray ray = new Ray(playerCamera.position, playerCamera.forward);
+        if (!Physics.Raycast(ray, out RaycastHit hit, pickupDistance)) return;
 
-        if (Physics.Raycast(ray, out RaycastHit hit, pickupDistance))
+        GameObject target = hit.collider.gameObject;
+
+        // ── Cauldron: manual brew ──
+        if (target.CompareTag("Cauldron"))
         {
-            if (hit.collider.CompareTag("Ingredient"))
+            Cauldron cauldron = target.GetComponent<Cauldron>();
+            if (cauldron == null) cauldron = target.GetComponentInParent<Cauldron>();
+            if (cauldron != null)
             {
-                Ingredient ing = hit.collider.GetComponent<Ingredient>();
-                if (ing != null && !ing.IsHeld) GrabIngredient(ing);
+                cauldron.Brew();
+                return;
             }
-            else if (hit.collider.CompareTag("Potion"))
+        }
+
+        // ── PlantPot: harvest if grown, otherwise pick up ──
+        if (target.CompareTag("PlantPot"))
+        {
+            PlantPot pot = target.GetComponent<PlantPot>();
+            if (pot != null)
             {
-                Potion pot = hit.collider.GetComponent<Potion>();
-                if (pot != null) GrabPotion(pot);
+                if (pot.State == PlantPot.PotState.Grown)
+                {
+                    pot.TryHarvest();
+                    return;
+                }
+                GrabPlantPot(pot);
+                return;
+            }
+        }
+
+        // ── Ingredient ──
+        if (target.CompareTag("Ingredient"))
+        {
+            Ingredient ing = target.GetComponent<Ingredient>();
+            if (ing != null && !ing.IsHeld)
+            {
+                GrabIngredient(ing);
+                return;
+            }
+        }
+
+        // ── Potion ──
+        if (target.CompareTag("Potion"))
+        {
+            Potion pot = target.GetComponent<Potion>();
+            if (pot != null)
+            {
+                GrabPotion(pot);
+                return;
             }
         }
     }
+
+    // ──────────────────────────────────────────────
+    //  GRAB METHODS
+    // ──────────────────────────────────────────────
 
     private void GrabIngredient(Ingredient item)
     {
@@ -79,16 +141,25 @@ public class PlayerInteraction : MonoBehaviour
     {
         _heldPotion = pot;
 
-        Rigidbody potRb = pot.GetComponent<Rigidbody>();
-        Collider potCol = pot.GetComponent<Collider>();
-
-        potRb.isKinematic = true;
-        potCol.enabled = false;
+        Rigidbody rb = pot.GetComponent<Rigidbody>();
+        Collider col = pot.GetComponent<Collider>();
+        rb.isKinematic = true;
+        col.enabled = false;
 
         pot.transform.SetParent(holdPoint);
         pot.transform.localPosition = Vector3.zero;
         pot.transform.localRotation = Quaternion.identity;
     }
+
+    private void GrabPlantPot(PlantPot pot)
+    {
+        _heldPot = pot;
+        _heldPot.OnPickedUp(holdPoint);
+    }
+
+    // ──────────────────────────────────────────────
+    //  THROW
+    // ──────────────────────────────────────────────
 
     private void ThrowItem()
     {
@@ -103,16 +174,20 @@ public class PlayerInteraction : MonoBehaviour
         {
             _heldPotion.transform.SetParent(null);
 
-            Rigidbody potRb = _heldPotion.GetComponent<Rigidbody>();
-            Collider potCol = _heldPotion.GetComponent<Collider>();
+            Rigidbody rb = _heldPotion.GetComponent<Rigidbody>();
+            Collider col = _heldPotion.GetComponent<Collider>();
+            rb.isKinematic = false;
+            col.enabled = true;
+            rb.linearVelocity = Vector3.zero;
+            rb.AddForce(force, ForceMode.Impulse);
 
-            potRb.isKinematic = false;
-            potCol.enabled = true;
-            potRb.linearVelocity = Vector3.zero;
-            potRb.AddForce(force, ForceMode.Impulse);
-
-            _heldPotion.OnPickedUp();
+            _heldPotion.OnPickedUp(); // enables gravity
             _heldPotion = null;
+        }
+        else if (_heldPot != null)
+        {
+            _heldPot.OnDropped(force);
+            _heldPot = null;
         }
     }
 }

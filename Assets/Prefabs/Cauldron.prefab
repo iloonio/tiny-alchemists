@@ -91,7 +91,7 @@ GameObject:
   - component: {fileID: 2506866959540510645}
   m_Layer: 0
   m_Name: Cauldron
-  m_TagString: Untagged
+  m_TagString: Cauldron
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -184,6 +184,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cauldron
   potionPrefab: {fileID: 1137243224661083654, guid: 9d318beaae09be645aa0784ca1155f2c, type: 3}
   potionSpawnPoint: {fileID: 3809426045035414439}
+  explosionRadius: 5
+  explosionForce: 12
+  fireRadius: 4
+  potionsToSpawn: 3
+  spawnPopForce: 2
 --- !u!54 &2506866959540510645
 Rigidbody:
   m_ObjectHideFlags: 0

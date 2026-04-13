@@ -2215,6 +2215,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cauldron
       objectReference: {fileID: 0}
+    - target: {fileID: 4661862734302367016, guid: 6c16963e0565dfb41bea7cfe07c72534, type: 3}
+      propertyPath: m_TagString
+      value: Cauldron
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

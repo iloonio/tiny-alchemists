@@ -1,21 +1,44 @@
+using System.Collections.Generic;
 using UnityEngine;
+
+// ═══════════════════════════════════════════════════════════════
+//  Potion.cs — Potion vial that breaks on impact
+//
+//  GDD DELIVERY MATRIX:
+//    No Base  → ~3 unit radius instantaneous explosion, small knockback
+//    Cloud    → ~3 unit radius sphere, 120s
+//    Object   → ~2 unit length physics cube, 120s
+//    Puddle   → ~3 unit radius circular puddle on surface, 120s
+//
+//  GDD SIZE MODIFIER:
+//    Radius → ~5 units; Cube side → ~4 units
+//
+//  UNITY SETUP:
+//    - PotionPrefab: Rigidbody, Collider, Renderer, this script
+//    - Tag as "Potion"
+// ═══════════════════════════════════════════════════════════════
 
 [RequireComponent(typeof(Rigidbody))]
 public class Potion : MonoBehaviour
 {
-    public PotionType currentType;
+    private PotionRecipe _recipe;
 
-    [Header("Crystal Platform")]
-    [Tooltip("How long the crystal cube platform lasts (seconds)")]
-    public float crystalPlatformDuration = 6f;
-    [Tooltip("Size of the spawned crystal cube")]
-    public float crystalPlatformSize = 2f;
+    [Header("Delivery: Radius (Cloud / Puddle / No-base)")]
+    public float baseRadius = 3f;           // GDD: ~3 units
+    public float sizedRadius = 5f;          // GDD: Size → ~5 units
 
-    [Header("Fire-Crystal AOE")]
-    [Tooltip("Radius of the AOE burn zone")]
-    public float aoERadius = 4f;
-    [Tooltip("Duration of the AOE burn zone")]
-    public float aoeDuration = 5f;
+    [Header("Delivery: Cube (Object base)")]
+    public float baseCubeSize = 2f;         // GDD: ~2 unit length
+    public float sizedCubeSize = 4f;        // GDD: Size → ~4 units
+
+    [Header("Duration")]
+    public float deliveryDuration = 120f;   // GDD: 120s
+
+    [Header("No-Base Burst")]
+    public float burstKnockback = 6f;       // GDD: "small knockback"
+
+    [Header("Break Threshold")]
+    public float breakSpeed = 3f;
 
     private Rigidbody _rb;
 
@@ -26,18 +49,10 @@ public class Potion : MonoBehaviour
         _rb.linearVelocity = Vector3.zero;
     }
 
-    public void Initialize(PotionType type)
+    public void Initialize(PotionRecipe recipe)
     {
-        currentType = type;
-
-        Renderer rend = GetComponent<Renderer>();
-        if (type == PotionType.Fire)        rend.material.color = Color.red;
-        else if (type == PotionType.Crystal) rend.material.color = Color.cyan;
-        else if (type == PotionType.FireCrystal) rend.material.color = new Color(0.8f, 0.2f, 1f); // purple
-        else if (type == PotionType.Explosive)   rend.material.color = new Color(1f, 0.5f, 0f);
-        else if (type == PotionType.Sparkle)     rend.material.color = Color.yellow;
-        else // FailedSludge or unhandled
-            rend.material.color = new Color(0.4f, 0.3f, 0.2f);
+        _recipe = recipe;
+        TintVial();
     }
 
     public void OnPickedUp()
@@ -45,124 +60,169 @@ public class Potion : MonoBehaviour
         _rb.useGravity = true;
     }
 
+    // ──────────────────────────────────────────────
+    //  COLLISION → BREAK
+    // ──────────────────────────────────────────────
+
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.relativeVelocity.magnitude > 3f)
-        {
-            ExplodeEffect(collision);
-            Destroy(gameObject);
-        }
-    }
+        if (collision.relativeVelocity.magnitude < breakSpeed) return;
 
-
-    private void ExplodeEffect(Collision collision)
-    {
-        Debug.Log($"Potion {currentType} smashed on {collision.gameObject.name}!");
-
-        GameObject hitObj = collision.gameObject;
         ContactPoint contact = collision.GetContact(0);
-        Vector3 hitPoint = contact.point;
-
-        switch (currentType)
-        {
-            case PotionType.Fire:
-                HandleFire(hitObj);
-                break;
-
-            case PotionType.Crystal:
-                HandleCrystal(hitObj, hitPoint);
-                break;
-
-            case PotionType.FireCrystal:
-                HandleFireCrystal(hitObj, hitPoint);
-                break;
-
-            default:
-                // FailedSludge, Sparkle, Explosive – no effect yet
-                break;
-        }
+        ExplodeEffect(contact.point, contact.normal, collision.gameObject);
+        Destroy(gameObject);
     }
 
-    // ── Fire Potion ──
-    private void HandleFire(GameObject hitObj)
+    // ──────────────────────────────────────────────
+    //  EFFECT DISPATCH
+    // ──────────────────────────────────────────────
+
+    private void ExplodeEffect(Vector3 hitPoint, Vector3 hitNormal, GameObject hitObj)
     {
-        // Try to apply fire to whatever we hit
-        StatusEffectManager sem = hitObj.GetComponent<StatusEffectManager>();
-        if (sem != null)
+        if (_recipe == null)
         {
-            sem.ApplyFire();
+            Debug.LogWarning("[Potion] No recipe set!");
             return;
         }
 
-        // If the hit object is flammable
-        FlammableObject flam = hitObj.GetComponent<FlammableObject>();
-        if (flam != null)
+        Debug.Log($"<color=magenta>[Potion]</color> {_recipe} broke at {hitPoint}");
+
+        bool hasSize = _recipe.HasModifier(IngredientType.Size);
+        float radius = hasSize ? sizedRadius : baseRadius;
+        float cubeSize = hasSize ? sizedCubeSize : baseCubeSize;
+
+        if (!_recipe.Base.HasValue)
         {
-            flam.Ignite();
+            HandleInstantBurst(hitPoint, radius);
+        }
+        else
+        {
+            switch (_recipe.Base.Value)
+            {
+                case IngredientType.Cloud:
+                    SpawnZone(DeliveryShape.Cloud, hitPoint, hitNormal, radius);
+                    break;
+                case IngredientType.Object:
+                    SpawnCube(hitPoint, cubeSize);
+                    break;
+                case IngredientType.Puddle:
+                    SpawnZone(DeliveryShape.Puddle, hitPoint, hitNormal, radius);
+                    break;
+            }
+        }
+
+        // Direct-hit: apply modifier effects to whatever the bottle struck
+        ApplyDirectHit(hitObj);
+    }
+
+    // ──────────────────────────────────────────────
+    //  NO BASE: INSTANT BURST
+    // ──────────────────────────────────────────────
+
+    private void HandleInstantBurst(Vector3 center, float radius)
+    {
+        Debug.Log("<color=yellow>[Potion]</color> Instant burst!");
+        Collider[] hits = Physics.OverlapSphere(center, radius);
+
+        // GDD: "~3 unit radius instantaneous explosion; small knockback" (even with no modifiers)
+        foreach (var col in hits)
+        {
+            Rigidbody rb = col.GetComponent<Rigidbody>();
+            if (rb != null && !rb.isKinematic)
+            {
+                rb.AddExplosionForce(burstKnockback, center, radius, 0.5f, ForceMode.Impulse);
+            }
+        }
+
+        // Then apply modifier effects on top
+        if (_recipe.Modifiers.Count > 0)
+        {
+            PotionModifierHandler.ApplyModifiers(
+                hits,
+                _recipe.Modifiers,
+                center,
+                DeliveryContext.InstantBurst
+            );
         }
     }
 
-    // ── Crystal Potion ──
-    private void HandleCrystal(GameObject hitObj, Vector3 hitPoint)
+    // ──────────────────────────────────────────────
+    //  DELIVERY SPAWNERS
+    // ──────────────────────────────────────────────
+
+    private void SpawnZone(DeliveryShape shape, Vector3 position, Vector3 surfaceNormal, float radius)
     {
-        // If it hits a Player → crystallize them
-        StatusEffectManager sem = hitObj.GetComponent<StatusEffectManager>();
-        if (sem != null)
-        {
-            sem.ApplyCrystal();
-            return;
-        }
+        PrimitiveType primitive = (shape == DeliveryShape.Cloud)
+            ? PrimitiveType.Sphere
+            : PrimitiveType.Cylinder;
 
-        // If it hits environment → spawn a temporary Crystal Cube platform
-        SpawnCrystalPlatform(hitPoint);
-    }
-
-    // ── Fire + Crystal Potion ──
-    private void HandleFireCrystal(GameObject hitObj, Vector3 hitPoint)
-    {
-        // 1) Always spawn the AOE burn zone at impact
-        SpawnFireCrystalZone(hitPoint);
-
-        // 2) Direct hit on a player → apply BOTH crystallized AND on-fire
-        StatusEffectManager sem = hitObj.GetComponent<StatusEffectManager>();
-        if (sem != null)
-        {
-            sem.ApplyCrystal();
-            sem.ApplyFire();
-        }
-    }
-
-    private void SpawnCrystalPlatform(Vector3 position)
-    {
-        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        cube.name = "CrystalPlatform";
-        cube.transform.position = position + Vector3.up * (crystalPlatformSize * 0.5f);
-        cube.transform.localScale = Vector3.one * crystalPlatformSize;
-
-        // Visual: semi-transparent cyan
-        Renderer rend = cube.GetComponent<Renderer>();
-        rend.material.color = new Color(0f, 1f, 1f, 0.6f);
-
-        // Destroy after duration
-        Destroy(cube, crystalPlatformDuration);
-
-        Debug.Log($"<color=cyan>[Crystal]</color> Platform spawned at {position}, lasts {crystalPlatformDuration}s");
-    }
-
-    private void SpawnFireCrystalZone(Vector3 position)
-    {
-        GameObject zone = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        zone.name = "FireCrystalZone";
+        GameObject zone = GameObject.CreatePrimitive(primitive);
+        zone.name = $"PotionZone_{shape}";
         zone.transform.position = position;
 
-        // Remove solid collider – the zone uses OverlapSphere internally
         Collider col = zone.GetComponent<Collider>();
         if (col != null) Destroy(col);
 
-        FireCrystalZone fcz = zone.AddComponent<FireCrystalZone>();
-        fcz.radius = aoERadius;
-        fcz.duration = aoeDuration;
+        PotionDeliveryZone delivery = zone.AddComponent<PotionDeliveryZone>();
+        delivery.Configure(shape, radius, deliveryDuration, _recipe.Modifiers, surfaceNormal);
+    }
 
-        Debug.Log($"<color=red>[FireCrystal]</color> AOE zone spawned at {position}");
+    private void SpawnCube(Vector3 position, float size)
+    {
+        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        cube.name = "PotionCube";
+        cube.transform.position = position + Vector3.up * (size * 0.5f);
+
+        PotionDeliveryCube delivery = cube.AddComponent<PotionDeliveryCube>();
+        delivery.Configure(size, deliveryDuration, _recipe.Modifiers);
+    }
+
+    private void ApplyDirectHit(GameObject hitObj)
+    {
+        if (_recipe.Modifiers.Count == 0) return;
+
+        Collider hitCol = hitObj.GetComponent<Collider>();
+        if (hitCol == null) return;
+
+        PotionModifierHandler.ApplyModifiers(
+            new Collider[] { hitCol },
+            _recipe.Modifiers,
+            hitObj.transform.position,
+            DeliveryContext.InstantBurst
+        );
+    }
+
+    // ──────────────────────────────────────────────
+    //  VISUAL TINT
+    // ──────────────────────────────────────────────
+
+    private void TintVial()
+    {
+        Renderer rend = GetComponent<Renderer>();
+        if (rend == null) return;
+
+        Color baseColor = Color.gray;
+        if (_recipe.Base.HasValue)
+        {
+            switch (_recipe.Base.Value)
+            {
+                case IngredientType.Cloud:  baseColor = new Color(0.7f, 0.7f, 1f); break;
+                case IngredientType.Object: baseColor = new Color(0.6f, 0.4f, 0.2f); break;
+                case IngredientType.Puddle: baseColor = new Color(0.3f, 0.1f, 0.8f); break;
+            }
+        }
+
+        if (_recipe.HasModifier(IngredientType.Fire))
+            baseColor = Color.Lerp(baseColor, Color.red, 0.5f);
+        else if (_recipe.HasModifier(IngredientType.Float))
+            baseColor = Color.Lerp(baseColor, Color.white, 0.4f);
+        else if (_recipe.HasModifier(IngredientType.Bouncy))
+            baseColor = Color.Lerp(baseColor, Color.green, 0.4f);
+        else if (_recipe.HasModifier(IngredientType.Magnetic))
+            baseColor = Color.Lerp(baseColor, Color.magenta, 0.4f);
+        else if (_recipe.HasModifier(IngredientType.Sparkle))
+            baseColor = Color.Lerp(baseColor, Color.yellow, 0.4f);
+
+        rend.material.color = baseColor;
     }
 }
