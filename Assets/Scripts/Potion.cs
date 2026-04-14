@@ -9,7 +9,7 @@ using UnityEngine;
 //    Object   → ~2 unit length physics cube, 120s
 //    Puddle   → ~3 unit radius circular puddle on surface, 120s
 //
-//  GDD SIZE MODIFIER:
+//  SIZE MODIFIER:
 //    Radius → ~5 units; Cube side → ~4 units
 //
 
@@ -113,25 +113,29 @@ public class Potion : MonoBehaviour
         Debug.Log("<color=yellow>[Potion]</color> Instant burst!");
         Collider[] hits = Physics.OverlapSphere(center, radius);
 
-        // 3 unit radius instantaneous explosion; small knockback" (even with no modifiers)
+        bool hasMagnetic = _recipe.HasModifier(IngredientType.Magnetic);
+
         foreach (var col in hits)
         {
             Rigidbody rb = col.GetComponent<Rigidbody>();
-            if (rb != null && !rb.isKinematic)
+            if (rb == null || rb.isKinematic) continue;
+
+            if (hasMagnetic)
+            {
+                // "not knocked back; instead pulled towards point of origin"
+                Vector3 toCenter = (center - rb.position).normalized;
+                rb.AddForce(toCenter * burstKnockback, ForceMode.Impulse);
+            }
+            else
             {
                 rb.AddExplosionForce(burstKnockback, center, radius, 0.5f, ForceMode.Impulse);
             }
         }
 
-        // Then apply modifier effects on top
         if (_recipe.Modifiers.Count > 0)
         {
             PotionModifierHandler.ApplyModifiers(
-                hits,
-                _recipe.Modifiers,
-                center,
-                DeliveryContext.InstantBurst
-            );
+                hits, _recipe.Modifiers, center, DeliveryContext.InstantBurst);
         }
     }
 
