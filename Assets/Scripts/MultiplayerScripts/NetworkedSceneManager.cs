@@ -75,7 +75,7 @@ public class NetworkedSceneManager : NetworkBehaviour
 
     private IEnumerator SpawnPlayer(ulong clientId)
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(2); //doing a slight delay here just in case.. Can be removed in the future. 
 
         if (!NetworkManager.ConnectedClients.ContainsKey(clientId)) yield break;
 
