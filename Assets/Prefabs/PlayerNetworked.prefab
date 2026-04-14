@@ -66,7 +66,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.2
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -495,6 +495,7 @@ MonoBehaviour:
   playerMovementFPS: {fileID: 1963060662102942584}
   playerCamera: {fileID: 6666041418846382031}
   playerAudioListener: {fileID: 789439417492985511}
+  playerEventSystem: {fileID: 39695778559335214}
 --- !u!1 &9088279477719763223
 GameObject:
   m_ObjectHideFlags: 0
@@ -625,6 +626,10 @@ PrefabInstance:
     - target: {fileID: 5658021059511585987, guid: 37470a0d48cd6667095d9a49edf159b2, type: 3}
       propertyPath: m_Name
       value: homunculus_01_withoutanimation
+      objectReference: {fileID: 0}
+    - target: {fileID: 5658021059511585987, guid: 37470a0d48cd6667095d9a49edf159b2, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

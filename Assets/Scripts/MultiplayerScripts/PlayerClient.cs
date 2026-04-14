@@ -1,6 +1,7 @@
 using Unity.Netcode;
 using Unity.Services.Matchmaker.Models;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Networking;
 
 public class PlayerClient : NetworkBehaviour
@@ -8,12 +9,15 @@ public class PlayerClient : NetworkBehaviour
     [SerializeField] private PlayerMovementFPS playerMovementFPS;
     [SerializeField] private Camera playerCamera;
     [SerializeField] private AudioListener playerAudioListener;
+    [SerializeField] private EventSystem playerEventSystem;
 
     private void Awake()
     {
         playerMovementFPS.enabled = false;
         playerCamera.enabled = false;
         playerAudioListener.enabled = false;
+        playerEventSystem.enabled = false;
+        
     }
 
     public override void OnNetworkSpawn()
@@ -24,6 +28,7 @@ public class PlayerClient : NetworkBehaviour
             playerMovementFPS.enabled = true;
             playerCamera.enabled = true;
             playerAudioListener.enabled = true;
+            playerEventSystem.enabled = true;
         }
         else
         {
@@ -31,6 +36,7 @@ public class PlayerClient : NetworkBehaviour
             playerMovementFPS.enabled = false;
             playerCamera.enabled = false;
             playerAudioListener.enabled = false;
+            playerEventSystem.enabled = false;
         }
     }
 }
