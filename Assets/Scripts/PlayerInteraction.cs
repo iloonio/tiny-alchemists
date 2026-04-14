@@ -1,3 +1,4 @@
+using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -102,7 +103,7 @@ public class PlayerInteraction : MonoBehaviour
         potRb.isKinematic = true;
         potCol.enabled = false;
 
-        pot.transform.SetParent(holdPoint);
+        pot.transform.SetParent(transform);
         pot.transform.localPosition = Vector3.zero;
         pot.transform.localRotation = Quaternion.identity;
     }

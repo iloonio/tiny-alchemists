@@ -380,7 +380,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3be432680974e964091811ff84b9230c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
-  holdPoint: {fileID: 4412822305982529772}
+  holdPoint: {fileID: 3179545949758258533}
   playerCamera: {fileID: 6903788993697452270}
   pickupDistance: 3
   throwForce: 6
