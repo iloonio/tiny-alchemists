@@ -33,11 +33,18 @@ public class PlayerInteraction : MonoBehaviour
         _status = GetComponent<StatusEffectManager>();
     }
 
- 
-    //  INPUT CALLBACK (wired via PlayerInput component)
-    public void OnInteract(InputAction.CallbackContext ctx)
+    // Polls InputManager every frame
+    void Update()
     {
-        if (!ctx.performed) return;
+        var input = InputManager.Instance;
+        if (input == null) return;
+
+        if (input.InteractAction.WasPressedThisFrame())
+            OnInteract();
+    }
+
+    private void OnInteract()
+    {
         if (_status != null && _status.IsCrystallized) return;
 
         if (IsHolding)

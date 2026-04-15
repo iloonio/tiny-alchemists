@@ -12,9 +12,6 @@ public class PlayerMovementFPS : MonoBehaviour
     [Header("References")]
     public Transform playerCamera;
 
-    private InputAction moveAction;
-    private InputAction jumpAction;
-    private InputAction lookAction;
     private Rigidbody _playerBody;
     private Vector2 _moveInput;
     private Vector2 _lookInput;
@@ -28,25 +25,24 @@ public class PlayerMovementFPS : MonoBehaviour
         _playerBody = GetComponent<Rigidbody>();
         _status = GetComponent<StatusEffectManager>();
 
-        moveAction = InputSystem.actions.FindAction("Move");
-        jumpAction = InputSystem.actions.FindAction("Jump");
-        lookAction = InputSystem.actions.FindAction("Look");
-
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
     void Update()
-    {
-        _moveInput = moveAction.ReadValue<Vector2>();
+    { 
+        var input = InputManager.Instance;
+        if (input == null) return;
 
+        _moveInput = input.MoveAction.ReadValue<Vector2>();
+        
         // Block jump when crystallized
-        if (jumpAction.WasPressedThisFrame() && _isGrounded)
+        if (input.JumpAction.WasPressedThisFrame() && _isGrounded)
         {
             if (_status == null || !_status.IsCrystallized)
                 _playerBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
-        
+
         HandleLook();
     }
 
@@ -58,7 +54,10 @@ public class PlayerMovementFPS : MonoBehaviour
     private void HandleLook()
     {
         if (playerCamera == null) return;
-        _lookInput = lookAction.ReadValue<Vector2>();
+        var input = InputManager.Instance;
+        if (input == null) return;
+
+        _lookInput = input.LookAction.ReadValue<Vector2>();
 
         float lookX = _lookInput.x * mouseSensitivity * Time.deltaTime;
         float lookY = _lookInput.y * mouseSensitivity * Time.deltaTime;
