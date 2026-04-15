@@ -23,6 +23,8 @@ public class PlayerMovementFPS : MonoBehaviour
     void Start()
     {
         _playerBody = GetComponent<Rigidbody>();
+        _playerBody.freezeRotation = true;      
+        _playerBody.interpolation = RigidbodyInterpolation.None;  
         _status = GetComponent<StatusEffectManager>();
 
         Cursor.lockState = CursorLockMode.Locked;

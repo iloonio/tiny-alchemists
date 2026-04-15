@@ -383,6 +383,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
   holdPoint: {fileID: 219484952967654007}
   playerCamera: {fileID: 9028271193113943732}
+  carrySpeed: 20
+  carryDamping: 8
   pickupDistance: 3
   throwForce: 6
   throwUpForce: 3
@@ -425,7 +427,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce82ebe9f1da6734b9a5a8bbf4482b06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  moveSpeed: 3
+  moveSpeed: 5
   jumpForce: 5
   mouseSensitivity: 15
   playerCamera: {fileID: 9028271193113943732}

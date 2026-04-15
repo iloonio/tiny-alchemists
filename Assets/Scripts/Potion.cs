@@ -3,15 +3,15 @@ using UnityEngine;
 
 //  Potion.cs — Potion vial that breaks on impact
 //
-//  DELIVERY MATRIX:
+//   MATRIX:
 //    No Base  → ~3 unit radius instantaneous explosion, small knockback
 //    Cloud    → ~3 unit radius sphere, 120s
 //    Object   → ~2 unit length physics cube, 120s
 //    Puddle   → ~3 unit radius circular puddle on surface, 120s
 //
-//  SIZE MODIFIER:
+//  MODIFIER:
 //    Radius → ~5 units; Cube side → ~4 units
-//
+
 
 [RequireComponent(typeof(Rigidbody))]
 public class Potion : MonoBehaviour
@@ -19,18 +19,18 @@ public class Potion : MonoBehaviour
     private PotionRecipe _recipe;
 
     [Header("Delivery: Radius (Cloud / Puddle / No-base)")]
-    public float baseRadius = 3f;           
-    public float sizedRadius = 5f;          
+    public float baseRadius = 3f;           // 3 units
+    public float sizedRadius = 5f;          // Size 5 units
 
     [Header("Delivery: Cube (Object base)")]
-    public float baseCubeSize = 2f;         
-    public float sizedCubeSize = 4f;       
+    public float baseCubeSize = 2f;         // 2 unit length
+    public float sizedCubeSize = 4f;        // Size 4 units
 
     [Header("Duration")]
-    public float deliveryDuration = 120f;   
+    public float deliveryDuration = 120f;   // 120s
 
     [Header("No-Base Burst")]
-    public float burstKnockback = 6f;       
+    public float burstKnockback = 6f;       // small knockback
 
     [Header("Break Threshold")]
     public float breakSpeed = 3f;
@@ -50,12 +50,9 @@ public class Potion : MonoBehaviour
         TintVial();
     }
 
-    public void OnPickedUp()
-    {
-        _rb.useGravity = true;
-    }
-
-
+    // Gravity is managed by PlayerInteraction on grab/throw.
+    // No OnPickedUp() needed here.
+    
     //  COLLISION → BREAK
     private void OnCollisionEnter(Collision collision)
     {
@@ -65,7 +62,6 @@ public class Potion : MonoBehaviour
         ExplodeEffect(contact.point, contact.normal, collision.gameObject);
         Destroy(gameObject);
     }
-
 
     //  EFFECT DISPATCH
     private void ExplodeEffect(Vector3 hitPoint, Vector3 hitNormal, GameObject hitObj)
@@ -105,41 +101,36 @@ public class Potion : MonoBehaviour
         // Direct-hit: apply modifier effects to whatever the bottle struck
         ApplyDirectHit(hitObj);
     }
-
-
+    
     //  NO BASE: INSTANT BURST
     private void HandleInstantBurst(Vector3 center, float radius)
     {
         Debug.Log("<color=yellow>[Potion]</color> Instant burst!");
         Collider[] hits = Physics.OverlapSphere(center, radius);
 
-        bool hasMagnetic = _recipe.HasModifier(IngredientType.Magnetic);
-
+        // 3 unit radius instantaneous explosion; small knockback" (even with no modifiers)
         foreach (var col in hits)
         {
             Rigidbody rb = col.GetComponent<Rigidbody>();
-            if (rb == null || rb.isKinematic) continue;
-
-            if (hasMagnetic)
-            {
-                // "not knocked back; instead pulled towards point of origin"
-                Vector3 toCenter = (center - rb.position).normalized;
-                rb.AddForce(toCenter * burstKnockback, ForceMode.Impulse);
-            }
-            else
+            if (rb != null && !rb.isKinematic)
             {
                 rb.AddExplosionForce(burstKnockback, center, radius, 0.5f, ForceMode.Impulse);
             }
         }
 
+        // Then apply modifier effects on top
         if (_recipe.Modifiers.Count > 0)
         {
             PotionModifierHandler.ApplyModifiers(
-                hits, _recipe.Modifiers, center, DeliveryContext.InstantBurst);
+                hits,
+                _recipe.Modifiers,
+                center,
+                DeliveryContext.InstantBurst
+            );
         }
     }
 
-    //  DELIVERY SPAWNERS
+    //  DELIVERY SPAWNERS  
     private void SpawnZone(DeliveryShape shape, Vector3 position, Vector3 surfaceNormal, float radius)
     {
         PrimitiveType primitive = (shape == DeliveryShape.Cloud)
