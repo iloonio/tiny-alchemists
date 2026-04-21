@@ -1,58 +1,43 @@
 using UnityEngine;
 
+//  Ingredient.cs — A physical ingredient in the world
+//
+//  All pickup/drop physics are handled by PlayerInteraction.
+//  This script only stores identity data and the IsHeld flag.
 
-public enum IngredientType
-{
-    FireFlower,
-    CrystalFlower,
-    SparkleFlower
-}
-
-public enum PotionType
-{
-    FailedSludge,
-    Fire,
-    Crystal,
-    Sparkle,
-    Explosive,    // Fire + Sparkle
-    FireCrystal   // Fire + Crystal
-}
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collider))]
-
 public class Ingredient : MonoBehaviour
 {
     [Header("Ingredient Data")]
-    public IngredientType type; 
-    public bool IsHeld { get; private set; }
+    public IngredientType type;
 
-    private Rigidbody _rb;
-    private Collider _col;
+    // Set by PlayerInteraction when grabbed/released.
+    // Read by Cauldron and PlantPot to reject held items.
+    public bool IsHeld;
 
-    private void Awake()
+    public IngredientCategory Category => IngredientHelper.GetCategory(type);
+
+    private void Start()
     {
-        _rb = GetComponent<Rigidbody>();
-        _col = GetComponent<Collider>();
-    }
+        Renderer rend = GetComponent<Renderer>();
+        if (rend == null) return;
 
-    public void OnPickedUp(Transform holdPoint)
-    {
-        IsHeld = true;
-        _rb.isKinematic = true;
-        _col.enabled = false;
-        transform.SetParent(holdPoint);
-        transform.localPosition = Vector3.zero;
-        transform.localRotation = Quaternion.identity;
-    }
+        Color c = type switch
+        {
+            IngredientType.Cloud    => new Color(0.8f, 0.8f, 1f),
+            IngredientType.Object   => new Color(0.6f, 0.4f, 0.2f),
+            IngredientType.Puddle   => new Color(0.2f, 0.2f, 0.8f),
+            IngredientType.Fire     => Color.red,
+            IngredientType.Size     => new Color(1f, 0.5f, 0f),
+            IngredientType.Float    => Color.white,
+            IngredientType.Bouncy   => Color.green,
+            IngredientType.Magnetic => Color.magenta,
+            IngredientType.Sparkle  => Color.yellow,
+            _ => Color.gray
+        };
 
-    public void OnDropped(Vector3 throwForce)
-    {
-        IsHeld = false;
-        transform.SetParent(null);
-        _rb.isKinematic = false;
-        _col.enabled = true;
-        _rb.linearVelocity = Vector3.zero;
-        _rb.AddForce(throwForce, ForceMode.Impulse);
+    rend.material.color = c;
     }
 }

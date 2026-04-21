@@ -383,6 +383,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
   holdPoint: {fileID: 219484952967654007}
   playerCamera: {fileID: 9028271193113943732}
+  carrySpeed: 20
+  carryDamping: 8
   pickupDistance: 3
   throwForce: 6
   throwUpForce: 3
@@ -425,10 +427,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce82ebe9f1da6734b9a5a8bbf4482b06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  moveSpeed: 3
+  moveSpeed: 5
   jumpForce: 5
   mouseSensitivity: 15
   playerCamera: {fileID: 9028271193113943732}
+--- !u!114 &4846949924452459838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6445133105806573275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54980c3c7384a1d43b8f4df41c240393, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AutoAssignCamera
 --- !u!114 &399253634140029420
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -443,14 +457,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StatusEffectManager
   IsOnFire: 0
   IsCrystallized: 0
+  IsFloating: 0
+  IsBouncy: 0
+  IsMiasmaImmune: 0
+  fireSpeedMultiplier: 1
+  fireRandomPush: {x: 0, y: 0, z: 0}
   fireDuration: 5
-  jitterIntensity: 3
-  sporadicPushStrength: 1.5
+  fireSpeedBoost: 1.6
+  fireRandomPushStrength: 2
   pushInterval: 0.4
+  floatDuration: 5
+  bouncyDuration: 5
+  bounciness: 0.9
   crystalDuration: 4
   crystalGravityMultiplier: 5
-  cameraJitter: {x: 0, y: 0}
-  sporadicForward: 0
   crystalShellPrefab: {fileID: 0}
 --- !u!1 &8147502792791964142
 GameObject:
