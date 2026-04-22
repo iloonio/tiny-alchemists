@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6930506679121753637
+--- !u!1 &5558702696735568454
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,69 +8,40 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3715588185907068932}
+  - component: {fileID: 6241181866799260547}
+  - component: {fileID: 6607447829115889720}
+  - component: {fileID: 5281874339114205163}
   m_Layer: 0
-  m_Name: SpawnPoint
+  m_Name: Atomic Cauldron
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3715588185907068932
+--- !u!4 &6241181866799260547
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6930506679121753637}
+  m_GameObject: {fileID: 5558702696735568454}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 2.5}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3138348391566149631}
+  m_Children:
+  - {fileID: 553870616417397108}
+  - {fileID: 4658894367186363380}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &8090472369274164978
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 274039028620461142}
-  - component: {fileID: 2451200430842839034}
-  - component: {fileID: 7359257865670645807}
-  m_Layer: 0
-  m_Name: TriggerZone
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &274039028620461142
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8090472369274164978}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -0, z: 0.752}
-  m_LocalScale: {x: 2.6641, y: 0.4838999, z: 2.5902991}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3138348391566149631}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &2451200430842839034
+--- !u!65 &6607447829115889720
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8090472369274164978}
+  m_GameObject: {fileID: 5558702696735568454}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -83,37 +54,65 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!64 &7359257865670645807
-MeshCollider:
+  m_Size: {x: 2.714323, y: 0.95827043, z: 2.689837}
+  m_Center: {x: 0, y: 0.5, z: 0}
+--- !u!114 &5281874339114205163
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8090472369274164978}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
+  m_GameObject: {fileID: 5558702696735568454}
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
---- !u!1001 &3172537729074683924
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79cc1909a5e9c1042800c40eb1369eb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Cauldron
+  potionPrefab: {fileID: 1137243224661083654, guid: 9d318beaae09be645aa0784ca1155f2c, type: 3}
+  potionSpawnPoint: {fileID: 4658894367186363380}
+  explosionRadius: 5
+  explosionForce: 12
+  fireRadius: 4
+  potionsToSpawn: 3
+  spawnPopForce: 2
+--- !u!1 &6502074854592962023
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4658894367186363380}
+  m_Layer: 0
+  m_Name: SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4658894367186363380
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6502074854592962023}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6241181866799260547}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &10422379732307615
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 6241181866799260547}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: f74ccf43667be07578b4aa6d6fe262aa, type: 3}
       propertyPath: m_LocalPosition.x
@@ -141,11 +140,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f74ccf43667be07578b4aa6d6fe262aa, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f74ccf43667be07578b4aa6d6fe262aa, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f74ccf43667be07578b4aa6d6fe262aa, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -157,48 +156,45 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f74ccf43667be07578b4aa6d6fe262aa, type: 3}
       propertyPath: m_Name
-      value: Ruslan's Cauldron
+      value: lofi-cauldron
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: f74ccf43667be07578b4aa6d6fe262aa, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3715588185907068932}
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: f74ccf43667be07578b4aa6d6fe262aa, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 274039028620461142}
+    m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f74ccf43667be07578b4aa6d6fe262aa, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8374087424390424381}
+      addedObject: {fileID: 8361463511596281785}
   m_SourcePrefab: {fileID: 100100000, guid: f74ccf43667be07578b4aa6d6fe262aa, type: 3}
---- !u!1 &2361706517612748101 stripped
+--- !u!4 &553870616417397108 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f74ccf43667be07578b4aa6d6fe262aa, type: 3}
+  m_PrefabInstance: {fileID: 10422379732307615}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &928989230659908558 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: f74ccf43667be07578b4aa6d6fe262aa, type: 3}
-  m_PrefabInstance: {fileID: 3172537729074683924}
+  m_PrefabInstance: {fileID: 10422379732307615}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8374087424390424381
-MonoBehaviour:
+--- !u!64 &8361463511596281785
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2361706517612748101}
+  m_GameObject: {fileID: 928989230659908558}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79cc1909a5e9c1042800c40eb1369eb4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Cauldron
-  potionPrefab: {fileID: 1137243224661083654, guid: 9d318beaae09be645aa0784ca1155f2c, type: 3}
-  potionSpawnPoint: {fileID: 3715588185907068932}
-  explosionRadius: 5
-  explosionForce: 12
-  fireRadius: 4
-  potionsToSpawn: 3
-  spawnPopForce: 2
---- !u!4 &3138348391566149631 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f74ccf43667be07578b4aa6d6fe262aa, type: 3}
-  m_PrefabInstance: {fileID: 3172537729074683924}
-  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -2124705421725058983, guid: f74ccf43667be07578b4aa6d6fe262aa, type: 3}
