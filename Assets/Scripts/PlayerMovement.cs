@@ -12,21 +12,31 @@ public class PlayerMovementFPS : MonoBehaviour
 
     [Header("References")]
     public Transform playerCamera;
-
+    private StatusEffectManager _status;
     private Rigidbody _playerBody;
+
+    private InputAction moveAction;
+    private InputAction jumpAction;
+    private InputAction lookAction;
+
     private Vector2 _moveInput;
     private Vector2 _lookInput;
     private float _xRotation = 0f;
     private bool _isGrounded;
 
-    private StatusEffectManager _status;
+    
 
     void Start()
     {
         _playerBody = GetComponent<Rigidbody>();
+
         _playerBody.freezeRotation = true;      
-        _playerBody.interpolation = RigidbodyInterpolation.None;  
+        _playerBody.interpolation = RigidbodyInterpolation.None;  // why?
         _status = GetComponent<StatusEffectManager>();
+
+        moveAction = InputSystem.actions.FindAction("Move");
+        jumpAction = InputSystem.actions.FindAction("Jump");
+        lookAction = InputSystem.actions.FindAction("Look");
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -34,13 +44,10 @@ public class PlayerMovementFPS : MonoBehaviour
 
     void Update()
     { 
-        var input = InputManager.Instance;
-        if (input == null) return;
-
-        _moveInput = input.MoveAction.ReadValue<Vector2>();
+        _moveInput = moveAction.ReadValue<Vector2>();
         
         // Block jump when crystallized
-        if (input.JumpAction.WasPressedThisFrame() && _isGrounded)
+        if (jumpAction.WasPressedThisFrame() && _isGrounded)
         {
             if (_status == null || !_status.IsCrystallized)
                 _playerBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
@@ -57,10 +64,8 @@ public class PlayerMovementFPS : MonoBehaviour
     private void HandleLook()
     {
         if (playerCamera == null) return;
-        var input = InputManager.Instance;
-        if (input == null) return;
 
-        _lookInput = input.LookAction.ReadValue<Vector2>();
+        _lookInput = lookAction.ReadValue<Vector2>();
 
         float lookX = _lookInput.x * mouseSensitivity * Time.deltaTime;
         float lookY = _lookInput.y * mouseSensitivity * Time.deltaTime;

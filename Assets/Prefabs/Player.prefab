@@ -264,7 +264,6 @@ GameObject:
   - component: {fileID: 5504136758400115997}
   - component: {fileID: 1488249936381215809}
   - component: {fileID: 399253634140029420}
-  - component: {fileID: 4846949924452459838}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -462,18 +461,6 @@ MonoBehaviour:
   crystalDuration: 4
   crystalGravityMultiplier: 5
   crystalShellPrefab: {fileID: 0}
---- !u!114 &4846949924452459838
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6445133105806573275}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54980c3c7384a1d43b8f4df41c240393, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AutoAssignCamera
 --- !u!1 &6681222314763175142
 GameObject:
   m_ObjectHideFlags: 0

@@ -54,19 +54,20 @@ public class PlayerInteraction : MonoBehaviour
 
     public bool IsHolding => _heldType != HeldType.None;
 
+    private InputAction interactAction;
+
     void Start()
     {
         _status = GetComponent<StatusEffectManager>();
         _playerCollider = GetComponent<Collider>();
+
+        interactAction = InputSystem.actions.FindAction("Interact");
     }
 
     //  INPUT (polls InputManager each frame)
     void Update()
     {
-        var input = InputManager.Instance;
-        if (input == null) return;
-
-        if (input.InteractAction.WasPressedThisFrame())
+        if (interactAction.WasPressedThisFrame())
             OnInteract();
     }
 
@@ -156,8 +157,7 @@ public class PlayerInteraction : MonoBehaviour
     //  GRAB — Unified for all object types
     private void Grab(GameObject obj, HeldType type)
     {
-        Rigidbody rb = obj.GetComponent<Rigidbody>();
-        if (rb == null) return;
+        if (!obj.TryGetComponent<Rigidbody>(out var rb)) return;
 
         _heldObject = obj;
         _heldRb = rb;

@@ -163,7 +163,7 @@ Transform:
   m_GameObject: {fileID: 8199374975592989161}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.4, z: 0.79999995}
+  m_LocalPosition: {x: 0, y: -0.15, z: 0.5}
   m_LocalScale: {x: 0.9285311, y: 0.9285311, z: 0.9285311}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -380,8 +380,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3be432680974e964091811ff84b9230c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
-  holdPoint: {fileID: 3179545949758258533}
+  holdPoint: {fileID: 4412822305982529772}
   playerCamera: {fileID: 6903788993697452270}
+  carrySpeed: 30
+  carryDamping: 8
   pickupDistance: 3
   throwForce: 6
   throwUpForce: 3
@@ -399,14 +401,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StatusEffectManager
   IsOnFire: 0
   IsCrystallized: 0
+  IsFloating: 0
+  IsBouncy: 0
+  IsMiasmaImmune: 0
+  fireSpeedMultiplier: 1
+  fireRandomPush: {x: 0, y: 0, z: 0}
   fireDuration: 5
-  jitterIntensity: 3
-  sporadicPushStrength: 1.5
+  fireSpeedBoost: 1.6
+  fireRandomPushStrength: 2
   pushInterval: 0.4
+  floatDuration: 5
+  bouncyDuration: 5
+  bounciness: 0.9
   crystalDuration: 4
   crystalGravityMultiplier: 5
-  cameraJitter: {x: 0, y: 0}
-  sporadicForward: 0
   crystalShellPrefab: {fileID: 0}
 --- !u!114 &-6462760444768499298
 MonoBehaviour:
@@ -469,8 +477,8 @@ MonoBehaviour:
   SyncScaleX: 0
   SyncScaleY: 0
   SyncScaleZ: 0
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.01
+  PositionThreshold: 0.01
+  RotAngleThreshold: 5
   ScaleThreshold: 0.01
   UseQuaternionSynchronization: 0
   UseQuaternionCompression: 0
@@ -493,6 +501,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerClient
   ShowTopMostFoldoutHeaderGroup: 1
   playerMovementFPS: {fileID: 1963060662102942584}
+  playerInteraction: {fileID: 1676792726876008947}
   playerCamera: {fileID: 6666041418846382031}
   playerAudioListener: {fileID: 789439417492985511}
   playerEventSystem: {fileID: 39695778559335214}
