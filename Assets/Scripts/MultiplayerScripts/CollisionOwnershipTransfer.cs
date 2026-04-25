@@ -17,14 +17,14 @@ public class CollisionOwnershipTransfer : NetworkBehaviour
 
     public void OnCollisionEnter(Collision other)
     {
-        Debug.Log("Collision Detected with: " + other.gameObject.name);
+        // Debug.Log("Collision Detected with: " + other.gameObject.name);
         if (other.gameObject.CompareTag("Player"))
         {
             NetworkObject networkObject = other.gameObject.GetComponentInParent<NetworkObject>();
             if (networkObject != null && networkObject.IsSpawned)
             {
                 // Change Ownership 
-                Debug.Log("Transferring ownership to: " + networkObject.OwnerClientId);
+                // Debug.Log("Transferring ownership to: " + networkObject.OwnerClientId);
                 m_networkObject.ChangeOwnership(networkObject.OwnerClientId);
             }
         }
