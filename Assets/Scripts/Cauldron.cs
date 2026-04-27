@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Netcode;
 using UnityEngine;
 
 //  Cauldron.cs — Manual-brew cauldron with validation
@@ -157,12 +158,19 @@ public class Cauldron : MonoBehaviour
             GameObject obj = Instantiate(potionPrefab, spawnPos + offset, Quaternion.identity);
             Potion potion = obj.GetComponent<Potion>();
             potion.Initialize(recipe);
+            
+            // Handle potions on the network 
+            if (obj.TryGetComponent<NetworkObject>(out NetworkObject netObj))
+            {
+                netObj.Spawn();
+            }
 
             // pop
             Rigidbody rb = obj.GetComponent<Rigidbody>();
             if (rb != null)
             {
                 rb.useGravity = false;
+
                 rb.linearVelocity = Vector3.zero;
             }
         }

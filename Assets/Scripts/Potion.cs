@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 //  Potion.cs — Potion vial that breaks on impact
@@ -156,6 +158,12 @@ public class Potion : MonoBehaviour
 
         PotionDeliveryCube delivery = cube.AddComponent<PotionDeliveryCube>();
         delivery.Configure(size, deliveryDuration, _recipe.Modifiers);
+
+        NetworkObject NetObjCube = cube.AddComponent<NetworkObject>();
+        cube.AddComponent<NetworkTransform>();
+
+        NetObjCube.Spawn();
+
     }
 
     private void ApplyDirectHit(GameObject hitObj)

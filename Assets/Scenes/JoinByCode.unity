@@ -610,6 +610,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: UnityServicesWithName
       objectReference: {fileID: 0}
+    - target: {fileID: 5107749086537607270, guid: 579655fa7bd8b4bc5a4166bc19562233, type: 3}
+      propertyPath: FetchPlayerInfo
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5107749086537607270, guid: 579655fa7bd8b4bc5a4166bc19562233, type: 3}
+      propertyPath: SetCustomProfile
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8890375798384428031, guid: 579655fa7bd8b4bc5a4166bc19562233, type: 3}
+      propertyPath: EnvironmentName
+      value: dev
+      objectReference: {fileID: 0}
+    - target: {fileID: 8890375798384428031, guid: 579655fa7bd8b4bc5a4166bc19562233, type: 3}
+      propertyPath: InitializeOnStart
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8890375798384428031, guid: 579655fa7bd8b4bc5a4166bc19562233, type: 3}
+      propertyPath: UseCustomEnvironment
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9017638059927427500, guid: 579655fa7bd8b4bc5a4166bc19562233, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

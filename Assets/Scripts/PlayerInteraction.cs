@@ -239,4 +239,14 @@ public class PlayerInteraction : MonoBehaviour
         _heldPotion = null;
         _heldPot = null;
     }
+
+    public float GetPickupDistance()
+    {
+        return pickupDistance;
+    }
+
+    public Transform GetPlayerCamera()
+    {
+        return playerCamera;
+    }
 }

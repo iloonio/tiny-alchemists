@@ -1,149 +1,72 @@
-using UnityEngine;
 using Unity.Netcode;
+using UnityEditor.PackageManager;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(StatusEffectManager))]
-public class NetworkedPlayerInteract : NetworkBehaviour
+[RequireComponent(typeof(PlayerInteraction))]
+public class NetworkedPlayerInteraction : NetworkBehaviour
 {
-    [Header("References")]
-    [SerializeField] private Transform holdPoint;
-    [SerializeField] private Transform playerCamera;
+    private InputAction _interactAction;
+    private PlayerInteraction _playerInteraction;
+    private Transform _playerCamera;
+    private float _rayDistance;
 
-    [Header("Physics Settings")]
-    [SerializeField] private float followSpeed = 25f; 
-    [SerializeField] private float maxDistanceBeforeDrop = 3f;
+    // TODO: implement ownership transfer with a raycast that is of the same range as the interact key. 
 
-    private NetworkObject _heldNetworkObject;
-    private Rigidbody _heldRigidbody;
-    private StatusEffectManager _status;
-
-    public override void OnNetworkSpawn()
+    void Awake()
     {
-        if (!IsOwner)
-        {
-            enabled = false;
-            return;
-        }
-        _status = GetComponent<StatusEffectManager>();
+        _playerInteraction = GetComponent<PlayerInteraction>();
+        _playerCamera = _playerInteraction.GetPlayerCamera();
+        _rayDistance = _playerInteraction.GetPickupDistance();
+        _interactAction = InputSystem.actions.FindAction("Interact");
     }
 
-    private void FixedUpdate()
+    void Update()
     {
-        // Only the owner calculates the physics pull for their held object
-        if (IsOwner && _heldNetworkObject != null && _heldRigidbody != null)
-        {
-            MoveObjectWithPhysics();
-        }
-    }
-
-    private void MoveObjectWithPhysics()
-    {
-        float distance = Vector3.Distance(_heldNetworkObject.transform.position, holdPoint.position);
-        
-        // Auto-drop if the object gets stuck behind a wall
-        if (distance > maxDistanceBeforeDrop)
-        {
-            RequestThrowServerRpc(Vector3.zero);
-            return;
-        }
-
-        // Velocity-based follow (allows for collisions)
-        Vector3 targetVelocity = (holdPoint.position - _heldNetworkObject.transform.position) * followSpeed;
-        _heldRigidbody.linearVelocity = targetVelocity;
-
-        // Rotation follow
-        _heldRigidbody.angularVelocity = Vector3.zero;
-        _heldNetworkObject.transform.rotation = Quaternion.Slerp(
-            _heldNetworkObject.transform.rotation, 
-            holdPoint.rotation, 
-            Time.fixedDeltaTime * followSpeed
-        );
-    }
-
-    // --- GRAB LOGIC ---
-
-    [ServerRpc]
-    public void RequestGrabServerRpc(NetworkObjectReference netObjRef)
-    {
-        if (netObjRef.TryGet(out NetworkObject netObj))
-        {
-            // 1. Give Ownership to the client so their FixedUpdate controls it
-            netObj.ChangeOwnership(OwnerClientId);
-
-            // 2. Set physics state for all clients
-            SetObjectPhysicsClientRpc(netObjRef, true);
-
-            // 3. Tell the specific client to set their local references
-            UpdateLocalRefsClientRpc(netObjRef);
-        }
-    }
-
-    [ClientRpc]
-    private void UpdateLocalRefsClientRpc(NetworkObjectReference netObjRef)
-    {
+        // Only the local player should process their own input
         if (!IsOwner) return;
-
-        if (netObjRef.TryGet(out NetworkObject netObj))
+        // If player interacts and they are currently not holding anything 
+        if (_interactAction.WasPressedThisFrame() && !_playerInteraction.IsHolding)
         {
-            _heldNetworkObject = netObj;
-            _heldRigidbody = netObj.GetComponent<Rigidbody>();
+            TryOwnerShipTransfer();
         }
     }
 
-    // --- THROW LOGIC ---
-
-    [ServerRpc]
-    public void RequestThrowServerRpc(Vector3 throwForce)
+    public void TryOwnerShipTransfer()
     {
-        if (_heldNetworkObject == null) return;
+        Ray ray = new(_playerCamera.position, _playerCamera.forward);
+        if (!Physics.Raycast(ray, out RaycastHit hit, _rayDistance)) return;
 
-        // 1. Reset Physics state
-        SetObjectPhysicsClientRpc(_heldNetworkObject, false);
+        GameObject target = hit.collider.gameObject;
 
-        // 2. Apply the actual throw force
-        if (_heldRigidbody != null)
+        // If we hit something interactable
+        if (target.CompareTag("Cauldron") || target.CompareTag("Potion") || 
+            target.CompareTag("Ingredient") || target.CompareTag("PlantPot"))
         {
-            _heldRigidbody.AddForce(throwForce, ForceMode.Impulse);
-        }
+            NetworkObject targetNetObj = target.GetComponentInParent<NetworkObject>();
 
-        // 3. Remove ownership and clear references
-        _heldNetworkObject.RemoveOwnership();
-        ClearLocalRefsClientRpc();
-    }
-
-    [ClientRpc]
-    private void ClearLocalRefsClientRpc()
-    {
-        if (!IsOwner) return;
-        _heldNetworkObject = null;
-        _heldRigidbody = null;
-    }
-
-    // --- SHARED PHYSICS STATE ---
-
-    [ClientRpc]
-    private void SetObjectPhysicsClientRpc(NetworkObjectReference netObjRef, bool isHeld)
-    {
-        if (netObjRef.TryGet(out NetworkObject netObj))
-        {
-            Rigidbody rb = netObj.GetComponent<Rigidbody>();
-            if (rb == null) return;
-
-            // We keep Kinematic FALSE so it can hit walls
-            rb.isKinematic = false; 
-            rb.useGravity = !isHeld;
-            
-            // Continuous prevents the object from phasing through thin walls while moving fast
-            rb.collisionDetectionMode = isHeld ? 
-                CollisionDetectionMode.Continuous : 
-                CollisionDetectionMode.Discrete;
-
-            // Optional: Ignore collision with player while holding to prevent "flying"
-            Collider itemCol = netObj.GetComponent<Collider>();
-            Collider playerCol = GetComponent<Collider>();
-            if (itemCol != null && playerCol != null)
+            // If the object has a NetworkObject attached to it
+            if (targetNetObj != null && targetNetObj.IsSpawned)
             {
-                Physics.IgnoreCollision(itemCol, playerCol, isHeld);
+                // This should work, but if it doesn't we will send RPCs instead. 
+                Debug.Log("Transferring ownership to: " + NetworkObject.OwnerClientId);
+                RequestOwnershipServerRpc(targetNetObj);
             }
         }
+    } 
+
+    [ServerRpc]
+    private void RequestOwnershipServerRpc(NetworkObjectReference targetNetObjRef, ServerRpcParams rpcParams = default)
+    {
+        if (targetNetObjRef.TryGet(out NetworkObject targetNetObj))
+        {
+            ulong clientId = rpcParams.Receive.SenderClientId;
+
+            Debug.Log($"Server: Transferring ownership of {targetNetObj.name} to Client {clientId}");
+
+            targetNetObj.ChangeOwnership(clientId);
+        }
     }
+
+
 }

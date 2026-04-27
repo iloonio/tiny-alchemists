@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3234519960349645772}
   m_Layer: 0
   m_Name: Atomic Cauldron Networked
-  m_TagString: Untagged
+  m_TagString: Cauldron
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -69,7 +69,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79cc1909a5e9c1042800c40eb1369eb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cauldron
-  potionPrefab: {fileID: 1137243224661083654, guid: 9d318beaae09be645aa0784ca1155f2c, type: 3}
+  potionPrefab: {fileID: 5934595923095334776, guid: a7c97f0495cc79589848107644c20644, type: 3}
   potionSpawnPoint: {fileID: 5403684665275195556}
   explosionRadius: 5
   explosionForce: 12
@@ -88,7 +88,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1866398104
+  GlobalObjectIdHash: 3035595133
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 3
