@@ -159,11 +159,11 @@ public class Potion : MonoBehaviour
         PotionDeliveryCube delivery = cube.AddComponent<PotionDeliveryCube>();
         delivery.Configure(size, deliveryDuration, _recipe.Modifiers);
 
+        // Spawning the cube on the network
         NetworkObject NetObjCube = cube.AddComponent<NetworkObject>();
         cube.AddComponent<NetworkTransform>();
 
         NetObjCube.Spawn();
-
     }
 
     private void ApplyDirectHit(GameObject hitObj)
