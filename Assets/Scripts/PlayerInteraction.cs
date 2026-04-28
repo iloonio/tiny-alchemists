@@ -2,8 +2,6 @@ using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-
-
 //  PHYSICS-BASED CARRY:
 //    - Held objects are NOT parented to anything
 //    - Held objects keep their Rigidbody and Collider active
@@ -14,6 +12,7 @@ using UnityEngine.InputSystem;
 //  This means objects can't clip through walls, and there's no
 //  risk of dropping items out of the map by facing a wall.
 
+[RequireComponent(typeof(Collider), typeof(StatusEffectManager))]
 public class PlayerInteraction : MonoBehaviour
 {
     [Header("References")]
@@ -39,7 +38,7 @@ public class PlayerInteraction : MonoBehaviour
 
     // Type-specific references (for calling type-specific methods)
     private Ingredient _heldIngredient;
-    private Potion _heldPotion;
+    private NetworkedPotion _heldPotion;
     private PlantPot _heldPot;
 
     // Saved state to restore on drop
@@ -119,7 +118,7 @@ public class PlayerInteraction : MonoBehaviour
         {
             Cauldron cauldron = target.GetComponent<Cauldron>();
             if (cauldron == null) cauldron = target.GetComponentInParent<Cauldron>();
-            if (cauldron != null) { cauldron.Brew(); return; }
+            if (cauldron != null) { cauldron.RequestBrewServerRpc(); return; }
         }
 
         // PlantPot: harvest if grown, otherwise pick up
@@ -165,7 +164,7 @@ public class PlayerInteraction : MonoBehaviour
 
         // Cache component references
         _heldIngredient = (type == HeldType.Ingredient) ? obj.GetComponent<Ingredient>() : null;
-        _heldPotion = (type == HeldType.Potion) ? obj.GetComponent<Potion>() : null;
+        _heldPotion = (type == HeldType.Potion) ? obj.GetComponent<NetworkedPotion>() : null;
         _heldPot = (type == HeldType.PlantPot) ? obj.GetComponent<PlantPot>() : null;
 
         // Save physics state

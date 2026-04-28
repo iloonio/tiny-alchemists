@@ -39,9 +39,8 @@ public class NetworkedPlayerInteraction : NetworkBehaviour
 
         GameObject target = hit.collider.gameObject;
 
-        // If we hit something interactable
-        if (target.CompareTag("Cauldron") || target.CompareTag("Potion") || 
-            target.CompareTag("Ingredient") || target.CompareTag("PlantPot"))
+        // If we hit something interactable that can have its ownership transferred
+        if (target.CompareTag("Potion") || target.CompareTag("Ingredient") || target.CompareTag("PlantPot"))
         {
             NetworkObject targetNetObj = target.GetComponentInParent<NetworkObject>();
 

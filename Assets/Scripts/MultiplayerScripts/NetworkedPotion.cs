@@ -1,5 +1,12 @@
+using System;
+using System.Collections.Generic;
+using Mono.Cecil.Cil;
 using Unity.Netcode;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.GameCenter;
+using UnityEngine.Timeline;
 
 
 //  Potion.cs — Potion vial that breaks on impact
@@ -14,9 +21,15 @@ using UnityEngine;
 //    Radius → ~5 units; Cube side → ~4 units
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(NetworkObject))]
 public class NetworkedPotion : NetworkBehaviour
 {
-        private PotionRecipe _recipe;
+
+    [Header("Network Prefabs for each Core type")]
+    [SerializeField] private GameObject cloudZonePrefab;
+    [SerializeField] private GameObject puddleZonePrefab;
+    [SerializeField] private GameObject cubePrefab;
+    [SerializeField] private GameObject PoofVFXPrefab;
 
     [Header("Delivery: Radius (Cloud / Puddle / No-base)")]
     public float baseRadius = 3f;           // 3 units
@@ -37,16 +50,26 @@ public class NetworkedPotion : NetworkBehaviour
 
     private Rigidbody _rb;
 
-        void Awake()
+    public NetworkVariable<PotionRecipe> _recipe = new();
+
+    
+
+    void Awake()
     {
         _rb = GetComponent<Rigidbody>();
         _rb.useGravity = false;
         _rb.linearVelocity = Vector3.zero;
     }
 
-    public void Initialize(PotionRecipe recipe)
+    public void InitializeServer(PotionRecipe recipe)
     {
-        _recipe = recipe;
+        if (!IsServer) return;
+        _recipe.Value = recipe;
+        
+    }
+
+    public override void OnNetworkSpawn()
+    {
         TintVial();
     }
 
@@ -54,17 +77,29 @@ public class NetworkedPotion : NetworkBehaviour
     // No OnPickedUp() needed here.
     
     //  COLLISION → BREAK
+    /// <summary>
+    /// OnCollisionEnter is called when the bottle collides with something else. 
+    /// Aside from that, it is all handled Server-side. 
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnCollisionEnter(Collision collision)
     {
+        if (!IsServer) return; 
+        // Only Server should call this function, client's don't touch this.
+
         if (collision.relativeVelocity.magnitude < breakSpeed) return;
 
         ContactPoint contact = collision.GetContact(0);
-        ExplodeEffectServerRpc(contact.point);
-        Destroy(gameObject);
+
+        ExplodeEffectServer(contact.point, collision.gameObject);
+
+        // Despawn the bottle across the network
+        GetComponent<NetworkObject>().Despawn();
+        
     }
 
     // handle the exploding stuff here. 
-    [ServerRpc] private void ExplodeEffectServerRpc(Vector3 hitPoint)
+    private void ExplodeEffectServer(Vector3 hitPoint, GameObject hitObj)
     {
         if (_recipe == null)
         {
@@ -72,7 +107,118 @@ public class NetworkedPotion : NetworkBehaviour
             return;
         }
 
+        bool hasSize = _recipe.Value.HasModifier(IngredientType.Size);
+        float radius = hasSize ? sizedRadius : baseRadius;
+        float cubeSize = hasSize ? sizedCubeSize : baseCubeSize;
+
+        if (!_recipe.Value.HasBase)
+        {
+            HandleInstantBurst(hitPoint, radius);
+        }
+        else
+        {
+            switch (_recipe.Value.Base)
+            {
+                case IngredientType.Cloud:
+                    //
+                    break;
+                case IngredientType.Puddle:
+                    break;
+                case IngredientType.Object:
+                    SpawnNetworkedObject(hitPoint, cubeSize);
+                    break;
+            }
+        }
+        ApplyDirectHit(hitObj);
         Debug.Log($"<color=magenta>[Potion]</color> {_recipe} broke at {hitPoint}");
+    }
+
+    /// <summary>
+    /// Called by the Server in the instance where an 
+    /// Instant Burst effect is caused by the breaking of a potion.
+    /// </summary>
+    /// <param name="center"></param>
+    /// <param name="radius"></param>
+    private void HandleInstantBurst(Vector3 center, float radius)
+    {
+        Collider[] hits = Physics.OverlapSphere(center, radius);
+        foreach (var col in hits)
+        {
+            if (col.TryGetComponent(out Rigidbody rb) && !rb.isKinematic)
+            {
+                rb.AddExplosionForce(burstKnockback, center, radius, 0.5f, ForceMode.Impulse);
+            }
+        }
+
+        if (_recipe.Value.ModifierCount > 0)
+        {
+            var Modifiers = RecipeAsList();
+
+            PotionModifierHandler.ApplyModifiers(hits, Modifiers, center, DeliveryContext.InstantBurst);
+        }
+
+        PlayBurstFxClientRpc(center);
+    }
+
+    private List<IngredientType> RecipeAsList()
+    {
+        List<IngredientType> mods = new()
+            {
+                _recipe.Value.Mod1,
+                _recipe.Value.Mod2,
+                _recipe.Value.Mod3
+            };
+            for (int i = _recipe.Value.ModifierCount; i > 0; i--)
+            {
+                mods.RemoveAt(i-1);
+            }
+            return mods;
+    }
+
+    /// <summary>
+    /// Server spawns an Object with its specified recipe configurations.
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="size"></param>
+    private void SpawnNetworkedObject(Vector3 position, float size)
+    {
+        if (cubePrefab == null)
+        {
+            Debug.Log("<color=red>Missing Cubeprefab in NetworkingPotion.cs!! </color>");
+            return;
+        }
+        GameObject cube = Instantiate(cubePrefab, position+Vector3.up * (size * 0.5f), Quaternion.identity);
+        cube.transform.localScale = Vector3.one * size;
+
+        var delivery = cube.GetComponent<PotionDeliveryCube>();
+        var Modifiers = RecipeAsList();
+        delivery.Configure(size, deliveryDuration, Modifiers);
+
+        cube.GetComponent<NetworkObject>().Spawn();
+    }
+
+    /// <summary>
+    /// Apply effects Directly to a hit target. 
+    /// </summary>
+    /// <param name="hitObj"></param>
+    private void ApplyDirectHit(GameObject hitObj)
+    {
+        var Modifiers = RecipeAsList();
+       if (Modifiers.Count == 0) return;
+       if (hitObj.TryGetComponent(out Collider hitCol))
+        {
+            PotionModifierHandler.ApplyModifiers(
+                new Collider[] {hitCol}, 
+                Modifiers, 
+                hitObj.transform.position, 
+                DeliveryContext.InstantBurst
+                );
+        }
+    }
+
+    [ClientRpc] private void PlayBurstFxClientRpc(Vector3 center)
+    {
+        Instantiate(PoofVFXPrefab, center, Quaternion.identity);
     }
 
 
@@ -83,9 +229,9 @@ public class NetworkedPotion : NetworkBehaviour
         if (rend == null) return;
 
         Color baseColor = Color.gray;
-        if (_recipe.Base.HasValue)
+        if (_recipe.Value.HasBase)
         {
-            switch (_recipe.Base.Value)
+            switch (_recipe.Value.Base)
             {
                 case IngredientType.Cloud:  baseColor = new Color(0.7f, 0.7f, 1f); break;
                 case IngredientType.Object: baseColor = new Color(0.6f, 0.4f, 0.2f); break;
@@ -93,15 +239,15 @@ public class NetworkedPotion : NetworkBehaviour
             }
         }
 
-        if (_recipe.HasModifier(IngredientType.Fire))
+        if (_recipe.Value.HasModifier(IngredientType.Fire))
             baseColor = Color.Lerp(baseColor, Color.red, 0.5f);
-        else if (_recipe.HasModifier(IngredientType.Float))
+        else if (_recipe.Value.HasModifier(IngredientType.Float))
             baseColor = Color.Lerp(baseColor, Color.white, 0.4f);
-        else if (_recipe.HasModifier(IngredientType.Bouncy))
+        else if (_recipe.Value.HasModifier(IngredientType.Bouncy))
             baseColor = Color.Lerp(baseColor, Color.green, 0.4f);
-        else if (_recipe.HasModifier(IngredientType.Magnetic))
+        else if (_recipe.Value.HasModifier(IngredientType.Magnetic))
             baseColor = Color.Lerp(baseColor, Color.magenta, 0.4f);
-        else if (_recipe.HasModifier(IngredientType.Sparkle))
+        else if (_recipe.Value.HasModifier(IngredientType.Sparkle))
             baseColor = Color.Lerp(baseColor, Color.yellow, 0.4f);
 
         rend.material.color = baseColor;

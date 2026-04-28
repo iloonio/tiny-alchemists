@@ -91,8 +91,7 @@ public static class PotionModifierHandler
                 continue;
             }
 
-            var flam = col.GetComponent<FlammableObject>();
-            if (flam != null) flam.Ignite();
+            if (col.TryGetComponent<FlammableObject>(out var flam)) flam.IgniteServer();
         }
     }
 
@@ -219,7 +218,7 @@ public static class PotionModifierHandler
             if (sem != null && !sem.IsOnFire) sem.ApplyFire();
 
             var flam = col.GetComponent<FlammableObject>();
-            if (flam != null) flam.Ignite();
+            if (flam != null) flam.IgniteServer();
         }
 
         Debug.Log("<color=yellow>[Special]</color> Fire+Sparkle EXPLOSION!");

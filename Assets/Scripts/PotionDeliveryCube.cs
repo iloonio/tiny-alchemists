@@ -100,7 +100,7 @@ public class PotionDeliveryCube : MonoBehaviour
                     if (col.gameObject == gameObject) continue;
 
                     var flam = col.GetComponent<FlammableObject>();
-                    if (flam != null) flam.Ignite();
+                    if (flam != null) flam.IgniteServer();
 
                     // Players are handled via OnCollisionEnter (direct touch)
                 }
@@ -128,7 +128,7 @@ public class PotionDeliveryCube : MonoBehaviour
             if (sem != null) sem.ApplyFire();
 
             var flam = collision.gameObject.GetComponent<FlammableObject>();
-            if (flam != null) flam.Ignite();
+            if (flam != null) flam.IgniteServer();
         }
 
         // Bouncy: extra knockback on contact

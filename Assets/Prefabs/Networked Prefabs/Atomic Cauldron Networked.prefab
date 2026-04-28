@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6372480227252975645}
   - component: {fileID: 6993426363613950285}
-  - component: {fileID: 3606430115678066329}
   - component: {fileID: 3234519960349645772}
+  - component: {fileID: 3606430115678066329}
   m_Layer: 0
   m_Name: Atomic Cauldron Networked
   m_TagString: Cauldron
@@ -57,25 +57,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.714323, y: 0.95827043, z: 2.689837}
   m_Center: {x: 0, y: 0.5, z: 0}
---- !u!114 &3606430115678066329
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2107958811335865385}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79cc1909a5e9c1042800c40eb1369eb4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Cauldron
-  potionPrefab: {fileID: 5934595923095334776, guid: a7c97f0495cc79589848107644c20644, type: 3}
-  potionSpawnPoint: {fileID: 5403684665275195556}
-  explosionRadius: 5
-  explosionForce: 12
-  fireRadius: 4
-  potionsToSpawn: 3
-  spawnPopForce: 2
 --- !u!114 &3234519960349645772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,6 +82,26 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
+--- !u!114 &3606430115678066329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2107958811335865385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79cc1909a5e9c1042800c40eb1369eb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Cauldron
+  ShowTopMostFoldoutHeaderGroup: 1
+  potionPrefab: {fileID: 5934595923095334776, guid: a7c97f0495cc79589848107644c20644, type: 3}
+  potionSpawnPoint: {fileID: 5403684665275195556}
+  explosionRadius: 5
+  explosionForce: 12
+  fireRadius: 4
+  potionsToSpawn: 3
+  spawnPopForce: 2
 --- !u!1 &9205671372076906737
 GameObject:
   m_ObjectHideFlags: 0

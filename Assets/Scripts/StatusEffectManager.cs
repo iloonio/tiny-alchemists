@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Unity.Netcode;
 
 //  StatusEffectManager.cs — All status effects on a player
 //
@@ -15,9 +16,16 @@ using UnityEngine;
 //  BOUNCY on Player:
 //    - PhysicMaterial with high bounciness for duration
 
-public class StatusEffectManager : MonoBehaviour
+public class StatusEffectManager : NetworkBehaviour
 {
     // ── Public state flags ──
+
+    public NetworkVariable<bool> IsOnFireNet = new NetworkVariable<bool>(
+        false,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+
     [HideInInspector] public bool IsOnFire;
     [HideInInspector] public bool IsCrystallized;
     [HideInInspector] public bool IsFloating;
@@ -71,19 +79,49 @@ public class StatusEffectManager : MonoBehaviour
     //  PUBLIC API
     public void ApplyFire(float overrideDuration = -1f)
     {
+        if (!IsServer) return;
+
         float dur = overrideDuration > 0 ? overrideDuration : fireDuration;
 
         // Environment path
         var flammable = GetComponent<FlammableObject>();
         if (flammable != null)
         {
-            flammable.Ignite();
+            flammable.IgniteServer();
             return;
         }
 
         // Player path — restart timer
         if (_fireRoutine != null) StopCoroutine(_fireRoutine);
         _fireRoutine = StartCoroutine(FireRoutine(dur));
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        IsOnFireNet.OnValueChanged += OnFireStateChanged;
+
+        HandleFireVisuals(IsOnFireNet.Value);
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        // Always unsubscribe to prevent memory leaks or errors
+        IsOnFireNet.OnValueChanged -= OnFireStateChanged;
+    }
+
+    private void OnFireStateChanged(bool previousValue, bool newValue)
+    {
+        HandleFireVisuals(newValue);
+    }
+
+    private void HandleFireVisuals(bool onFire)
+    {
+        IsOnFire = onFire;
+
+        if (onFire)
+        {
+            Debug.Log("Fire Visuals here");
+        }
     }
 
     public void ApplyCrystal(float overrideDuration = -1f)
@@ -122,6 +160,7 @@ public class StatusEffectManager : MonoBehaviour
     // ── FIRE ──
     private IEnumerator FireRoutine(float duration)
     {
+        IsOnFireNet.Value = true; //networkVariable
         IsOnFire = true;
         IsMiasmaImmune = true;
         fireSpeedMultiplier = fireSpeedBoost;
@@ -157,6 +196,7 @@ public class StatusEffectManager : MonoBehaviour
         // Clean up
         fireRandomPush = Vector3.zero;
         fireSpeedMultiplier = 1f;
+        IsOnFireNet.Value = false;
         IsOnFire = false;
         IsMiasmaImmune = false;
         _fireRoutine = null;

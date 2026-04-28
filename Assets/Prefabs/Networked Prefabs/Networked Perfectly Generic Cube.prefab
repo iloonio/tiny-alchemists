@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 2472208193683093628}
   - component: {fileID: 3998919515177607477}
   - component: {fileID: 8790696654872238803}
-  - component: {fileID: -7460207664801539753}
+  - component: {fileID: 4645376652948575894}
   m_Layer: 0
   m_Name: Networked Perfectly Generic Cube
   m_TagString: Ingredient
@@ -171,7 +171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 513383655
+  GlobalObjectIdHash: 1110053337
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 3
@@ -243,7 +243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CollisionOwnershipTransfer
   ShowTopMostFoldoutHeaderGroup: 1
---- !u!114 &-7460207664801539753
+--- !u!114 &4645376652948575894
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -252,8 +252,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 2629676032733814214}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7ab36f3f44a10f4191b2b1e9975b600, type: 3}
+  m_Script: {fileID: 11500000, guid: 43b2d5520c8e61fe8b6f455a47f76368, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Ingredient
-  type: 1
-  IsHeld: 0
+  m_EditorClassIdentifier: Assembly-CSharp::CollisionLogger
