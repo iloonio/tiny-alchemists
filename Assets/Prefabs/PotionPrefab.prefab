@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7406574358452120691}
   - component: {fileID: 3433349781470483215}
   - component: {fileID: 1456920274403143212}
-  - component: {fileID: -8195916160821393769}
+  - component: {fileID: 8540009401867532884}
   m_Layer: 0
   m_Name: PotionPrefab
   m_TagString: Potion
@@ -143,7 +143,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &-8195916160821393769
+--- !u!114 &8540009401867532884
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -155,8 +155,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d87d3fe39f542b04c922563dd737a60c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Potion
-  currentType: 0
-  crystalPlatformDuration: 5.95
-  crystalPlatformSize: 2
-  aoERadius: 4
-  aoeDuration: 5
+  baseRadius: 3
+  baseDuration: 120
+  baseCubeSize: 1.5
+  sizeMultiplier: 2
+  burstRadius: 4
+  breakSpeed: 3

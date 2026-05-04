@@ -7,6 +7,9 @@ TagManager:
   - Ingredient
   - Potion
   - Flammable
+  - PlantPot
+  - Cauldron
+  - spawnpoint
   layers:
   - Default
   - TransparentFX
