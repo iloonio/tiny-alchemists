@@ -22,6 +22,7 @@ using UnityEngine.Timeline;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(NetworkObject))]
+[RequireComponent(typeof(Renderer))]
 public class NetworkedPotion : NetworkBehaviour
 {
 
@@ -50,6 +51,8 @@ public class NetworkedPotion : NetworkBehaviour
 
     private Rigidbody _rb;
 
+    private Renderer _renderer;
+
     public NetworkVariable<PotionRecipe> _recipe = new();
 
     
@@ -57,15 +60,16 @@ public class NetworkedPotion : NetworkBehaviour
     void Awake()
     {
         _rb = GetComponent<Rigidbody>();
+        _renderer = GetComponent<Renderer>();
         _rb.useGravity = false;
         _rb.linearVelocity = Vector3.zero;
     }
 
+    // Only server should be able to call this. 
     public void InitializeServer(PotionRecipe recipe)
     {
-        if (!IsServer) return;
+        Debug.Log($"<color=magenta>[NetworkedPotion]</color> Initializing potion with Recipe: {recipe}");
         _recipe.Value = recipe;
-        
     }
 
     public override void OnNetworkSpawn()
@@ -162,17 +166,12 @@ public class NetworkedPotion : NetworkBehaviour
 
     private List<IngredientType> RecipeAsList()
     {
-        List<IngredientType> mods = new()
+        return new List<IngredientType>
             {
                 _recipe.Value.Mod1,
                 _recipe.Value.Mod2,
                 _recipe.Value.Mod3
-            };
-            for (int i = _recipe.Value.ModifierCount; i > 0; i--)
-            {
-                mods.RemoveAt(i-1);
-            }
-            return mods;
+            }.GetRange(0, _recipe.Value.ModifierCount); // Get only active modifiers
     }
 
     /// <summary>
@@ -225,9 +224,6 @@ public class NetworkedPotion : NetworkBehaviour
     //  VISUAL TINT
     private void TintVial()
     {
-        Renderer rend = GetComponent<Renderer>();
-        if (rend == null) return;
-
         Color baseColor = Color.gray;
         if (_recipe.Value.HasBase)
         {
@@ -250,6 +246,6 @@ public class NetworkedPotion : NetworkBehaviour
         else if (_recipe.Value.HasModifier(IngredientType.Sparkle))
             baseColor = Color.Lerp(baseColor, Color.yellow, 0.4f);
 
-        rend.material.color = baseColor;
+        _renderer.material.color = baseColor;
     }
 }

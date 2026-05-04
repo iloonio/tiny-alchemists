@@ -163,7 +163,7 @@ public class Cauldron : NetworkBehaviour
         // If nothing is in the cauldron, then nothing should happen. 
         if (_contents.Count == 0)
         {
-            Debug.Log("<color=yellow>[Cauldron]</color> The cauldron must have at least 1 ingredient to brew!");
+            Debug.Log("<color=cyan>[Cauldron]</color> The cauldron must have at least 1 ingredient to brew!");
             return; // Stop here so it doesn't run validation or explode
         }
 
@@ -315,28 +315,29 @@ public class Cauldron : NetworkBehaviour
             ? potionSpawnPoint.position
             : transform.position + Vector3.up * 1.5f;
 
+        Debug.Log($"<color=cyan>[Cauldron]</color> Spawning potions with Recipe: {recipe}");
+
         for (int i = 0; i < potionsToSpawn; i++)
         {
-            // Slight random spread so they don't stack perfectly
-            Vector3 offset = new Vector3(
+            // Slight random spread so potions don't stack perfectly
+            Vector3 offset = new(
                 Random.Range(-0.3f, 0.3f),
                 0.1f * i,
                 Random.Range(-0.3f, 0.3f)
             );
 
+            // 1. Instantiate the potion prefab at the spawn position. 
             GameObject obj = Instantiate(potionPrefab, spawnPos + offset, Quaternion.identity);
-            NetworkedPotion potion = obj.GetComponent<NetworkedPotion>();
-            potion.InitializeServer(recipe);
             
-            // Handle potions on the network 
-            if (obj.TryGetComponent(out NetworkObject netObj))
-            {
-                netObj.Spawn();
-            }
+            // 2. Spawn the potion on the 
+            if (obj.TryGetComponent(out NetworkObject netObj)) netObj.SpawnWithOwnership(OwnerClientId); 
+            
+            // 3. Initialize the potion's recipe on the server, which should sync with clients. 
+            obj.GetComponent<NetworkedPotion>().InitializeServer(recipe);
 
-            // pop
-            Rigidbody rb = obj.GetComponent<Rigidbody>();
-            if (rb != null)
+
+            // pop out potions
+            if (obj.TryGetComponent<Rigidbody>(out var rb))
             {
                 rb.useGravity = false;
 
