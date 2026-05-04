@@ -205,7 +205,7 @@ public class Cauldron : NetworkBehaviour
                     netObj.transform.position = ingredientGraveyard.position;
                 }
 
-                // 2. Disable physics on the server so it stops interacting
+                // 2. Disable physics on the server so it stops 
                 if (netObj.TryGetComponent(out Rigidbody rb))
                 {
                     rb.isKinematic = true;

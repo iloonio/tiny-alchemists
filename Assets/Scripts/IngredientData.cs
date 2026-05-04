@@ -64,6 +64,20 @@ public struct PotionRecipe : INetworkSerializable, IEquatable<PotionRecipe>
     public bool HasModifier(IngredientType mod) =>
         mod == Mod1 || mod == Mod2 || mod == Mod3;
 
+    public IEnumerable<IngredientType> GetModifiers()
+    {
+        if (ModifierCount > 0) yield return Mod1;
+        if (ModifierCount > 1) yield return Mod2;
+        if (ModifierCount > 2) yield return Mod3;
+    }
+
+    public override string ToString()
+    {
+        string baseName = HasBase ? Base.ToString() : "NoBase";
+        string mods = string.Join(", ", GetModifiers());
+        if (string.IsNullOrEmpty(mods)) mods = "NoMods";
+        return $"[{baseName} | {mods}]";
+    }
 }
 
 // This wrapper makes the NetworkList happy
