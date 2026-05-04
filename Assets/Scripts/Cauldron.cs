@@ -38,6 +38,10 @@ public class Cauldron : NetworkBehaviour
     [Tooltip("Fire radius on failed brew")]
     public float fireRadius = 4f;
 
+    [Header("Ingredient Pooling")]
+    [Tooltip("Where consumed ingredients are teleported to hide them")]
+    public Transform ingredientGraveyard;
+
     [Header("Potion Spawn")]
     [Tooltip("How many potions a successful brew produces")]
     public int potionsToSpawn = 3;
@@ -48,6 +52,10 @@ public class Cauldron : NetworkBehaviour
     // The Cauldron is stored as a NetworkList to ensure that all Clients
     // are synced.
     private NetworkList<IngredientNetworkElement> _contents;
+
+    // Add this near your _contents NetworkList declaration
+    private List<NetworkObject> _physicalIngredients = new();
+
 
     public void Awake()
     {
@@ -85,43 +93,170 @@ public class Cauldron : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // Only server should manage the Cauldron's state
         if (!IsServer) return;
         
-        // Only Objects with an ingredient component should pass through here. 
-        if (other.TryGetComponent(out Ingredient Ingredient))
+        if (other.TryGetComponent(out Ingredient ingredient))
         {
-            if (Ingredient == null || Ingredient.IsHeld) return;
-            // Accept up to 4 ingredients (1 base + 3 modifiers max)
-            if (_contents.Count >= 4)
+            if (ingredient == null || ingredient.IsHeld) return;
+            
+            // Using 5 for win-condition setup
+            if (_contents.Count >= 5) 
             {
-                Debug.Log("<color=cyan>[Cauldron]</color> Full! Cannot add more.");
+                Debug.Log("<color=cyan>[Cauldron]</color> Full!");
                 return;
             }
-            if (_contents.Count < 4)
-            {
-                _contents.Add(Ingredient.type);
 
-                Debug.Log($"<color=cyan>[Cauldron]</color> Added {Ingredient.type}. Contents: {_contents.Count}");
-                
-                Ingredient.GetComponent<NetworkObject>().Despawn();
-            }
+            // 1. Add to synced NetworkList for recipe validation
+            _contents.Add(ingredient.type);
+            
+            // 2. Track the physical object so we can despawn it during the brew
+            _physicalIngredients.Add(ingredient.GetComponent<NetworkObject>());
+
+            Debug.Log($"<color=cyan>[Cauldron]</color> Added {ingredient.type}. Contents: {_contents.Count}");
         }
     }
 
-    //  BREW (called by ALL Clients through PlayerInteraction)
+    // Crucial for physics-based
+    private void OnTriggerExit(Collider other)
+    {
+        if (!IsServer) return;
+
+        if (other.TryGetComponent(out Ingredient ingredient))
+        {
+            NetworkObject netObj = ingredient.GetComponent<NetworkObject>();
+            
+            // If this object was inside our tracking list and left the trigger zone
+            if (_physicalIngredients.Contains(netObj))
+            {
+                _physicalIngredients.Remove(netObj);
+
+                // Remove it from the synced recipe list
+                // We loop backwards to safely remove the exact type that fell out
+                for (int i = _contents.Count - 1; i >= 0; i--)
+                {
+                    // Assuming IngredientNetworkElement has a .Type property or casts to IngredientType
+                    if (_contents[i].Type == ingredient.type) 
+                    {
+                        _contents.RemoveAt(i);
+                        break; // Only remove one instance of this ingredient type!
+                    }
+                }
+
+                Debug.Log($"<color=yellow>[Cauldron]</color> {ingredient.type} fell out! Contents: {_contents.Count}");
+            }
+        }
+    } 
+
+    //  BREW (called by Clients through PlayerInteraction)
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     public void RequestBrewServerRpc()
     {
-        if (Validate() != null) { Explode(); return; }
+        // --- NEW DEBUG LOGGING ---
+        List<string> ingredientNames = new List<string>();
+        foreach (var ingredient in _contents)
+        {
+            // Assuming IngredientNetworkElement has a .Type property
+            ingredientNames.Add(ingredient.Type.ToString()); 
+        }
+        string contentsString = ingredientNames.Count > 0 ? string.Join(", ", ingredientNames) : "Empty";
+        
+        // If nothing is in the cauldron, then nothing should happen. 
+        if (_contents.Count == 0)
+        {
+            Debug.Log("<color=yellow>[Cauldron]</color> The cauldron must have at least 1 ingredient to brew!");
+            return; // Stop here so it doesn't run validation or explode
+        }
+
+        Debug.Log($"<color=cyan>[Cauldron]</color> Brew requested! Contents ({_contents.Count}): [ {contentsString} ]");
+
+        if (Validate() != null) 
+        { 
+            Explode(); 
+            return; 
+        }
 
         PotionRecipe recipe = BuildRecipe();
 
         SpawnPotions(recipe);
 
-        _contents = new(); //maybe this will fix it?
+        ConsumePhysicalIngredients();
+
+        _contents.Clear(); // Fixed: Clear() is the correct method for NetworkLists!
     }
 
+    private void ConsumePhysicalIngredients()
+    {
+        if (!IsServer) return;
+
+        // We need to collect the NetworkObjectIds to tell the clients which items to hide
+        ulong[] objectsToHide = new ulong[_physicalIngredients.Count];
+
+        for (int i = 0; i < _physicalIngredients.Count; i++)
+        {
+            NetworkObject netObj = _physicalIngredients[i];
+            if (netObj != null && netObj.IsSpawned)
+            {
+                objectsToHide[i] = netObj.NetworkObjectId;
+
+                // 1. Teleport the object. 
+                // (Assuming the Ingredient has a NetworkTransform, this position syncs automatically)
+                if (ingredientGraveyard != null)
+                {
+                    netObj.transform.position = ingredientGraveyard.position;
+                }
+
+                // 2. Disable physics on the server so it stops interacting
+                if (netObj.TryGetComponent(out Rigidbody rb))
+                {
+                    rb.isKinematic = true;
+                    rb.useGravity = false;
+                }
+                if (netObj.TryGetComponent(out Collider col))
+                {
+                    col.enabled = false;
+                }
+            }
+        }
+        
+        // 3. Tell ALL clients (including the host) to hide the visual meshes
+        HideIngredientsRpc(objectsToHide);
+        
+        // Empty our tracking list for the next brew
+        _physicalIngredients.Clear(); 
+    }
+
+
+    [Rpc(SendTo.Everyone)]
+    private void HideIngredientsRpc(ulong[] objectIds)
+    {
+        foreach (ulong id in objectIds)
+        {
+            // Try to find the local instance of this networked object
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(id, out NetworkObject netObj))
+            {
+                // Disable all renderers (in case your ingredient has multiple parts)
+                Renderer[] renderers = netObj.GetComponentsInChildren<Renderer>();
+                foreach (var r in renderers)
+                {
+                    r.enabled = false;
+                }
+
+                // Disable colliders on the client side too
+                Collider[] colliders = netObj.GetComponentsInChildren<Collider>();
+                foreach (var c in colliders)
+                {
+                    c.enabled = false;
+                }
+                
+                // Just in case, ensure the client-side Rigidbody is also frozen
+                if (netObj.TryGetComponent(out Rigidbody rb))
+                {
+                    rb.isKinematic = true;
+                    rb.useGravity = false;
+                }
+            }
+        }
+    }
 
     //  VALIDATION
     private string Validate()
