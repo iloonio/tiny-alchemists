@@ -69,10 +69,6 @@ public class NetworkedPotion : NetworkBehaviour
     {
         Debug.Log($"<color=magenta>[NetworkedPotion]</color> Initializing potion with Recipe: {recipe}");
         _recipe.Value = recipe;
-    }
-
-    public override void OnNetworkSpawn()
-    {
         TintVial();
     }
 

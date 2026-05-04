@@ -328,12 +328,14 @@ public class Cauldron : NetworkBehaviour
 
             // 1. Instantiate the potion prefab at the spawn position. 
             GameObject obj = Instantiate(potionPrefab, spawnPos + offset, Quaternion.identity);
-            
-            // 2. Spawn the potion on the 
+
+            // 2. Spawn the potion on the network
             if (obj.TryGetComponent(out NetworkObject netObj)) netObj.SpawnWithOwnership(OwnerClientId); 
-            
+
             // 3. Initialize the potion's recipe on the server, which should sync with clients. 
             obj.GetComponent<NetworkedPotion>().InitializeServer(recipe);
+            
+            
 
 
             // pop out potions
