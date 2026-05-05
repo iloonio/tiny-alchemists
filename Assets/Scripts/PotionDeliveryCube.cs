@@ -1,89 +1,96 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-//  PotionDeliveryCube.cs — Physics cube spawned by "Object" base
+// ═══════════════════════════════════════════════════════════════
+//  PotionDeliveryCube.cs — Networked physics cube (Object base)
 //
-//    Fire:     "ignites players touching cube AND objects within ~1 unit"
-//    Float:    "cube unaffected by gravity and has more drag"
-//    Bouncy:   "cube is bouncy" (PhysicsMaterial)
-//    Magnetic: "cube is magnetic" (registered in MagneticRegistry)
-//    Size:     ~4 unit side length (handled at spawn)
+//  ARCHITECTURE:
+//    - Spawned by server via NetworkedPotion.SpawnNetworkedObject()
+//    - Server runs the lifetime coroutine + fire tick
+//    - Visual sync happens via NetworkTransform (on the prefab)
+//    - Fire effects on players go through StatusEffectManager
+//      (server sets NetworkVariable → clients react)
 //
-//  Special Interactions:
-//    Size+Magnetic: heavier mass → stronger attraction (automatic)
-//    Bouncy+Magnetic: cube repels magnetic objects
+//  CURRENT SCOPE (Object + Fire + Size):
+//    Fire:  Ignites players on touch + objects within ~1 unit
+//    Size:  Larger cube (handled by Configure's size param)
+//
+//  UNITY SETUP:
+//    - Create a Cube prefab with:
+//      NetworkObject, NetworkTransform, Rigidbody,
+//      BoxCollider, Renderer, PotionDeliveryCube
+//    - Register in NetworkManager's prefab list
+//    - Assign as cubePrefab on NetworkedPotion
+// ═══════════════════════════════════════════════════════════════
 
-public class PotionDeliveryCube : MonoBehaviour
+[RequireComponent(typeof(NetworkObject))]
+[RequireComponent(typeof(Rigidbody))]
+public class PotionDeliveryCube : NetworkBehaviour
 {
     [HideInInspector] public float duration = 120f;
     [HideInInspector] public float cubeSize = 1.5f;
     [HideInInspector] public List<IngredientType> modifiers;
 
     private float _tickInterval = 0.5f;
-    private float _fireRadius = 1f; 
+    private float _fireRadius = 1f;
     private bool _hasFire;
-    private bool _hasMagnetic;
     private Rigidbody _rb;
 
+    /// <summary>
+    /// Called by NetworkedPotion.SpawnNetworkedObject on the server,
+    /// BEFORE NetworkObject.Spawn(). Configures size, modifiers, physics.
+    /// </summary>
     public void Configure(float size, float dur, List<IngredientType> mods)
     {
         cubeSize = size;
         duration = dur;
         modifiers = mods ?? new List<IngredientType>();
         _hasFire = modifiers.Contains(IngredientType.Fire);
-        _hasMagnetic = modifiers.Contains(IngredientType.Magnetic);
 
         transform.localScale = Vector3.one * cubeSize;
 
-        // ── Rigidbody ──
         _rb = GetComponent<Rigidbody>();
-        if (_rb == null) _rb = gameObject.AddComponent<Rigidbody>();
-
         _rb.mass = cubeSize * 5f;
 
-        // Size+Magnetic special: larger cube has more mass → automatic stronger attraction
-
-        // Float: disable gravity + more drag
-        if (modifiers.Contains(IngredientType.Float))
-        {
-            _rb.useGravity = false;
-            _rb.linearDamping = 3f;
-            _rb.angularDamping = 2f;
-        }
-
-        // Bouncy: bouncy PhysicsMaterial
-        if (modifiers.Contains(IngredientType.Bouncy))
-        {
-            Collider col = GetComponent<Collider>();
-            if (col != null)
-            {
-                PhysicsMaterial bounceMat = new PhysicsMaterial("BouncyCube");
-                bounceMat.bounciness = 0.9f;
-                bounceMat.bounceCombine = PhysicsMaterialCombine.Maximum;
-                col.material = bounceMat;
-            }
-        }
-
-        // Magnetic: register cube in MagneticRegistry
-        if (_hasMagnetic)
-        {
-            bool repels = modifiers.Contains(IngredientType.Bouncy); // Bouncy+Magnetic special
-            MagneticRegistry.Instance.Register(_rb, duration, repels);
-        }
-
-        
+        // Visual tint (server-side, synced via NetworkVariable or RPC if needed)
         Renderer rend = GetComponent<Renderer>();
         if (rend != null)
         {
-            if (_hasFire)
-                rend.material.color = new Color(1f, 0.3f, 0f);
-            else
-                rend.material.color = new Color(0.6f, 0.8f, 1f);
+            rend.material.color = _hasFire
+                ? new Color(1f, 0.3f, 0f)  // burning orange
+                : new Color(0.6f, 0.8f, 1f); // icy blue
         }
-
-        StartCoroutine(CubeLifetimeRoutine());
     }
+
+    public override void OnNetworkSpawn()
+    {
+        // Sync visual on late-joining clients
+        ApplyVisualsClientRpc(cubeSize, _hasFire);
+
+        // Only server runs the lifetime + fire tick
+        if (IsServer)
+        {
+            StartCoroutine(CubeLifetimeRoutine());
+        }
+    }
+
+    [ClientRpc]
+    private void ApplyVisualsClientRpc(float size, bool hasFire)
+    {
+        transform.localScale = Vector3.one * size;
+
+        Renderer rend = GetComponent<Renderer>();
+        if (rend != null)
+        {
+            rend.material.color = hasFire
+                ? new Color(1f, 0.3f, 0f)
+                : new Color(0.6f, 0.8f, 1f);
+        }
+    }
+
+    // ── Server-only: lifetime + fire tick ──
 
     private IEnumerator CubeLifetimeRoutine()
     {
@@ -94,15 +101,20 @@ public class PotionDeliveryCube : MonoBehaviour
             // Fire: continuously ignite objects within ~1 unit
             if (_hasFire)
             {
-                Collider[] nearby = Physics.OverlapSphere(transform.position, _fireRadius + cubeSize * 0.5f);
+                Collider[] nearby = Physics.OverlapSphere(
+                    transform.position, _fireRadius + cubeSize * 0.5f);
+
                 foreach (var col in nearby)
                 {
                     if (col.gameObject == gameObject) continue;
 
+                    // Flammable environment objects
                     var flam = col.GetComponent<FlammableObject>();
                     if (flam != null) flam.IgniteServer();
 
-                    // Players are handled via OnCollisionEnter (direct touch)
+                    // Players touching within radius
+                    var sem = col.GetComponent<StatusEffectManager>();
+                    if (sem != null && !sem.IsOnFireNet.Value) sem.ApplyFire();
                 }
             }
 
@@ -110,18 +122,18 @@ public class PotionDeliveryCube : MonoBehaviour
             elapsed += _tickInterval;
         }
 
-        // Cleanup
-        if (_hasMagnetic)
-            MagneticRegistry.Instance.Unregister(_rb);
-
         Debug.Log("<color=blue>[Cube]</color> Potion cube expired.");
-        Destroy(gameObject);
+
+        // Despawn across the network (not Destroy!)
+        GetComponent<NetworkObject>().Despawn();
     }
 
-    // Contact effects 
+    // ── Server-only: contact effects ──
+
     private void OnCollisionEnter(Collision collision)
     {
-        // Fire: ignite players on touch
+        if (!IsServer) return;
+
         if (_hasFire)
         {
             var sem = collision.gameObject.GetComponent<StatusEffectManager>();
@@ -130,23 +142,5 @@ public class PotionDeliveryCube : MonoBehaviour
             var flam = collision.gameObject.GetComponent<FlammableObject>();
             if (flam != null) flam.IgniteServer();
         }
-
-        // Bouncy: extra knockback on contact
-        if (modifiers.Contains(IngredientType.Bouncy))
-        {
-            Rigidbody otherRb = collision.gameObject.GetComponent<Rigidbody>();
-            if (otherRb != null && !otherRb.isKinematic)
-            {
-                Vector3 away = (collision.transform.position - transform.position).normalized;
-                otherRb.AddForce((away + Vector3.up * 0.5f) * 8f, ForceMode.Impulse);
-            }
-        }
-    }
-
-    void OnDestroy()
-    {
-        // Safety: unregister if destroyed early
-        if (_hasMagnetic && _rb != null)
-            MagneticRegistry.Instance.Unregister(_rb);
     }
 }
