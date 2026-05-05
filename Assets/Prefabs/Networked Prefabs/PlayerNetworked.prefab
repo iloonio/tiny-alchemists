@@ -215,8 +215,8 @@ GameObject:
   - component: {fileID: 1404608025441194524}
   - component: {fileID: 1963060662102942584}
   - component: {fileID: 1676792726876008947}
-  - component: {fileID: 2265333749908414923}
   - component: {fileID: -6462760444768499298}
+  - component: {fileID: 2265333749908414923}
   - component: {fileID: -5138850131887474266}
   - component: {fileID: 9076185057622448705}
   - component: {fileID: 9136545249741013697}
@@ -310,7 +310,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8476081546139838895}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 2866ab553ff11f35285cf24db5111779, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -367,6 +367,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   moveSpeed: 3
   jumpForce: 5
+  groundTraction: 15
   mouseSensitivity: 15
   playerCamera: {fileID: 6903788993697452270}
 --- !u!114 &1676792726876008947
@@ -388,6 +389,31 @@ MonoBehaviour:
   pickupDistance: 3
   throwForce: 6
   throwUpForce: 3
+--- !u!114 &-6462760444768499298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8476081546139838895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 1813953776
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!114 &2265333749908414923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -400,6 +426,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7a8e11d6d1d90e41be2d4099ed3f1d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusEffectManager
+  ShowTopMostFoldoutHeaderGroup: 1
+  IsOnFireNet:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
   IsOnFire: 0
   IsCrystallized: 0
   IsFloating: 0
@@ -417,31 +449,6 @@ MonoBehaviour:
   crystalDuration: 4
   crystalGravityMultiplier: 5
   crystalShellPrefab: {fileID: 0}
---- !u!114 &-6462760444768499298
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8476081546139838895}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 4199789813
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
 --- !u!114 &-5138850131887474266
 MonoBehaviour:
   m_ObjectHideFlags: 0
