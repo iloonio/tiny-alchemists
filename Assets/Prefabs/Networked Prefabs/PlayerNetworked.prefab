@@ -368,6 +368,10 @@ MonoBehaviour:
   moveSpeed: 3
   jumpForce: 5
   groundTraction: 15
+  maxSlopeAngle: 60
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
   mouseSensitivity: 15
   playerCamera: {fileID: 6903788993697452270}
 --- !u!114 &1676792726876008947

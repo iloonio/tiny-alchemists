@@ -9,6 +9,8 @@ public class PlayerMovementFPS : MonoBehaviour
     [Tooltip("Strictly 3 Unity Units per second")] public float moveSpeed = 3f;
     [Tooltip("Optional jump force")] public float jumpForce = 5f;
     [Tooltip("Adjusts how slippery the little fellas are")] public float groundTraction = 15f;
+    public float maxSlopeAngle = 45f;
+    public LayerMask groundLayer;
     public float mouseSensitivity = 15f;
 
     [Header("References")]
@@ -82,17 +84,18 @@ public class PlayerMovementFPS : MonoBehaviour
 
     private void HandleMovement()
     {
-        // Crystallized: freeze horizontal, let gravity pull down
+        // 0. Crystallized: freeze horizontal, let gravity pull down
         if (_status != null && _status.IsCrystallized)
         {
             _playerBody.linearVelocity = new Vector3(0f, _playerBody.linearVelocity.y, 0f);
             return;
         }
 
+        // 1. Declare move direction and speed
         Vector3 moveDir = transform.forward * _moveInput.y + transform.right * _moveInput.x;
-
-        // Fire: speed boost + random horizontal push
         float speed = moveSpeed;
+
+        // 2. Fire: speed boost + random horizontal push
         if (_status != null && _status.IsOnFire)
         {
             speed *= _status.fireSpeedMultiplier;
@@ -104,10 +107,29 @@ public class PlayerMovementFPS : MonoBehaviour
             }
         }
 
+        // 3. Apply Slope Slowdown
+        float slopeMultiplier = GetSlopeMultiplier();
+        speed *= slopeMultiplier;
+
+        // 4. Final velocity
         Vector3 targetVelocity = moveDir * speed;
         _playerBody.linearVelocity = new Vector3(targetVelocity.x,
                                                  _playerBody.linearVelocity.y,
                                                  targetVelocity.z);
+    }
+
+    private float GetSlopeMultiplier()
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 1.1f, groundLayer))
+        {
+            float slopeAngle = Vector3.Angle(Vector3.up, hit.normal);
+            if (slopeAngle > 0)
+            {
+                if (slopeAngle >= maxSlopeAngle) return 0f; // too steep
+                return 1f - (slopeAngle / maxSlopeAngle);
+            }
+        }
+        return 1f;
     }
 
     private void OnCollisionStay(Collision collision)
