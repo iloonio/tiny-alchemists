@@ -8,7 +8,8 @@ public class PlayerMovementFPS : MonoBehaviour
     [Header("Settings")]
     [Tooltip("Strictly 3 Unity Units per second")] public float moveSpeed = 3f;
     [Tooltip("Optional jump force")] public float jumpForce = 5f;
-    public float mouseSensitivity = 15f;    
+    [Tooltip("Adjusts how slippery the little fellas are")] public float groundTraction = 15f;
+    public float mouseSensitivity = 15f;
 
     [Header("References")]
     public Transform playerCamera;
@@ -24,13 +25,13 @@ public class PlayerMovementFPS : MonoBehaviour
     private float _xRotation = 0f;
     private bool _isGrounded;
 
-    
+
 
     void Start()
     {
         _playerBody = GetComponent<Rigidbody>();
 
-        _playerBody.freezeRotation = true;      
+        _playerBody.freezeRotation = true;
         _playerBody.interpolation = RigidbodyInterpolation.None;  // why?
         _status = GetComponent<StatusEffectManager>();
 
@@ -43,9 +44,9 @@ public class PlayerMovementFPS : MonoBehaviour
     }
 
     void Update()
-    { 
+    {
         _moveInput = moveAction.ReadValue<Vector2>();
-        
+
         // Block jump when crystallized
         if (jumpAction.WasPressedThisFrame() && _isGrounded)
         {
@@ -81,13 +82,13 @@ public class PlayerMovementFPS : MonoBehaviour
 
     private void HandleMovement()
     {
-        // Crystallized: freeze horizontal, let gravity pull down 
+        // Crystallized: freeze horizontal, let gravity pull down
         if (_status != null && _status.IsCrystallized)
         {
             _playerBody.linearVelocity = new Vector3(0f, _playerBody.linearVelocity.y, 0f);
             return;
         }
-        
+
         Vector3 moveDir = transform.forward * _moveInput.y + transform.right * _moveInput.x;
 
         // Fire: speed boost + random horizontal push
@@ -105,7 +106,7 @@ public class PlayerMovementFPS : MonoBehaviour
 
         Vector3 targetVelocity = moveDir * speed;
         _playerBody.linearVelocity = new Vector3(targetVelocity.x,
-                                                 _playerBody.linearVelocity.y, 
+                                                 _playerBody.linearVelocity.y,
                                                  targetVelocity.z);
     }
 
