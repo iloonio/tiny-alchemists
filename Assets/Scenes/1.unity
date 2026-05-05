@@ -693,6 +693,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 212304f36c924464ebc752a8e8f379cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FlammableObject
+  ShowTopMostFoldoutHeaderGroup: 1
   burnDuration: 3
   spreadRadius: 2
   spreadDelay: 0.5
@@ -729,6 +730,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7a8e11d6d1d90e41be2d4099ed3f1d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusEffectManager
+  ShowTopMostFoldoutHeaderGroup: 1
+  IsOnFireNet:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
   IsOnFire: 0
   IsCrystallized: 0
   IsFloating: 0
@@ -993,6 +1000,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 212304f36c924464ebc752a8e8f379cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FlammableObject
+  ShowTopMostFoldoutHeaderGroup: 1
   burnDuration: 3
   spreadRadius: 2
   spreadDelay: 0.5
@@ -1229,6 +1237,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7a8e11d6d1d90e41be2d4099ed3f1d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusEffectManager
+  ShowTopMostFoldoutHeaderGroup: 1
+  IsOnFireNet:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
   IsOnFire: 0
   IsCrystallized: 0
   IsFloating: 0
@@ -1770,6 +1784,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 212304f36c924464ebc752a8e8f379cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FlammableObject
+  ShowTopMostFoldoutHeaderGroup: 1
   burnDuration: 3
   spreadRadius: 2
   spreadDelay: 0.5
