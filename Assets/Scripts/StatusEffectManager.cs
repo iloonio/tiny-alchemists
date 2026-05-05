@@ -34,7 +34,7 @@ public class StatusEffectManager : MonoBehaviour
     [Tooltip("Speed multiplier while on fire (GDD: move faster)")]
     public float fireSpeedBoost = 1.6f;
     [Tooltip("Strength of random horizontal pushes")]
-    public float fireRandomPushStrength = 2f;
+    public float fireRandomPushStrength = 0.5f;
     [Tooltip("Average interval between random pushes (seconds)")]
     public float pushInterval = 0.4f;
 

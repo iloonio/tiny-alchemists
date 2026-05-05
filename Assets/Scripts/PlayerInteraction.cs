@@ -1,17 +1,22 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-
-
-//  PHYSICS-BASED CARRY:
-//    - Held objects are NOT parented to anything
-//    - Held objects keep their Rigidbody and Collider active
-//    - Every FixedUpdate, we set the object's velocity to fly
-//      toward holdPoint — it collides with walls naturally
-//    - On throw, we just apply an impulse
+// ═══════════════════════════════════════════════════════════════
+//  PlayerInteraction.cs — Pickup / carry / throw
 //
-//  This means objects can't clip through walls, and there's no
-//  risk of dropping items out of the map by facing a wall.
+//  CARRY FIX (no jitter):
+//    While held, the object is set kinematic and its position
+//    is updated in LateUpdate (after camera moves), so it
+//    perfectly tracks the holdPoint with zero visual lag.
+//
+//    Wall collision is handled via SphereCast: if the hold
+//    position is inside a wall, we pull the object back to
+//    the nearest valid point. This gives the "physics feel"
+//    without actual rigidbody jitter.
+//
+//    On throw, kinematic is turned off and gravity + impulse
+//    are applied — the object becomes a real physics body again.
+// ═══════════════════════════════════════════════════════════════
 
 public class PlayerInteraction : MonoBehaviour
 {
@@ -19,24 +24,22 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private Transform holdPoint;
     [SerializeField] private Transform playerCamera;
 
-    [Header("Carry Physics")]
-    [Tooltip("How aggressively the object chases the hold point")]
-    [SerializeField] private float carrySpeed = 30f;
-    [Tooltip("Damping to prevent oscillation")]
-    [SerializeField] private float carryDamping = 8f;
+    [Header("Carry")]
+    [Tooltip("Radius used for wall-avoidance SphereCast")]
+    [SerializeField] private float carryCollisionRadius = 0.25f;
 
     [Header("Throw")]
     [SerializeField] private float pickupDistance = 3f;
     [SerializeField] private float throwForce = 6f;
     [SerializeField] private float throwUpForce = 1f;
 
-    // What we are holding
+    // ── What we're holding ──
     private enum HeldType { None, Ingredient, Potion, PlantPot }
     private HeldType _heldType = HeldType.None;
     private GameObject _heldObject;
     private Rigidbody _heldRb;
 
-    // Type-specific references (for calling type-specific methods)
+    // Type-specific references
     private Ingredient _heldIngredient;
     private Potion _heldPotion;
     private PlantPot _heldPot;
@@ -46,9 +49,9 @@ public class PlayerInteraction : MonoBehaviour
     private float _savedDrag;
     private float _savedAngularDrag;
     private CollisionDetectionMode _savedCollisionMode;
+    private RigidbodyInterpolation _savedInterpolation;
 
     private StatusEffectManager _status;
-
     private Collider _playerCollider;
 
     public bool IsHolding => _heldType != HeldType.None;
@@ -59,7 +62,10 @@ public class PlayerInteraction : MonoBehaviour
         _playerCollider = GetComponent<Collider>();
     }
 
-    //  INPUT (polls InputManager each frame)
+    // ──────────────────────────────────────────────
+    //  INPUT
+    // ──────────────────────────────────────────────
+
     void Update()
     {
         var input = InputManager.Instance;
@@ -69,29 +75,54 @@ public class PlayerInteraction : MonoBehaviour
             OnInteract();
     }
 
+    // ──────────────────────────────────────────────
+    //  CARRY POSITION (runs after camera, zero jitter)
+    // ──────────────────────────────────────────────
 
-    //  PHYSICS CARRY (moves held object toward holdPoint)
-    void FixedUpdate()
+    void LateUpdate()
     {
         if (_heldRb == null) return;
 
-        // If the object got destroyed while held (e.g., burned), release
         if (_heldObject == null)
         {
             ForceRelease();
             return;
         }
 
-        // MovePosition directly — much tighter than velocity chasing
-        _heldRb.MovePosition(Vector3.Lerp(_heldRb.position, holdPoint.position, carrySpeed * Time.fixedDeltaTime));
+        Vector3 targetPos = holdPoint.position;
 
-        // Align rotation to camera
+        // Wall avoidance: SphereCast from camera toward holdPoint
+        Vector3 camPos = playerCamera.position;
+        Vector3 toTarget = targetPos - camPos;
+        float dist = toTarget.magnitude;
+
+        if (dist > 0.01f && Physics.SphereCast(camPos, carryCollisionRadius,
+                toTarget.normalized, out RaycastHit wallHit, dist,
+                ~0, QueryTriggerInteraction.Ignore))
+        {
+            // Don't count hitting the held object itself
+            if (wallHit.collider.gameObject != _heldObject)
+            {
+                // Pull back to just before the wall
+                float safeDist = Mathf.Max(wallHit.distance - carryCollisionRadius, 0.1f);
+                targetPos = camPos + toTarget.normalized * safeDist;
+            }
+        }
+
+        // Directly place the object (kinematic, so no physics interference)
+        _heldRb.position = targetPos;
+        _heldObject.transform.position = targetPos;
+
+        // Align rotation to camera forward
         Quaternion targetRot = Quaternion.LookRotation(playerCamera.forward, Vector3.up);
-        _heldRb.MoveRotation(Quaternion.Slerp(_heldRb.rotation, targetRot, 10f * Time.fixedDeltaTime));
+        _heldRb.rotation = targetRot;
+        _heldObject.transform.rotation = targetRot;
     }
 
-
+    // ──────────────────────────────────────────────
     //  INTERACT DISPATCH
+    // ──────────────────────────────────────────────
+
     private void OnInteract()
     {
         if (_status != null && _status.IsCrystallized) return;
@@ -111,7 +142,7 @@ public class PlayerInteraction : MonoBehaviour
 
         GameObject target = hit.collider.gameObject;
 
-        // Cauldron: manual brew (not a pickup)
+        // Cauldron: manual brew
         if (target.CompareTag("Cauldron"))
         {
             Cauldron cauldron = target.GetComponent<Cauldron>();
@@ -150,8 +181,10 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
+    // ──────────────────────────────────────────────
+    //  GRAB
+    // ──────────────────────────────────────────────
 
-    //  GRAB — Unified for all object types
     private void Grab(GameObject obj, HeldType type)
     {
         Rigidbody rb = obj.GetComponent<Rigidbody>();
@@ -161,7 +194,6 @@ public class PlayerInteraction : MonoBehaviour
         _heldRb = rb;
         _heldType = type;
 
-        // Cache component references
         _heldIngredient = (type == HeldType.Ingredient) ? obj.GetComponent<Ingredient>() : null;
         _heldPotion = (type == HeldType.Potion) ? obj.GetComponent<Potion>() : null;
         _heldPot = (type == HeldType.PlantPot) ? obj.GetComponent<PlantPot>() : null;
@@ -171,19 +203,14 @@ public class PlayerInteraction : MonoBehaviour
         _savedDrag = rb.linearDamping;
         _savedAngularDrag = rb.angularDamping;
         _savedCollisionMode = rb.collisionDetectionMode;
+        _savedInterpolation = rb.interpolation;
 
-        // Configure for carry: no gravity, high drag, continuous collision
-        rb.useGravity = false;
-        rb.linearDamping = 0f;       // we control velocity directly
-        rb.angularDamping = 5f;      // stop spinning
-        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-        rb.interpolation = RigidbodyInterpolation.Interpolate;
+        // Kinematic carry: no physics simulation, we control position directly
+        rb.isKinematic = true;
 
-        // Notify the object it's being held
+        // Notify the object
         if (_heldIngredient != null) _heldIngredient.IsHeld = true;
         if (_heldPot != null) _heldPot.SetHeld(true);
-        // Potion: enable gravity flag for when it's thrown
-        // (it spawns with gravity off; OnPickedUp used to flip it on)
 
         // Ignore collision between player and held object
         Collider heldCol = obj.GetComponent<Collider>();
@@ -191,43 +218,43 @@ public class PlayerInteraction : MonoBehaviour
             Physics.IgnoreCollision(_playerCollider, heldCol, true);
     }
 
+    // ──────────────────────────────────────────────
+    //  THROW
+    // ──────────────────────────────────────────────
 
-    //  THROW — Unified for all object types
     private void ThrowHeldObject()
     {
-        // Restore collision with player
-        Collider heldCol = _heldObject.GetComponent<Collider>();
-        if (heldCol != null && _playerCollider != null)
-            Physics.IgnoreCollision(_playerCollider, heldCol, false);
-
         if (_heldRb == null || _heldObject == null)
         {
             ForceRelease();
             return;
         }
 
-        // Restore physics state
+        // Restore collision
+        Collider heldCol = _heldObject.GetComponent<Collider>();
+        if (heldCol != null && _playerCollider != null)
+            Physics.IgnoreCollision(_playerCollider, heldCol, false);
+
+        // Restore to dynamic physics body
+        _heldRb.isKinematic = false;
         _heldRb.linearDamping = _savedDrag;
         _heldRb.angularDamping = _savedAngularDrag;
         _heldRb.collisionDetectionMode = _savedCollisionMode;
-
-        // Enable gravity (always, so thrown objects fall)
+        _heldRb.interpolation = _savedInterpolation;
         _heldRb.useGravity = true;
 
-        // Apply throw impulse
+        // Throw
         Vector3 force = playerCamera.forward * throwForce + Vector3.up * throwUpForce;
         _heldRb.linearVelocity = Vector3.zero;
         _heldRb.AddForce(force, ForceMode.Impulse);
 
-        // Notify the object it's been released
+        // Notify
         if (_heldIngredient != null) _heldIngredient.IsHeld = false;
         if (_heldPot != null) _heldPot.SetHeld(false);
 
-        // Clear references
         ForceRelease();
     }
 
-    // Wipe all held-object state without applying physics.
     private void ForceRelease()
     {
         _heldObject = null;
