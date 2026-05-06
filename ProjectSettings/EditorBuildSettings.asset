@@ -23,6 +23,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/JoinByCode.unity
     guid: 6562e076db661804fabb13b471c855e1
+  - enabled: 1
+    path: Assets/Scenes/MultiplayerTestQuick.unity
+    guid: b0832fe61f1a25845ba56a2e571d1306
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
