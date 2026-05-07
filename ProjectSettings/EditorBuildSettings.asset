@@ -26,6 +26,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MultiplayerTestQuick.unity
     guid: b0832fe61f1a25845ba56a2e571d1306
+  - enabled: 1
+    path: Assets/_Refactor/Scenes/GameTestScene.unity
+    guid: 6537133881614224489e6e81566be1e1
+  - enabled: 1
+    path: Assets/_Refactor/Scenes/SetupTestScene.unity
+    guid: 03c3701e31badbb4489a1b1d756161a6
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
