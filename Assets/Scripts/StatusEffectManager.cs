@@ -2,29 +2,49 @@ using System.Collections;
 using UnityEngine;
 using Unity.Netcode;
 
-//  StatusEffectManager.cs — All status effects on a player
+// ═══════════════════════════════════════════════════════════════
+//  StatusEffectManager.cs — Networked Status Effects
 //
-//  FIRE on Player:
-//    - Move faster (speed multiplier)
-//    - Occasionally moved in random HORIZONTAL directions
-//    - Immune to miasma for ~5s
-//    - Lasts ~5s
+//  ARCHITECTURE:
+//    Server:  Decides who gets an effect → sets NetworkVariable
+//    Client:  Reads NetworkVariable → runs LOCAL coroutine for
+//             movement effects (speed boost, push) and visuals
 //
-//  FLOAT on Player:
-//    - Gravity disabled for duration
+//  This means each client controls their own movement response
+//  to fire, while the server controls the world state (duration,
+//  who is affected, fire spreading).
 //
-//  BOUNCY on Player:
-//    - PhysicMaterial with high bounciness for duration
+//  CURRENT EFFECTS (Object + Fire + Size scope):
+//    - Fire: speed boost + random horizontal push + miasma immunity
+//
+//  UNITY SETUP:
+//    - Attach to Player prefab (needs NetworkObject)
+//    - Also attach to any entity that can receive status effects
+// ═══════════════════════════════════════════════════════════════
 
 public class StatusEffectManager : NetworkBehaviour
 {
-    // ── Public state flags ──
+    // ══════════════════════════════════════════
+    //  NETWORKED STATE (Server writes, everyone reads)
+    // ══════════════════════════════════════════
 
-    public NetworkVariable<bool> IsOnFireNet = new NetworkVariable<bool>(
+    /// <summary>Synced fire state. Server sets true/false, clients react.</summary>
+    public NetworkVariable<bool> IsOnFireNet = new(
         false,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
+
+    /// <summary>Fire duration synced so clients know how long to run local effects.</summary>
+    public NetworkVariable<float> FireDurationNet = new(
+        0f,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+
+    // ══════════════════════════════════════════
+    //  LOCAL STATE (read by PlayerMovementFPS on this client)
+    // ══════════════════════════════════════════
 
     [HideInInspector] public bool IsOnFire;
     [HideInInspector] public bool IsCrystallized;
@@ -32,18 +52,20 @@ public class StatusEffectManager : NetworkBehaviour
     [HideInInspector] public bool IsBouncy;
     [HideInInspector] public bool IsMiasmaImmune;
 
-    // ── Fire: speed multiplier read by PlayerMovement ──
+    /// <summary>Speed multiplier while on fire. Read by PlayerMovementFPS.</summary>
     [HideInInspector] public float fireSpeedMultiplier = 1f;
-    // ── Fire: random horizontal push read by PlayerMovement ──
+
+    /// <summary>Random horizontal push. Read by PlayerMovementFPS.</summary>
     [HideInInspector] public Vector3 fireRandomPush;
+
+    // ══════════════════════════════════════════
+    //  TUNING
+    // ══════════════════════════════════════════
 
     [Header("On-Fire Settings")]
     public float fireDuration = 5f;
-    [Tooltip("Speed multiplier while on fire (GDD: move faster)")]
     public float fireSpeedBoost = 1.6f;
-    [Tooltip("Strength of random horizontal pushes")]
-    public float fireRandomPushStrength = 2f;
-    [Tooltip("Average interval between random pushes (seconds)")]
+    public float fireRandomPushStrength = 0.5f;
     public float pushInterval = 0.4f;
 
     [Header("Float Settings")]
@@ -60,14 +82,12 @@ public class StatusEffectManager : NetworkBehaviour
     [Header("Visuals (Optional)")]
     public GameObject crystalShellPrefab;
 
-    private Coroutine _fireRoutine;
-    private Coroutine _crystalRoutine;
-    private Coroutine _floatRoutine;
-    private Coroutine _bouncyRoutine;
+    // ── Internal ──
+    private Coroutine _serverFireRoutine;
+    private Coroutine _localFireRoutine;
     private Rigidbody _rb;
     private Collider _col;
     private PhysicsMaterial _originalPhysMat;
-    private GameObject _activeCrystalShell;
 
     void Awake()
     {
@@ -76,14 +96,55 @@ public class StatusEffectManager : NetworkBehaviour
         if (_col != null) _originalPhysMat = _col.material;
     }
 
-    //  PUBLIC API
+    // ══════════════════════════════════════════
+    //  NETWORK LIFECYCLE
+    // ══════════════════════════════════════════
+
+    public override void OnNetworkSpawn()
+    {
+        // Everyone subscribes to fire state changes
+        IsOnFireNet.OnValueChanged += OnFireStateChanged;
+
+        // If we joined mid-fire, handle current state
+        if (IsOnFireNet.Value)
+            StartLocalFireEffects(FireDurationNet.Value);
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        IsOnFireNet.OnValueChanged -= OnFireStateChanged;
+    }
+
+    /// <summary>
+    /// Called on ALL instances (server + every client) when fire state changes.
+    /// </summary>
+    private void OnFireStateChanged(bool wasOnFire, bool isNowOnFire)
+    {
+        if (isNowOnFire)
+        {
+            StartLocalFireEffects(FireDurationNet.Value);
+        }
+        else
+        {
+            StopLocalFireEffects();
+        }
+    }
+
+    // ══════════════════════════════════════════
+    //  PUBLIC API (called by PotionModifierHandler / Cauldron / etc.)
+    // ══════════════════════════════════════════
+
+    /// <summary>
+    /// Apply fire effect. Only executes on server.
+    /// Server sets NetworkVariables → clients react via OnValueChanged.
+    /// </summary>
     public void ApplyFire(float overrideDuration = -1f)
     {
         if (!IsServer) return;
 
         float dur = overrideDuration > 0 ? overrideDuration : fireDuration;
 
-        // Environment path
+        // Environment path: delegate to FlammableObject
         var flammable = GetComponent<FlammableObject>();
         if (flammable != null)
         {
@@ -91,88 +152,78 @@ public class StatusEffectManager : NetworkBehaviour
             return;
         }
 
-        // Player path — restart timer
-        if (_fireRoutine != null) StopCoroutine(_fireRoutine);
-        _fireRoutine = StartCoroutine(FireRoutine(dur));
+        // Player path: set networked state (this triggers OnFireStateChanged on all clients)
+        FireDurationNet.Value = dur;
+
+        // Server-side timer to auto-clear the fire
+        if (_serverFireRoutine != null) StopCoroutine(_serverFireRoutine);
+        _serverFireRoutine = StartCoroutine(ServerFireTimerRoutine(dur));
     }
 
-    public override void OnNetworkSpawn()
-    {
-        IsOnFireNet.OnValueChanged += OnFireStateChanged;
+    // ══════════════════════════════════════════
+    //  SERVER: Fire duration timer
+    //  (only runs on server — manages the NetworkVariable lifecycle)
+    // ══════════════════════════════════════════
 
-        HandleFireVisuals(IsOnFireNet.Value);
+    private IEnumerator ServerFireTimerRoutine(float duration)
+    {
+        IsOnFireNet.Value = true;
+
+        Debug.Log($"<color=orange>[Status Server]</color> {gameObject.name} ON FIRE for {duration}s");
+
+        yield return new WaitForSeconds(duration);
+
+        IsOnFireNet.Value = false;
+        _serverFireRoutine = null;
+
+        Debug.Log($"<color=orange>[Status Server]</color> {gameObject.name} fire expired.");
     }
 
-    public override void OnNetworkDespawn()
+    // ══════════════════════════════════════════
+    //  LOCAL: Fire gameplay effects
+    //  (runs on EVERY instance — each client handles their own
+    //   speed/push; server instance also runs for physics authority)
+    // ══════════════════════════════════════════
+
+    private void StartLocalFireEffects(float duration)
     {
-        // Always unsubscribe to prevent memory leaks or errors
-        IsOnFireNet.OnValueChanged -= OnFireStateChanged;
+        if (_localFireRoutine != null) StopCoroutine(_localFireRoutine);
+        _localFireRoutine = StartCoroutine(LocalFireEffectsRoutine(duration));
     }
 
-    private void OnFireStateChanged(bool previousValue, bool newValue)
+    private void StopLocalFireEffects()
     {
-        HandleFireVisuals(newValue);
-    }
-
-    private void HandleFireVisuals(bool onFire)
-    {
-        IsOnFire = onFire;
-
-        if (onFire)
+        if (_localFireRoutine != null)
         {
-            Debug.Log("Fire Visuals here");
+            StopCoroutine(_localFireRoutine);
+            _localFireRoutine = null;
         }
+
+        // Reset all local fire state
+        fireRandomPush = Vector3.zero;
+        fireSpeedMultiplier = 1f;
+        IsOnFire = false;
+        IsMiasmaImmune = false;
+
+        // TODO: Stop fire VFX here
+        Debug.Log($"<color=orange>[Status Local]</color> {gameObject.name} fire visuals/effects off.");
     }
 
-    public void ApplyCrystal(float overrideDuration = -1f)
+    private IEnumerator LocalFireEffectsRoutine(float duration)
     {
-        float dur = overrideDuration > 0 ? overrideDuration : crystalDuration;
-        if (_crystalRoutine != null) StopCoroutine(_crystalRoutine);
-        _crystalRoutine = StartCoroutine(CrystalRoutine(dur));
-    }
-
-
-    // Disable gravity for duration. No-base+Float = 5s one-shot.
-    // Cloud+Float calls with -1 (permanent while in zone, re-applied each tick).
-    public void ApplyFloat(float overrideDuration = -1f)
-    {
-        float dur = overrideDuration > 0 ? overrideDuration : floatDuration;
-
-        // If already floating, just extend
-        if (IsFloating) return;
-
-        if (_floatRoutine != null) StopCoroutine(_floatRoutine);
-        _floatRoutine = StartCoroutine(FloatRoutine(dur));
-    }
-
-    // Make the player bouncy for a duration.
-    public void ApplyBouncy(float overrideDuration = -1f)
-    {
-        float dur = overrideDuration > 0 ? overrideDuration : bouncyDuration;
-        if (IsBouncy) return;
-
-        if (_bouncyRoutine != null) StopCoroutine(_bouncyRoutine);
-        _bouncyRoutine = StartCoroutine(BouncyRoutine(dur));
-    }
-    
-    //  COROUTINES
-
-    // ── FIRE ──
-    private IEnumerator FireRoutine(float duration)
-    {
-        IsOnFireNet.Value = true; //networkVariable
         IsOnFire = true;
         IsMiasmaImmune = true;
         fireSpeedMultiplier = fireSpeedBoost;
 
-        Debug.Log($"<color=orange>[Status]</color> {gameObject.name} ON FIRE for {duration}s (speed x{fireSpeedBoost}, miasma immune)");
+        // TODO: Start fire VFX here (particle system, screen overlay, etc.)
+        Debug.Log($"<color=orange>[Status Local]</color> {gameObject.name} fire effects ON (speed x{fireSpeedBoost})");
 
         float elapsed = 0f;
         float nextPush = Random.Range(0.1f, pushInterval);
 
         while (elapsed < duration)
         {
-            // Random HORIZONTAL push (GDD: "occasionally moved in random horizontal directions")
+            // Random horizontal push
             nextPush -= Time.deltaTime;
             if (nextPush <= 0f)
             {
@@ -193,79 +244,27 @@ public class StatusEffectManager : NetworkBehaviour
             yield return null;
         }
 
-        // Clean up
-        fireRandomPush = Vector3.zero;
-        fireSpeedMultiplier = 1f;
-        IsOnFireNet.Value = false;
-        IsOnFire = false;
-        IsMiasmaImmune = false;
-        _fireRoutine = null;
-        Debug.Log($"<color=orange>[Status]</color> {gameObject.name} fire extinguished.");
+        // Don't clear state here — wait for OnFireStateChanged(false)
+        // The server controls when fire ends, not the local timer
+        _localFireRoutine = null;
     }
 
-    // ── CRYSTAL ──
-    private IEnumerator CrystalRoutine(float duration)
+    // ══════════════════════════════════════════
+    //  PLACEHOLDER STUBS (for future effects)
+    // ══════════════════════════════════════════
+
+    public void ApplyCrystal(float overrideDuration = -1f)
     {
-        IsCrystallized = true;
-        Debug.Log($"<color=cyan>[Status]</color> {gameObject.name} CRYSTALLIZED for {duration}s");
-
-        if (crystalShellPrefab != null)
-            _activeCrystalShell = Instantiate(crystalShellPrefab, transform.position, Quaternion.identity, transform);
-
-        float elapsed = 0f;
-        while (elapsed < duration)
-        {
-            if (_rb != null)
-                _rb.AddForce(Vector3.down * crystalGravityMultiplier, ForceMode.Acceleration);
-
-            elapsed += Time.fixedDeltaTime;
-            yield return new WaitForFixedUpdate();
-        }
-
-        if (_activeCrystalShell != null) Destroy(_activeCrystalShell);
-        IsCrystallized = false;
-        _crystalRoutine = null;
-        Debug.Log($"<color=cyan>[Status]</color> {gameObject.name} crystal shattered.");
+        // TODO: Implement with NetworkVariable pattern like fire
     }
 
-    // ── FLOAT ──
-    private IEnumerator FloatRoutine(float duration)
+    public void ApplyFloat(float overrideDuration = -1f)
     {
-        IsFloating = true;
-        bool wasGravity = _rb != null && _rb.useGravity;
-
-        if (_rb != null) _rb.useGravity = false;
-        Debug.Log($"<color=white>[Status]</color> {gameObject.name} FLOATING for {duration}s");
-
-        yield return new WaitForSeconds(duration);
-
-        if (_rb != null) _rb.useGravity = wasGravity;
-        IsFloating = false;
-        _floatRoutine = null;
-        Debug.Log($"<color=white>[Status]</color> {gameObject.name} float ended.");
+        // TODO: Implement with NetworkVariable pattern like fire
     }
 
-    // ── BOUNCY ──
-    private IEnumerator BouncyRoutine(float duration)
+    public void ApplyBouncy(float overrideDuration = -1f)
     {
-        IsBouncy = true;
-        Debug.Log($"<color=green>[Status]</color> {gameObject.name} BOUNCY for {duration}s");
-
-        // Apply bouncy physics material to player collider
-        if (_col != null)
-        {
-            PhysicsMaterial bounceMat = new PhysicsMaterial("BouncePlayer");
-            bounceMat.bounciness = bounciness;
-            bounceMat.bounceCombine = PhysicsMaterialCombine.Maximum;
-            _col.material = bounceMat;
-        }
-
-        yield return new WaitForSeconds(duration);
-
-        // Restore original
-        if (_col != null) _col.material = _originalPhysMat;
-        IsBouncy = false;
-        _bouncyRoutine = null;
-        Debug.Log($"<color=green>[Status]</color> {gameObject.name} bounce ended.");
+        // TODO: Implement with NetworkVariable pattern like fire
     }
 }
