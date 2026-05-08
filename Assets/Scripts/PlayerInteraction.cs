@@ -1,6 +1,7 @@
 using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Unity.Netcode;
 
 //  PHYSICS-BASED CARRY:
 //    - Held objects are NOT parented to anything
@@ -158,6 +159,8 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (!obj.TryGetComponent<Rigidbody>(out var rb)) return;
 
+        RequestOwnershipServerRpc(obj.GetComponentInParent<NetworkObject>());
+
         _heldObject = obj;
         _heldRb = rb;
         _heldType = type;
@@ -231,6 +234,8 @@ public class PlayerInteraction : MonoBehaviour
     // Wipe all held-object state without applying physics.
     private void ForceRelease()
     {
+        RelinquishOwnershipServerRpc(_heldObject.GetComponentInParent<NetworkObject>());
+
         _heldObject = null;
         _heldRb = null;
         _heldType = HeldType.None;
@@ -247,5 +252,31 @@ public class PlayerInteraction : MonoBehaviour
     public Transform GetPlayerCamera()
     {
         return playerCamera;
+    }
+
+    [ServerRpc]
+    private void RequestOwnershipServerRpc(NetworkObjectReference targetNetObjRef, ServerRpcParams rpcParams = default)
+    {
+        if (targetNetObjRef.TryGet(out NetworkObject targetNetObj))
+        {
+            ulong clientId = rpcParams.Receive.SenderClientId;
+
+            Debug.Log($"Server: Transferring ownership of {targetNetObj.name} to Client {clientId}");
+
+            targetNetObj.ChangeOwnership(clientId);
+        }
+    }
+
+    [ServerRpc]
+    private void RelinquishOwnershipServerRpc(NetworkObjectReference targetNetObjRef, ServerRpcParams rpcParams = default)
+    {
+        if (targetNetObjRef.TryGet(out NetworkObject targetNetObj))
+        {
+            ulong clientId = rpcParams.Receive.SenderClientId;
+
+            Debug.Log($"Server: Relinquishing ownership of {targetNetObj.name} by Client {clientId}");
+
+            targetNetObj.RemoveOwnership();
+        }
     }
 }
