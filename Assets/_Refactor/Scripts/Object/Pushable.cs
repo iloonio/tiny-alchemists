@@ -6,7 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(NetworkObject))]
 [RequireComponent(typeof(NetworkTransform))]
-public class PushableObject : NetworkBehaviour
+public class Pushable : NetworkBehaviour
 {
     private Rigidbody _rb;
 
@@ -14,7 +14,7 @@ public class PushableObject : NetworkBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         _rb.interpolation = RigidbodyInterpolation.Interpolate;
-        _rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+        _rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
     }
 
     [ServerRpc]

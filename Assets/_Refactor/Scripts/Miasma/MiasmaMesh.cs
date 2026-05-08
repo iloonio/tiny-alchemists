@@ -5,17 +5,17 @@ using System;
 
 public class MiasmaMesh : NetworkBehaviour 
 {
-    private MeshFilter meshFilter;
-    private Mesh mesh;
-    private bool isBatchUpdate;
+    private MeshFilter _meshFilter;
+    private Mesh _mesh;
+    private bool _isBatchUpdate;
 
     private void Start()
     {
-        meshFilter = GetComponent<MeshFilter>();
-        mesh = new Mesh {
+        _meshFilter = GetComponent<MeshFilter>();
+        _mesh = new Mesh {
             name = "MiasmaMesh"
         };
-        meshFilter.mesh = mesh;
+        _meshFilter.mesh = _mesh;
         Redraw();
     }
 
@@ -33,12 +33,12 @@ public class MiasmaMesh : NetworkBehaviour
 
     private void OnBatchUpdate(bool previous, bool current)
     {  
-        isBatchUpdate = current;
+        _isBatchUpdate = current;
     }
 
     private void OnActiveCellsChanged(NetworkListEvent<Vector3Int> changeEvent)
     {
-        if (!isBatchUpdate)
+        if (!_isBatchUpdate)
         {
             Redraw();
         }
@@ -56,11 +56,11 @@ public class MiasmaMesh : NetworkBehaviour
             AddCube(node, vertices, triangles, ref vertexIndex);
         }
 
-        mesh.Clear();
-        mesh.SetVertices(vertices);
-        mesh.SetTriangles(triangles, 0);
-        mesh.RecalculateNormals();
-        mesh.RecalculateBounds();
+        _mesh.Clear();
+        _mesh.SetVertices(vertices);
+        _mesh.SetTriangles(triangles, 0);
+        _mesh.RecalculateNormals();
+        _mesh.RecalculateBounds();
     }
 
     private void AddCube(Node node, List<Vector3> vertices, List<int> triangles, ref int vertexIndex)

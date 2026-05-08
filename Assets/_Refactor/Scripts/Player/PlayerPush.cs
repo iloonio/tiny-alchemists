@@ -5,13 +5,13 @@ public class PlayerPush : MonoBehaviour
 {
     private void OnCollisionStay(Collision collision)
     {
-        PushableObject moveable = collision.gameObject.GetComponent<PushableObject>();
+        Pushable pushable = collision.gameObject.GetComponent<Pushable>();
 
-        if (moveable == null) return;
+        if (pushable == null) return;
 
         foreach (ContactPoint contact in collision.contacts)
         {
-            moveable.PushServerRpc(-collision.impulse, contact.point);
+            pushable.PushServerRpc(-collision.impulse, contact.point);
         }
     }
 }
