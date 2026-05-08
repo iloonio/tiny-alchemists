@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BouncyModifierIngredientType
   _id: 5
   _color: {r: 0, g: 1, b: 0.08719444, a: 0}
+  _prefab: {fileID: 9196376099781582157, guid: 0d6fdfe23665ec045b1b7c5d385fc764, type: 3}

@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FloatModifierIngredientType
   _id: 6
   _color: {r: 0.08874982, g: 0, b: 0.6226415, a: 0}
+  _prefab: {fileID: 9196376099781582157, guid: 53621f22f59b26a41b83dc067b44d3f3, type: 3}

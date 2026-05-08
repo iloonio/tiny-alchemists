@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MagneticModifierIngredientType
   _id: 7
   _color: {r: 0, g: 0.27892852, b: 1, a: 0}
+  _prefab: {fileID: 9196376099781582157, guid: 95e173937f40c0e46839b54d107fa382, type: 3}

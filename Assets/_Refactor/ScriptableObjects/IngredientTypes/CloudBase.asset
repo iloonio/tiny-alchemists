@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CloudBaseIngredientType
   _id: 1
   _color: {r: 0, g: 0.98000383, b: 1, a: 0}
+  _prefab: {fileID: 9196376099781582157, guid: 5d04ee90ca0eb234c828dd5d3b008524, type: 3}

@@ -18,13 +18,7 @@ public class Cauldron : NetworkBehaviour, IInteractable
     [SerializeField] private float _explosionRadius = 5f;
     [SerializeField] private float _explosionForce = 12f;
     
-    private NetworkList<int> _contents;
-
-
-    public void Awake()
-    {
-        _contents = new NetworkList<int>();
-    }
+    private NetworkList<int> _contents = new();
 
     private void OnTriggerEnter(Collider other)
     {
@@ -34,12 +28,10 @@ public class Cauldron : NetworkBehaviour, IInteractable
 
         _contents.Add((int) ingredient.Type);
         ingredient.NetworkObject.Despawn();
-        Debug.Log("Added ingredient " + ingredient.Type);
     }
 
     public void Interact()
     {
-        Debug.Log("sending rpc");
         BrewServerRpc();
     }
 
@@ -50,12 +42,10 @@ public class Cauldron : NetworkBehaviour, IInteractable
 
         if (!BuildPotion(out int baseIngredientId, out List<int> modifierIngredientIds))
         { 
-            Debug.Log("Explode!");
             Explode(); 
         }
         else
         {
-            Debug.Log("Spawning!");
             StartCoroutine(SpawnPotions(baseIngredientId, modifierIngredientIds));        
             _contents.Clear();
         }
@@ -92,9 +82,9 @@ public class Cauldron : NetworkBehaviour, IInteractable
 
             GameObject potion = Instantiate(_potionPrefab, _potionSpawnPoint.position, Quaternion.identity);
 
-            potion.GetComponent<NetworkObject>().Spawn(); 
-
             potion.GetComponent<Potion>().Initialize(baseIngredientId, modifierIngredientIds);
+
+            potion.GetComponent<NetworkObject>().Spawn(); 
             
             Vector2 randomCircle = Random.insideUnitCircle.normalized;
             Vector3 horizontalDirection = new Vector3(randomCircle.x, 0f, randomCircle.y);

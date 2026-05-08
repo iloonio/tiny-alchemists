@@ -7,9 +7,11 @@ public abstract class IngredientType : ScriptableObject
 
     [SerializeField] private int _id;
     [SerializeField] private Color _color;
+    [SerializeField] private GameObject _prefab;
 
     public int Id => _id;
     public Color Color => _color;
+    public GameObject Prefab => _prefab;
 
     protected virtual void OnEnable()
     {
