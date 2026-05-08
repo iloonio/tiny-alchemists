@@ -1,6 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 
+[RequireComponent(typeof(Collider))]
 public class PlayerInteract : MonoBehaviour
 {
     [Header("Interact")]
@@ -18,6 +19,13 @@ public class PlayerInteract : MonoBehaviour
 
     private Holdable _held;
     public bool IsHolding => _held != null;
+    private Collider _heldCollider;
+    private Collider _collider;
+
+    private void Awake()
+    {
+        _collider = GetComponent<Collider>();
+    }
 
     private void Update()
     {
@@ -53,8 +61,10 @@ public class PlayerInteract : MonoBehaviour
     private void Drop()
     {
         _held.Drop();
+        Physics.IgnoreCollision(_collider, _heldCollider, false);
         RemoveOwnershipRpc(_held.NetworkObject);
         _held = null;
+        _heldCollider = null;
     }
     
     private void Toss()
@@ -66,15 +76,17 @@ public class PlayerInteract : MonoBehaviour
     private void TryInteract()
     {
         if (!Physics.Raycast(_playerCamera.position, _playerCamera.forward, out RaycastHit hit, _interactDistance, _interactLayer)) return;
+        Debug.Log("Hit " + hit.collider.gameObject);
 
         if (hit.collider.TryGetComponent(out IInteractable interactable))
         {        
+            Debug.Log("Interacting with" + hit.collider.gameObject);
             Interact(interactable);
         }
         else if (hit.collider.TryGetComponent(out Holdable holdable)
             && holdable.NetworkObject.IsOwnedByServer)
         {
-            PickUp(holdable);
+            PickUp(holdable, hit.collider);
         }
     }
 
@@ -83,11 +95,13 @@ public class PlayerInteract : MonoBehaviour
         interactable.Interact();
     }
 
-    private void PickUp(Holdable holdable)
+    private void PickUp(Holdable holdable, Collider collider)
     {
         _held = holdable;
+        _heldCollider = collider;
         _held.PickUp();
         AcquireOwnershipRpc(_held.NetworkObject);
+        Physics.IgnoreCollision(_collider, _heldCollider, true);
     }
 
     [ServerRpc]

@@ -1,0 +1,120 @@
+using System.Collections;
+using System.Collections.Generic;
+using Unity.Netcode;
+using UnityEngine;
+
+public class Cauldron : NetworkBehaviour, IInteractable
+{
+    [Header("Spawning")]
+    [SerializeField] private GameObject _potionPrefab;
+    [SerializeField] private Transform _potionSpawnPoint;
+    [SerializeField] private int _potionSpawnCount = 3;
+    [SerializeField] private float _potionSpawnVerticalForce = 3f;
+    [SerializeField] private float _potionSpawnHorizontalForce = 5f;
+    [SerializeField] private float _potionSpawnInterval = 0.5f;
+    [SerializeField] private BaseIngredientType _defaultBaseIngredient;
+
+    [Header("Explosion")]
+    [SerializeField] private float _explosionRadius = 5f;
+    [SerializeField] private float _explosionForce = 12f;
+    
+    private NetworkList<int> _contents;
+
+
+    public void Awake()
+    {
+        _contents = new NetworkList<int>();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!IsServer) return;
+        
+        if (!other.TryGetComponent(out Ingredient ingredient)) return;
+
+        _contents.Add((int) ingredient.Type);
+        ingredient.NetworkObject.Despawn();
+        Debug.Log("Added ingredient " + ingredient.Type);
+    }
+
+    public void Interact()
+    {
+        Debug.Log("sending rpc");
+        BrewServerRpc();
+    }
+
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    public void BrewServerRpc()
+    {
+        if (_contents.Count == 0) return;
+
+        if (!BuildPotion(out int baseIngredientId, out List<int> modifierIngredientIds))
+        { 
+            Debug.Log("Explode!");
+            Explode(); 
+        }
+        else
+        {
+            Debug.Log("Spawning!");
+            StartCoroutine(SpawnPotions(baseIngredientId, modifierIngredientIds));        
+            _contents.Clear();
+        }
+    }
+
+    private bool BuildPotion(out int baseIngredientId, out List<int> modifierIngredientIds)
+    {
+        baseIngredientId = (int) _defaultBaseIngredient;
+        modifierIngredientIds = new(); 
+
+        foreach (int id in _contents)
+        {
+            IngredientType type = (IngredientType) id;
+            if (type is BaseIngredientType)
+            {
+                if (baseIngredientId != (int) _defaultBaseIngredient) return false;
+                baseIngredientId = id;
+            }
+            else if (type is ModifierIngredientType)
+            {
+                if (modifierIngredientIds.Count >= 3 || modifierIngredientIds.Contains(id)) return false;
+                modifierIngredientIds.Add(id);
+            }
+        }
+
+        return true;
+    }
+    
+    private IEnumerator SpawnPotions(int baseIngredientId, List<int> modifierIngredientIds)
+    {
+        for (int i = 0; i < _potionSpawnCount; i++)
+        {
+            yield return new WaitForSeconds(_potionSpawnInterval);
+
+            GameObject potion = Instantiate(_potionPrefab, _potionSpawnPoint.position, Quaternion.identity);
+
+            potion.GetComponent<NetworkObject>().Spawn(); 
+
+            potion.GetComponent<Potion>().Initialize(baseIngredientId, modifierIngredientIds);
+            
+            Vector2 randomCircle = Random.insideUnitCircle.normalized;
+            Vector3 horizontalDirection = new Vector3(randomCircle.x, 0f, randomCircle.y);
+            Vector3 force = Vector3.up * _potionSpawnVerticalForce + horizontalDirection * _potionSpawnHorizontalForce;
+            potion.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
+        }
+    }
+
+    private void Explode()
+    {
+        if(!IsServer) return;
+
+        foreach (var collider in Physics.OverlapSphere(_potionSpawnPoint.position, _explosionRadius))
+        {
+            if (collider.TryGetComponent(out Rigidbody rb))
+            {
+                rb.AddExplosionForce(_explosionForce, _potionSpawnPoint.position, _explosionRadius, 1f, ForceMode.Impulse);
+            }
+
+            // TODO set on fire
+        }
+    }
+}
