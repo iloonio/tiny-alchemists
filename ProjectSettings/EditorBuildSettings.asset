@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/StatusEffectTest.unity
+    guid: 73e293b2eba1b29408d9d80c55c5cfaf
+  - enabled: 1
     path: Assets/Scenes/SessionLobby.unity
     guid: 0e6de992add765365929b7a888b0b55f
   - enabled: 1
