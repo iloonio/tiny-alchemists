@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SparkleModifierIngredientType
   _id: 9
   _color: {r: 0.9708805, g: 1, b: 0, a: 0}
-  _prefab: {fileID: 9196376099781582157, guid: 26421e6efff8f184aabfa47308c5e2b2, type: 3}
+  _ingredientPrefab: {fileID: 9196376099781582157, guid: 26421e6efff8f184aabfa47308c5e2b2, type: 3}

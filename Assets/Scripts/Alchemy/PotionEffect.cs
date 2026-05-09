@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -6,20 +5,20 @@ using UnityEngine;
 
 public class PotionEffect : NetworkBehaviour
 {
-    private int _baseIngredientId;
-    private List<int> _modifierIngredientIds = new();
-    private BaseIngredientType _baseIngredient;
-    private List<ModifierIngredientType> _modifierIngredients = new();
+    private int _baseEffectId;
+    private List<int> _modifierEffectIds = new();
+    private BaseEffect _baseEffect;
+    private List<ModifierEffect> _modifierEffects = new();
 
-    private NetworkVariable<int> _baseIngredientIdNetwork = new();
-    private NetworkList<int> _modifierIngredientIdsNetwork = new();
+    private NetworkVariable<int> _baseEffectIdNetwork = new();
+    private NetworkList<int> _modifierEffectIdsNetwork = new();
 
-    public void Initialize(int baseIngredientId, List<int> modifierIngredientIds)
+    public void Initialize(int baseIngredientId, List<int> modifierEffectIds)
     {
-        _baseIngredientId = baseIngredientId;
-        foreach (var modifierIngredientId in modifierIngredientIds)
+        _baseEffectId = baseIngredientId;
+        foreach (var modifierEffectId in modifierEffectIds)
         {
-            _modifierIngredientIds.Add(modifierIngredientId);
+            _modifierEffectIds.Add(modifierEffectId);
         }
     }
 
@@ -27,22 +26,22 @@ public class PotionEffect : NetworkBehaviour
     {
         if (IsServer) 
         {
-            _baseIngredientIdNetwork.Value = _baseIngredientId;
-            foreach (var modifierIngredientId in _modifierIngredientIds)
+            _baseEffectIdNetwork.Value = _baseEffectId;
+            foreach (var modifierEffectId in _modifierEffectIds)
             {
-                _modifierIngredientIdsNetwork.Add(modifierIngredientId);
+                _modifierEffectIdsNetwork.Add(modifierEffectId);
             }
         } 
          
-        _baseIngredient = (BaseIngredientType) _baseIngredientIdNetwork.Value;
-        foreach (var modifierIngredientId in _modifierIngredientIdsNetwork)
+        _baseEffect = (BaseEffect) ((IngredientType) _baseEffectIdNetwork.Value).CreateEffect();
+        foreach (var modifierEffectId in _modifierEffectIdsNetwork)
         {
-            _modifierIngredients.Add((ModifierIngredientType) modifierIngredientId);
+            _modifierEffects.Add((ModifierEffect) ((IngredientType) modifierEffectId).CreateEffect());
         }
 
         EffectSetup();
         EffectStart();
-        StartCoroutine(DespawnAfter(_baseIngredient.Duration));
+        StartCoroutine(DespawnAfter(_baseEffect.Duration));
     }
 
     private void Update()
@@ -69,55 +68,55 @@ public class PotionEffect : NetworkBehaviour
 
     private void EffectSetup()
     {
-        _baseIngredient.OnEffectSetup(this);
-        foreach (var modifierIngredient in _modifierIngredients)
+        _baseEffect.OnEffectSetup(this);
+        foreach (var modifierEffect in _modifierEffects)
         {
-            modifierIngredient.OnEffectSetup(this, _baseIngredient, _modifierIngredients);
+            modifierEffect.OnEffectSetup(this, _baseEffect, _modifierEffects);
         }
     }
 
     private void EffectStart()
     {
-        _baseIngredient.OnEffectStart(this);
-        foreach (var modifierIngredient in _modifierIngredients)
+        _baseEffect.OnEffectStart(this);
+        foreach (var modifierEffect in _modifierEffects)
         {
-            modifierIngredient.OnEffectStart(this, _baseIngredient, _modifierIngredients);
+            modifierEffect.OnEffectStart(this, _baseEffect, _modifierEffects);
         }
     }
 
     private void EffectUpdate()
     {
-        _baseIngredient.OnEffectUpdate(this);
-        foreach (var modifierIngredient in _modifierIngredients)
+        _baseEffect.OnEffectUpdate(this);
+        foreach (var modifierEffect in _modifierEffects)
         {
-            modifierIngredient.OnEffectUpdate(this, _baseIngredient, _modifierIngredients);
+            modifierEffect.OnEffectUpdate(this, _baseEffect, _modifierEffects);
         }
     }
 
     private void EffectEnd()
     {
-        _baseIngredient.OnEffectEnd(this);
-        foreach (var modifierIngredient in _modifierIngredients)
+        _baseEffect.OnEffectEnd(this);
+        foreach (var modifierEffect in _modifierEffects)
         {
-            modifierIngredient.OnEffectEnd(this, _baseIngredient, _modifierIngredients);
+            modifierEffect.OnEffectEnd(this, _baseEffect, _modifierEffects);
         }
     }
 
     private void EffectOnTriggerEnter(Collider other)
     {
-        _baseIngredient.OnEffectTriggerEnter(other, this);
-        foreach (var modifierIngredient in _modifierIngredients)
+        _baseEffect.OnEffectTriggerEnter(other, this);
+        foreach (var modifierEffect in _modifierEffects)
         {
-            modifierIngredient.OnEffectTriggerEnter(other, this, _baseIngredient, _modifierIngredients);
+            modifierEffect.OnEffectTriggerEnter(other, this, _baseEffect, _modifierEffects);
         }
     }
 
     private void EffectOnTriggerExit(Collider other)
     {
-        _baseIngredient.OnEffectTriggerExit(other, this);
-        foreach (var modifierIngredient in _modifierIngredients)
+        _baseEffect.OnEffectTriggerExit(other, this);
+        foreach (var modifierEffect in _modifierEffects)
         {
-            modifierIngredient.OnEffectTriggerExit(other, this, _baseIngredient, _modifierIngredients);
+            modifierEffect.OnEffectTriggerExit(other, this, _baseEffect, _modifierEffects);
         }
     }
 }

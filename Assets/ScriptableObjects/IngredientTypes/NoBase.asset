@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NoBaseIngredientType
   _id: 0
   _color: {r: 1, g: 1, b: 1, a: 0}
-  _prefab: {fileID: 0}
-  _effect: {fileID: 3143509383519786549, guid: 23afaa2fce93edb49a62533c866ff875, type: 3}
-  Duration: 1
-  Radius: 2
-  ExplosionForce: 10
+  _ingredientPrefab: {fileID: 0}
+  _potionEffectPrefab: {fileID: 3143509383519786549, guid: 23afaa2fce93edb49a62533c866ff875, type: 3}
+  _duration: 0.5
+  _radius: 2
+  _explosionForce: 10

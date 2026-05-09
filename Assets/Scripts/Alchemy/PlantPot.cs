@@ -64,7 +64,7 @@ public class PlantPot : NetworkBehaviour
         {
             yield return new WaitForSeconds(_harvestSpawnInterval);
 
-            GameObject ingredient = Instantiate(plantedIngredient.Prefab, _harvestSpawnPoint.position, Quaternion.identity);
+            GameObject ingredient = Instantiate(plantedIngredient.IngredientPrefab, _harvestSpawnPoint.position, Quaternion.identity);
 
             ingredient.GetComponent<NetworkObject>().Spawn(); 
             

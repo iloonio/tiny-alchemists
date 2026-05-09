@@ -75,7 +75,7 @@ public class Potion : NetworkBehaviour
         ContactPoint contact = collision.GetContact(0);
         Quaternion rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(transform.forward, contact.normal), contact.normal);
 
-        PotionEffect effect = Instantiate(((BaseIngredientType) _baseIngredientId).Effect, contact.point, rotation);
+        PotionEffect effect = Instantiate(((BaseIngredientType) _baseIngredientId).PotionEffectPrefab, contact.point, rotation);
 
         effect.NetworkObject.Spawn();
         effect.Initialize(_baseIngredientId, _modifierIngredientIds);

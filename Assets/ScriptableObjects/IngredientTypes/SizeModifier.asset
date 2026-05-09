@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SizeModifierIngredientType
   _id: 8
   _color: {r: 0.18095845, g: 0.6037736, b: 0, a: 0}
-  _prefab: {fileID: 9196376099781582157, guid: df07359303e08294bae551ad74776f15, type: 3}
+  _ingredientPrefab: {fileID: 9196376099781582157, guid: df07359303e08294bae551ad74776f15, type: 3}

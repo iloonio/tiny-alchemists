@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FireModifierIngredientType
   _id: 4
   _color: {r: 1, g: 0, b: 0, a: 0}
-  _prefab: {fileID: 9196376099781582157, guid: bb7796a9eb10c8941bb04ef21f70d9fe, type: 3}
-  FireStatus: {fileID: 11400000, guid: 4fec010c417574a43a0a16eac6fe4a07, type: 2}
-  FireStatusDuration: 5
+  _ingredientPrefab: {fileID: 9196376099781582157, guid: bb7796a9eb10c8941bb04ef21f70d9fe, type: 3}
+  _fireStatus: {fileID: 11400000, guid: 4fec010c417574a43a0a16eac6fe4a07, type: 2}
+  _fireStatusDuration: 5

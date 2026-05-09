@@ -7,11 +7,15 @@ public abstract class IngredientType : ScriptableObject
 
     [SerializeField] private int _id;
     [SerializeField] private Color _color;
-    [SerializeField] private GameObject _prefab;
+    [SerializeField] private GameObject _ingredientPrefab;
 
     public int Id => _id;
     public Color Color => _color;
-    public GameObject Prefab => _prefab;
+    public GameObject IngredientPrefab => _ingredientPrefab;
+    public virtual IngredientEffect CreateEffect() 
+    {
+        return null;
+    }
 
     protected virtual void OnEnable()
     {
