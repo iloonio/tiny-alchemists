@@ -76,11 +76,9 @@ public class PlayerInteract : MonoBehaviour
     private void TryInteract()
     {
         if (!Physics.Raycast(_playerCamera.position, _playerCamera.forward, out RaycastHit hit, _interactDistance, _interactLayer)) return;
-        Debug.Log("Hit " + hit.collider.gameObject);
 
         if (hit.collider.TryGetComponent(out IInteractable interactable))
         {        
-            Debug.Log("Interacting with" + hit.collider.gameObject);
             Interact(interactable);
         }
         else if (hit.collider.TryGetComponent(out Holdable holdable)

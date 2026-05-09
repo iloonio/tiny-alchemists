@@ -361,6 +361,8 @@ MonoBehaviour:
   _defaultBaseIngredient: {fileID: 11400000, guid: c2faac5490052d64087c9635f3f6131d, type: 2}
   _explosionRadius: 5
   _explosionForce: 12
+  _explosionStatus: {fileID: 11400000, guid: 4fec010c417574a43a0a16eac6fe4a07, type: 2}
+  _explosionStatusDuration: 5
 --- !u!135 &2806152228984345908
 SphereCollider:
   m_ObjectHideFlags: 0

@@ -199,6 +199,8 @@ GameObject:
   - component: {fileID: -423047658715276379}
   - component: {fileID: 6384452340925135108}
   - component: {fileID: 8194370698836893795}
+  - component: {fileID: 4991892091454183797}
+  - component: {fileID: 6315078851158611091}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -459,6 +461,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccaba3187637e354ca32b003a4813885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerPush
+--- !u!114 &4991892091454183797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4288260960102316284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b7bcf61377355543a7fd7286e420628, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
+  ShowTopMostFoldoutHeaderGroup: 1
+--- !u!114 &6315078851158611091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4288260960102316284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a47ab097b97c8a44ba0b833e7dffe33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatusTest
+  status: {fileID: 11400000, guid: 4fec010c417574a43a0a16eac6fe4a07, type: 2}
 --- !u!1 &6305013888629111460
 GameObject:
   m_ObjectHideFlags: 0

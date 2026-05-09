@@ -17,6 +17,8 @@ public class Cauldron : NetworkBehaviour, IInteractable
     [Header("Explosion")]
     [SerializeField] private float _explosionRadius = 5f;
     [SerializeField] private float _explosionForce = 12f;
+    [SerializeField] private Status _explosionStatus;
+    [SerializeField] private float _explosionStatusDuration = 5f;
     
     private NetworkList<int> _contents = new();
 
@@ -104,7 +106,10 @@ public class Cauldron : NetworkBehaviour, IInteractable
                 rb.AddExplosionForce(_explosionForce, _potionSpawnPoint.position, _explosionRadius, 1f, ForceMode.Impulse);
             }
 
-            // TODO set on fire
+            if (collider.TryGetComponent(out StatusAffectable statusAffectable))
+            {
+                statusAffectable.AddStatus(_explosionStatus, _explosionStatusDuration);
+            }
         }
     }
 }
