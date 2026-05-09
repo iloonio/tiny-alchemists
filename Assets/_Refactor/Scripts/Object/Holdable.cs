@@ -3,13 +3,9 @@ using Unity.Netcode.Components;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(NetworkObject))]
-[RequireComponent(typeof(NetworkTransform))]
-public class Holdable : MonoBehaviour
+public class Holdable : NetworkBehaviour
 {
     private Rigidbody _rb;
-    private NetworkObject _networkObject;
-    public NetworkObject NetworkObject => _networkObject;
     private bool _isHeld = false;
     public bool IsHeld => _isHeld;
 
@@ -19,7 +15,6 @@ public class Holdable : MonoBehaviour
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
-        _networkObject = GetComponent<NetworkObject>();
     }
 
     public void PickUp()

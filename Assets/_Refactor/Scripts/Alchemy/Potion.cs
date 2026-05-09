@@ -3,18 +3,23 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class Potion : NetworkBehaviour
 {
-    private IngredientType _baseIngredient;
-    private List<IngredientType> _modifierIngredients = new();
-    private Renderer _renderer;
+    [SerializeField] private float _breakSpeed = 10f;
 
-    private NetworkVariable<int> _baseIngredientId = new();
-    private NetworkList<int> _modifierIngredientIds = new();
+    private int _baseIngredientId;
+    private List<int> _modifierIngredientIds = new();
+    private Renderer _renderer;
+    private Rigidbody _rb;
+    public Rigidbody Rb => _rb;
+
+    private NetworkVariable<int> _baseIngredientIdNetwork = new();
+    private NetworkList<int> _modifierIngredientIdsNetwork = new();
 
     public void Initialize(int baseIngredientId, List<int> modifierIngredientIds)
     {
-        _baseIngredientId.Value = baseIngredientId;
+        _baseIngredientId = baseIngredientId;
         foreach (var modifierIngredientId in modifierIngredientIds)
         {
             _modifierIngredientIds.Add(modifierIngredientId);
@@ -24,14 +29,26 @@ public class Potion : NetworkBehaviour
     private void Awake()
     {
         _renderer = GetComponentInChildren<Renderer>();
+        _rb = GetComponent<Rigidbody>();
     }
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
-        _baseIngredient = (BaseIngredientType) _baseIngredientId.Value;
-        foreach (var modifierIngredientId in _modifierIngredientIds)
+        if (IsServer)
         {
-            _modifierIngredients.Add((ModifierIngredientType) modifierIngredientId);
+             _baseIngredientIdNetwork.Value = _baseIngredientId;
+            foreach (var modifierIngredientId in _modifierIngredientIds)
+            {
+                _modifierIngredientIdsNetwork.Add(modifierIngredientId);
+            }
+        }
+        else
+        {
+            _baseIngredientId = _baseIngredientIdNetwork.Value;
+            foreach (var modifierIngredientId in _modifierIngredientIdsNetwork)
+            {
+                _modifierIngredientIds.Add(modifierIngredientId);
+            }
         }
 
         SetColor();
@@ -39,13 +56,32 @@ public class Potion : NetworkBehaviour
 
     private void SetColor()
     {
-        Color sum = _baseIngredient.Color;
+        Color sum = ((IngredientType) _baseIngredientId).Color;
 
-        foreach (var modifierIngredient in _modifierIngredients)
+        foreach (var modifierIngredientId in _modifierIngredientIds)
         {
-            sum += modifierIngredient.Color;
+            sum += ((IngredientType) modifierIngredientId).Color;
         }
 
-        _renderer.material.color = sum / (1f + _modifierIngredients.Count);
+        _renderer.material.color = sum / (1f + _modifierIngredientIds.Count);
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!IsServer) return; 
+
+        if (collision.relativeVelocity.magnitude < _breakSpeed) return;
+
+        ContactPoint contact = collision.GetContact(0);
+        Quaternion rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(transform.forward, contact.normal), contact.normal);
+
+        PotionEffect effect = Instantiate(((BaseIngredientType) _baseIngredientId).Effect, contact.point, rotation);
+
+        effect.NetworkObject.Spawn();
+        effect.Initialize(_baseIngredientId, _modifierIngredientIds);
+
+        NetworkObject.Despawn();   
+    }
+
+
 }

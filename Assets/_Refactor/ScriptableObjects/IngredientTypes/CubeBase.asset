@@ -15,3 +15,5 @@ MonoBehaviour:
   _id: 2
   _color: {r: 0, g: 0, b: 0, a: 0}
   _prefab: {fileID: 9196376099781582157, guid: 310f3b8e1a1a3a0498c8f6b00305cb2e, type: 3}
+  _effect: {fileID: 3163726128693390025, guid: 310d6c8b1671757498ecf51f49ed4be1, type: 3}
+  Duration: 120

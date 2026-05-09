@@ -274,6 +274,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a40d5cf10b78010478f1683922e1cb9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Holdable
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!1 &8065159795559180490
 GameObject:
   m_ObjectHideFlags: 0
@@ -352,7 +353,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cauldron
   ShowTopMostFoldoutHeaderGroup: 1
-  _potionPrefab: {fileID: 4986591635374473630, guid: 1889ca3b179619649901399ddb2bfb3d, type: 3}
+  _potionPrefab: {fileID: 5362075143917337665, guid: 1889ca3b179619649901399ddb2bfb3d, type: 3}
   _potionSpawnPoint: {fileID: 4936819928984319367}
   _potionSpawnCount: 3
   _potionSpawnVerticalForce: 1.5

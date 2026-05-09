@@ -14,3 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NoBaseIngredientType
   _id: 0
   _color: {r: 1, g: 1, b: 1, a: 0}
+  _prefab: {fileID: 0}
+  _effect: {fileID: 3143509383519786549, guid: 23afaa2fce93edb49a62533c866ff875, type: 3}
+  Duration: 1
+  Radius: 2
+  ExplosionForce: 10

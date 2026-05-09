@@ -6,7 +6,7 @@ using UnityEngine;
 public class Cauldron : NetworkBehaviour, IInteractable
 {
     [Header("Spawning")]
-    [SerializeField] private GameObject _potionPrefab;
+    [SerializeField] private Potion _potionPrefab;
     [SerializeField] private Transform _potionSpawnPoint;
     [SerializeField] private int _potionSpawnCount = 3;
     [SerializeField] private float _potionSpawnVerticalForce = 3f;
@@ -82,16 +82,16 @@ public class Cauldron : NetworkBehaviour, IInteractable
         {
             yield return new WaitForSeconds(_potionSpawnInterval);
 
-            GameObject potion = Instantiate(_potionPrefab, _potionSpawnPoint.position, Quaternion.identity);
+            Potion potion = Instantiate(_potionPrefab, _potionSpawnPoint.position, Quaternion.identity);
 
-            potion.GetComponent<Potion>().Initialize(baseIngredientId, modifierIngredientIds);
+            potion.Initialize(baseIngredientId, modifierIngredientIds);
 
-            potion.GetComponent<NetworkObject>().Spawn(); 
+            potion.NetworkObject.Spawn(); 
             
             Vector2 randomCircle = Random.insideUnitCircle.normalized;
             Vector3 horizontalDirection = new Vector3(randomCircle.x, 0f, randomCircle.y);
             Vector3 force = Vector3.up * _potionSpawnVerticalForce + horizontalDirection * _potionSpawnHorizontalForce;
-            potion.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
+            potion.Rb.AddForce(force, ForceMode.Impulse);
         }
     }
 
