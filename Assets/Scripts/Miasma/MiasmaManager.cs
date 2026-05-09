@@ -1,278 +1,278 @@
-// using System.Collections.Generic;
-// using System;
-// using System.Linq;
-// using UnityEngine;
-// using Unity.Netcode;
-// using Random = UnityEngine.Random;
+using System.Collections.Generic;
+using System;
+using System.Linq;
+using UnityEngine;
+using Unity.Netcode;
+using Random = UnityEngine.Random;
 
-// public class MiasmaManager : NetworkBehaviour
-// {
+public class MiasmaManager : NetworkBehaviour
+{
 
-//     public static MiasmaManager Instance;
+    public static MiasmaManager Instance;
 
-//     [Header("Grid")]
-//     [SerializeField] private float cellSize = 0.5f;
-//     public float CellSize => cellSize;
-//     [SerializeField] private Vector3 origin;
-//     public Vector3 Origin => origin;
-//     [SerializeField] private Vector3Int gridSize;
-//     public Vector3Int GridSize => gridSize;
+    [Header("Grid")]
+    [SerializeField] private float _cellSize = 0.5f;
+    public float CellSize => _cellSize;
+    [SerializeField] private Vector3 _origin;
+    public Vector3 Origin => _origin;
+    [SerializeField] private Vector3Int _gridSize;
+    public Vector3Int GridSize => _gridSize;
     
-//     [Header("Growth")]
-//     [SerializeField] private float growthInterval = 1f;
-//     [SerializeField] private float growthBaseRate = 0.1f;
-//     [SerializeField] private float spawnBaseRate = 0.01f;
-//     [SerializeField] private float influenceDecay = 0.5f;
+    [Header("Growth")]
+    [SerializeField] private float _growthInterval = 1f;
+    [SerializeField] private float _growthBaseRate = 0.1f;
+    [SerializeField] private float _spawnBaseRate = 0.01f;
+    [SerializeField] private float _influenceDecay = 0.5f;
 
-//     [Header("Debug")]
-//     [SerializeField] private bool debugDraw = true;
-//     [SerializeField] private bool debugShowInactive = true;
-//     [SerializeField] private float debugSphereSize = 0.1f;
-//     [SerializeField] private Color activeColor = Color.green;
-//     [SerializeField] private Color inactiveColor = Color.red;
+    [Header("Debug")]
+    [SerializeField] private bool _debugDraw = true;
+    [SerializeField] private bool _debugShowInactive = true;
+    [SerializeField] private float _debugSphereSize = 0.1f;
+    [SerializeField] private Color _debugActiveColor = Color.green;
+    [SerializeField] private Color _debugInactiveColor = Color.red;
 
-//     private Node[,,] grid;
-//     private HashSet<Node> allNodes;
-//     private HashSet<Node> activeNodes;
+    private Node[,,] _grid;
+    private HashSet<Node> _allNodes;
+    private HashSet<Node> _activeNodes;
 
-//     private NetworkList<Vector3Int> activeCells;
-//     public NetworkList<Vector3Int> ActiveCells => activeCells;
-//     private NetworkVariable<bool> isBatchUpdate;
-//     public NetworkVariable<bool> IsBatchUpdate => isBatchUpdate;
+    private NetworkList<Vector3Int> _activeCells;
+    public NetworkList<Vector3Int> ActiveCells => _activeCells;
+    private NetworkVariable<bool> _isBatchUpdate;
+    public NetworkVariable<bool> IsBatchUpdate => _isBatchUpdate;
 
-//     private void Awake()
-//     {
-//         Instance = this;
-//         grid = new Node[gridSize.x, gridSize.y, gridSize.z];
-//         allNodes = new();
-//         activeNodes = new();
-//         activeCells = new NetworkList<Vector3Int>();
-//         isBatchUpdate = new();
-//     }
+    private void Awake()
+    {
+        Instance = this;
+        _grid = new Node[_gridSize.x, _gridSize.y, _gridSize.z];
+        _allNodes = new();
+        _activeNodes = new();
+        _activeCells = new NetworkList<Vector3Int>();
+        _isBatchUpdate = new();
+    }
 
-//     public override void OnNetworkSpawn()
-//     {
+    public override void OnNetworkSpawn()
+    {
 
-//         if (!IsServer) return;
+        if (!IsServer) return;
         
-//         foreach (Node node in activeNodes)
-//         {
-//             activeCells.Add(node.coord);
-//         }
+        foreach (Node node in _activeNodes)
+        {
+            _activeCells.Add(node.coord);
+        }
         
-//         isBatchUpdate.Value = false;
+        _isBatchUpdate.Value = false;
         
-//         activeCells.OnListChanged += OnActiveCellsChanged;
+        _activeCells.OnListChanged += OnActiveCellsChanged;
 
-//         InvokeRepeating(nameof(Grow), growthInterval, growthInterval);  
-//     }
+        InvokeRepeating(nameof(Grow), _growthInterval, _growthInterval);  
+    }
 
-//     public override void OnNetworkDespawn()
-//     {
-//         activeCells.OnListChanged -= OnActiveCellsChanged;
-//     }
+    public override void OnNetworkDespawn()
+    {
+        _activeCells.OnListChanged -= OnActiveCellsChanged;
+    }
 
-//     private void OnActiveCellsChanged(NetworkListEvent<Vector3Int> changeEvent)
-//     {
-//         switch (changeEvent.Type)
-//         {
-//             case NetworkListEvent<Vector3Int>.EventType.Add:
-//                 activeNodes.Add(GetNode(changeEvent.Value));
-//                 break;
+    private void OnActiveCellsChanged(NetworkListEvent<Vector3Int> changeEvent)
+    {
+        switch (changeEvent.Type)
+        {
+            case NetworkListEvent<Vector3Int>.EventType.Add:
+                _activeNodes.Add(GetNode(changeEvent.Value));
+                break;
 
-//             case NetworkListEvent<Vector3Int>.EventType.Remove:
-//                 activeNodes.Remove(GetNode(changeEvent.Value));
-//                 break;
+            case NetworkListEvent<Vector3Int>.EventType.Remove:
+                _activeNodes.Remove(GetNode(changeEvent.Value));
+                break;
 
-//             case NetworkListEvent<Vector3Int>.EventType.Clear:
-//                 activeNodes.Clear();
-//                 break;
-//         }
-//     }
+            case NetworkListEvent<Vector3Int>.EventType.Clear:
+                _activeNodes.Clear();
+                break;
+        }
+    }
 
-//     public void AddNode(Node node, bool startActive)
-//     {
-//         Vector3Int coord = node.coord;
-//         if (!InBounds(coord)) return;
+    public void AddNode(Node node, bool startActive)
+    {
+        Vector3Int coord = node.coord;
+        if (!InBounds(coord)) return;
 
-//         Node currentNode = grid[coord.x, coord.y, coord.z];
-//         if (currentNode == null)
-//         {
-//             grid[coord.x, coord.y, coord.z] = node;
-//             allNodes.Add(node);
-//             if (startActive) activeNodes.Add(node);
-//         }
-//         else
-//         {
-//             MergeNodes(currentNode, node);
-//         }
-//     }
+        Node currentNode = _grid[coord.x, coord.y, coord.z];
+        if (currentNode == null)
+        {
+            _grid[coord.x, coord.y, coord.z] = node;
+            _allNodes.Add(node);
+            if (startActive) _activeNodes.Add(node);
+        }
+        else
+        {
+            MergeNodes(currentNode, node);
+        }
+    }
 
-//     public Node GetNode(Vector3Int coord)
-//     {
-//         if (!InBounds(coord)) return null;
-//         return grid[coord.x, coord.y, coord.z];
-//     }
+    public Node GetNode(Vector3Int coord)
+    {
+        if (!InBounds(coord)) return null;
+        return _grid[coord.x, coord.y, coord.z];
+    }
 
-//     private void MergeNodes(Node node, Node other)
-//     {
-//         node.rate = Mathf.Min(node.rate, other.rate);
-//         node.threshold = Mathf.Max(node.threshold, other.threshold);
-//     }
+    private void MergeNodes(Node node, Node other)
+    {
+        node.rate = Mathf.Min(node.rate, other.rate);
+        node.threshold = Mathf.Max(node.threshold, other.threshold);
+    }
 
-//     public void ActivateNode(Node node)
-//     {
-//         if (!IsServer) return;
-//         activeCells.Add(node.coord);
-//     }
+    public void ActivateNode(Node node)
+    {
+        if (!IsServer) return;
+        _activeCells.Add(node.coord);
+    }
 
-//     public void DeactivateNode(Node node)
-//     {
-//         if (!IsServer) return;
-//        activeCells.Remove(node.coord);
-//     }
+    public void DeactivateNode(Node node)
+    {
+        if (!IsServer) return;
+       _activeCells.Remove(node.coord);
+    }
 
-//     public IEnumerable<Node> GetActiveNodes()
-//     {
-//         foreach (Node node in activeNodes)
-//         {
-//             yield return node;
-//         }
-//     }
+    public IEnumerable<Node> GetActiveNodes()
+    {
+        foreach (Node node in _activeNodes)
+        {
+            yield return node;
+        }
+    }
 
-//     public bool IsNodeActive(Node node)
-//     {
-//         return activeNodes.Contains(node);
-//     }
+    public bool IsNodeActive(Node node)
+    {
+        return _activeNodes.Contains(node);
+    }
 
-//     private void Grow()
-//     {
-//         if (!IsServer) return;
+    private void Grow()
+    {
+        if (!IsServer) return;
 
-//         List<Node> nodesToActivate = new List<Node>();
+        List<Node> nodesToActivate = new List<Node>();
 
-//         float activeRatio = activeNodes.Count / (float) allNodes.Count;
+        float activeRatio = _activeNodes.Count / (float) _allNodes.Count;
 
-//         foreach (Node node in allNodes)
-//         {
-//             if (IsNodeActive(node)) continue;
+        foreach (Node node in _allNodes)
+        {
+            if (IsNodeActive(node)) continue;
 
-//             if (activeRatio >= node.threshold 
-//                 && Random.value < spawnBaseRate * node.rate)
-//             {
-//                 nodesToActivate.Add(node);
-//                 node.influence = 1f;
-//             }
-//         }
+            if (activeRatio >= node.threshold 
+                && Random.value < _spawnBaseRate * node.rate)
+            {
+                nodesToActivate.Add(node);
+                node.influence = 1f;
+            }
+        }
 
-//         foreach (Node node in activeNodes)
-//         {
-//             for (int x = -1; x <= 1; x++)
-//             for (int y = -1; y <= 1; y++)
-//             for (int z = -1; z <= 1; z++)
-//             {
-//                 if (x == 0 && y == 0 && z == 0) continue;
+        foreach (Node node in _activeNodes)
+        {
+            for (int x = -1; x <= 1; x++)
+            for (int y = -1; y <= 1; y++)
+            for (int z = -1; z <= 1; z++)
+            {
+                if (x == 0 && y == 0 && z == 0) continue;
 
-//                 Vector3Int neighborCoord = node.coord + new Vector3Int(x, y, z);
-//                 if (!InBounds(neighborCoord)) continue;
+                Vector3Int neighborCoord = node.coord + new Vector3Int(x, y, z);
+                if (!InBounds(neighborCoord)) continue;
 
-//                 Node neighbor = GetNode(neighborCoord);
-//                 if (neighbor != null 
-//                     && !IsNodeActive(neighbor)
-//                     && activeRatio > neighbor.threshold 
-//                     && Random.value < growthBaseRate * neighbor.rate * node.influence)
-//                 {
-//                     nodesToActivate.Add(neighbor);
-//                     neighbor.influence = Mathf.Max(neighbor.influence, node.influence * influenceDecay);
-//                 }
-//             }
-//         }
+                Node neighbor = GetNode(neighborCoord);
+                if (neighbor != null 
+                    && !IsNodeActive(neighbor)
+                    && activeRatio > neighbor.threshold 
+                    && Random.value < _growthBaseRate * neighbor.rate * node.influence)
+                {
+                    nodesToActivate.Add(neighbor);
+                    neighbor.influence = Mathf.Max(neighbor.influence, node.influence * _influenceDecay);
+                }
+            }
+        }
 
-//         BatchUpdate(nodesToActivate);
-//     }
+        BatchUpdate(nodesToActivate);
+    }
 
-//     private void BatchUpdate(List<Node> nodesToActivate)
-//     {
-//         if (nodesToActivate.Count == 0) return;
+    private void BatchUpdate(List<Node> nodesToActivate)
+    {
+        if (nodesToActivate.Count == 0) return;
 
-//         isBatchUpdate.Value = true;
-//         Node firstNode = nodesToActivate.First();
-//         nodesToActivate.Remove(firstNode);
+        _isBatchUpdate.Value = true;
+        Node firstNode = nodesToActivate.First();
+        nodesToActivate.Remove(firstNode);
 
-//         foreach (Node node in nodesToActivate)
-//         {
-//             ActivateNode(node);
-//         }
+        foreach (Node node in nodesToActivate)
+        {
+            ActivateNode(node);
+        }
 
-//         isBatchUpdate.Value = false;
-//         ActivateNode(firstNode);
-//     }
+        _isBatchUpdate.Value = false;
+        ActivateNode(firstNode);
+    }
 
-//     public Vector3Int WorldToGrid(Vector3 worldPos)
-//     {
-//         return new Vector3Int(
-//             Mathf.FloorToInt((worldPos.x - origin.x) / cellSize),
-//             Mathf.FloorToInt((worldPos.y - origin.y) / cellSize),
-//             Mathf.FloorToInt((worldPos.z - origin.z) / cellSize)
-//         );
-//     }
+    public Vector3Int WorldToGrid(Vector3 worldPos)
+    {
+        return new Vector3Int(
+            Mathf.FloorToInt((worldPos.x - _origin.x) / _cellSize),
+            Mathf.FloorToInt((worldPos.y - _origin.y) / _cellSize),
+            Mathf.FloorToInt((worldPos.z - _origin.z) / _cellSize)
+        );
+    }
 
-//     public Vector3 GridToWorld(Vector3Int coord)
-//     {
-//         return new Vector3(
-//             origin.x + coord.x * cellSize + cellSize / 2,
-//             origin.y + coord.y * cellSize + cellSize / 2,
-//             origin.z + coord.z * cellSize + cellSize / 2
-//         );
-//     }
+    public Vector3 GridToWorld(Vector3Int coord)
+    {
+        return new Vector3(
+            _origin.x + coord.x * _cellSize + _cellSize / 2,
+            _origin.y + coord.y * _cellSize + _cellSize / 2,
+            _origin.z + coord.z * _cellSize + _cellSize / 2
+        );
+    }
 
-//     public bool InBounds(Vector3Int c)
-//     {
-//         return c.x >= 0 && c.x < gridSize.x &&
-//                c.y >= 0 && c.y < gridSize.y &&
-//                c.z >= 0 && c.z < gridSize.z;
-//     }
+    public bool InBounds(Vector3Int c)
+    {
+        return c.x >= 0 && c.x < _gridSize.x &&
+               c.y >= 0 && c.y < _gridSize.y &&
+               c.z >= 0 && c.z < _gridSize.z;
+    }
 
-//     private void OnDrawGizmos()
-//     {
-//         if (!debugDraw) return;
+    private void OnDrawGizmos()
+    {
+        if (!_debugDraw) return;
         
-//         Vector3 size = new Vector3(
-//             gridSize.x * cellSize,
-//             gridSize.y * cellSize,
-//             gridSize.z * cellSize
-//         );
+        Vector3 size = new Vector3(
+            _gridSize.x * _cellSize,
+            _gridSize.y * _cellSize,
+            _gridSize.z * _cellSize
+        );
 
-//         Vector3 center = origin + size / 2f;
+        Vector3 center = _origin + size / 2f;
 
-//         Gizmos.color = activeColor;
-//         Gizmos.DrawWireCube(center, size);
+        Gizmos.color = _debugActiveColor;
+        Gizmos.DrawWireCube(center, size);
         
-//         if (grid == null) return;
+        if (_grid == null) return;
 
-//         foreach (Node node in allNodes)
-//         {
-//             if (IsNodeActive(node))
-//             {
-//                 Gizmos.color = activeColor;
-//             } 
-//             else
-//             {
-//                 if (!debugShowInactive) continue;
-//                 Gizmos.color = inactiveColor;
-//             }
-//             Gizmos.DrawSphere(node.worldPos, debugSphereSize);
-//         }
-//     }
+        foreach (Node node in _allNodes)
+        {
+            if (IsNodeActive(node))
+            {
+                Gizmos.color = _debugActiveColor;
+            } 
+            else
+            {
+                if (!_debugShowInactive) continue;
+                Gizmos.color = _debugInactiveColor;
+            }
+            Gizmos.DrawSphere(node.worldPos, _debugSphereSize);
+        }
+    }
 
-// }
+}
 
-// public class Node
-// {
-//     public Vector3Int coord;
-//     public Vector3 worldPos;
+public class Node
+{
+    public Vector3Int coord;
+    public Vector3 worldPos;
 
-//     public float rate;
-//     public float threshold;
-//     public float influence;
-// }
+    public float rate;
+    public float threshold;
+    public float influence;
+}
