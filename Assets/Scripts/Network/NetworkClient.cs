@@ -1,7 +1,6 @@
 using Unity.Netcode;
-using UnityEngine.InputSystem;
 using UnityEngine;
-[RequireComponent(typeof(PlayerInput))]
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerMove))]
 [RequireComponent(typeof(PlayerLook))]

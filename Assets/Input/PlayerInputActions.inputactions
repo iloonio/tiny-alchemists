@@ -1,6 +1,6 @@
 {
     "version": 1,
-    "name": "PlayerInput",
+    "name": "PlayerInputActions",
     "maps": [
         {
             "name": "Game",
@@ -209,34 +209,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Inventory3",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "Menu",
-            "id": "a6a4632c-a117-483b-9573-b688006f49aa",
-            "actions": [
-                {
-                    "name": "New action",
-                    "type": "Button",
-                    "id": "c7f4d870-4f1a-4e8e-b91f-7dc26f69b83d",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "830cccbe-cc66-4a86-84f8-703d7bbe546e",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "New action",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -102,20 +102,28 @@ public class PlayerInteract : MonoBehaviour
         Physics.IgnoreCollision(_collider, _heldCollider, true);
     }
 
-    [ServerRpc]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     private void AcquireOwnershipRpc(NetworkObjectReference targetNetObjRef, ServerRpcParams rpcParams = default)
     {
         if (targetNetObjRef.TryGet(out NetworkObject targetNetObj))
         {
-            targetNetObj.ChangeOwnership(rpcParams.Receive.SenderClientId);
+            ulong clientId = rpcParams.Receive.SenderClientId;
+
+            Debug.Log($"Server: Transferring ownership of {targetNetObj.name} to Client {clientId}");
+
+            targetNetObj.ChangeOwnership(clientId);
         }
     }
 
-    [ServerRpc]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     private void RemoveOwnershipRpc(NetworkObjectReference targetNetObjRef, ServerRpcParams rpcParams = default)
     {
         if (targetNetObjRef.TryGet(out NetworkObject targetNetObj))
         {
+            ulong clientId = rpcParams.Receive.SenderClientId;
+
+            Debug.Log($"Server: Relinquishing ownership of {targetNetObj.name} by Client {clientId}");
+
             targetNetObj.RemoveOwnership();
         }
     }
