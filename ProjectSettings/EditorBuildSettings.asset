@@ -5,10 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SessionLobby.unity
     guid: 0e6de992add765365929b7a888b0b55f
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MultiplayerTest.unity
     guid: 18c12964fd562f257ad534759232c972
   - enabled: 0
@@ -17,13 +17,13 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/NGO_Minimal_Setup/NGO_Setup.unity
     guid: 42ac523d7a266cad284bb5cb4ffec7dd
-  - enabled: 1
+  - enabled: 0
     path: Assets/Widgets/Scenes/WidgetsQuickstart.unity
     guid: 0c12663377f8b948caf9058797bff6d3
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/JoinByCode.unity
     guid: 6562e076db661804fabb13b471c855e1
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MultiplayerTestQuick.unity
     guid: b0832fe61f1a25845ba56a2e571d1306
   - enabled: 1
