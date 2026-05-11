@@ -64,7 +64,9 @@ public class PlayerInteract : NetworkBehaviour
     {
         _held.Drop();
         Physics.IgnoreCollision(_collider, _heldCollider, false);
+
         RemoveOwnershipServerRpc(_held.NetworkObject);
+        
         _held = null;
         _heldCollider = null;
     }
@@ -86,7 +88,7 @@ public class PlayerInteract : NetworkBehaviour
         else if (hit.collider.TryGetComponent(out Holdable holdable)
             && holdable.NetworkObject.IsOwnedByServer)
         {
-            StartCoroutine(PickUp(holdable, hit.collider));
+            PickUp(holdable, hit.collider);
         }
     }
 
@@ -95,33 +97,32 @@ public class PlayerInteract : NetworkBehaviour
         interactable.Interact();
     }
 
-    private IEnumerator PickUp(Holdable holdable, Collider collider)
+    private void PickUp(Holdable holdable, Collider collider)
     {
         _held = holdable;
         _heldCollider = collider;
-
-        AcquireOwnershipServerRpc(_held.NetworkObject);
-        yield return new WaitUntil(() => _held.IsOwner);
-
         _held.PickUp();
         Physics.IgnoreCollision(_collider, _heldCollider, true);
+
+        AcquireOwnershipServerRpc(_held.NetworkObject, NetworkObject);
     }
 
     [ServerRpc]
-    private void AcquireOwnershipServerRpc(NetworkObjectReference targetNetObjRef, ServerRpcParams rpcParams = default)
+    public void AcquireOwnershipServerRpc(NetworkObjectReference targetNetObjRef, NetworkObjectReference playerNetObjRef, ServerRpcParams rpcParams = default)
     {
-        if (targetNetObjRef.TryGet(out NetworkObject targetNetObj))
+        if (targetNetObjRef.TryGet(out NetworkObject targetNetObj) && playerNetObjRef.TryGet(out NetworkObject playerNetObj))
         {
             ulong clientId = rpcParams.Receive.SenderClientId;
 
             Debug.Log($"Server: Transferring ownership of {targetNetObj.name} to Client {clientId}");
 
             targetNetObj.ChangeOwnership(clientId);
+            Physics.IgnoreCollision(playerNetObj.GetComponent<Collider>(), targetNetObj.GetComponent<Collider>(), true);
         }
     }
 
     [ServerRpc]
-    private void RemoveOwnershipServerRpc(NetworkObjectReference targetNetObjRef, ServerRpcParams rpcParams = default)
+    public void RemoveOwnershipServerRpc(NetworkObjectReference targetNetObjRef, ServerRpcParams rpcParams = default)
     {
         if (targetNetObjRef.TryGet(out NetworkObject targetNetObj))
         {

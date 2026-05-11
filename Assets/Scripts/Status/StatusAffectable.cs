@@ -25,6 +25,8 @@ public class StatusAffectable : NetworkBehaviour
 
     private void Update()
     {
+        List<Status> statusesToRemove = new();
+
         foreach (int statusId in statusIds)
         {
             Status status = (Status) statusId;
@@ -32,8 +34,13 @@ public class StatusAffectable : NetworkBehaviour
             durations[statusId] -= Time.deltaTime;
             if (durations[statusId] < 0)
             {
-                RemoveStatus(status);
+                statusesToRemove.Add(status);
             }
+        }
+
+        foreach (Status statusToRemove in statusesToRemove)
+        {
+            RemoveStatus(statusToRemove);
         }
     }
 

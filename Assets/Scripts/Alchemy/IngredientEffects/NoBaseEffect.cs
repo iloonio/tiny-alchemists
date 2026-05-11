@@ -13,7 +13,6 @@ public class NoBaseEffect : BaseEffect
 
     public override void OnEffectStart(PotionEffect effect)
     {
-        Debug.Log("Yey");
         foreach (var collider in Physics.OverlapSphere(effect.transform.position, Radius))
         {
             if (collider.TryGetComponent(out Rigidbody rb))

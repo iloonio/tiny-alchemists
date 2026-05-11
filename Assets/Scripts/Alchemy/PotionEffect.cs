@@ -22,7 +22,7 @@ public class PotionEffect : NetworkBehaviour
         }
     }
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
         if (IsServer) 
         {
@@ -38,6 +38,11 @@ public class PotionEffect : NetworkBehaviour
         {
             _modifierEffects.Add((ModifierEffect) ((IngredientType) modifierEffectId).CreateEffect());
         }
+    }
+
+    private void Start()
+    {
+        if (!IsServer) return;
 
         EffectSetup();
         EffectStart();
@@ -45,17 +50,23 @@ public class PotionEffect : NetworkBehaviour
     }
 
     private void Update()
-    {
+    {        
+        if (!IsServer) return;
+
         EffectUpdate();
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!IsServer) return;
+
         EffectOnTriggerEnter(other);
     }
 
     private void OnTriggerExit(Collider other)
     {
+        if (!IsServer) return;
+
         EffectOnTriggerExit(other);
     }
 

@@ -77,11 +77,9 @@ public class Potion : NetworkBehaviour
 
         PotionEffect effect = Instantiate(((BaseIngredientType) _baseIngredientId).PotionEffectPrefab, contact.point, rotation);
 
-        effect.NetworkObject.Spawn();
         effect.Initialize(_baseIngredientId, _modifierIngredientIds);
+        effect.NetworkObject.Spawn();
 
-        NetworkObject.Despawn();   
+        NetworkObject.Despawn();
     }
-
-
 }
