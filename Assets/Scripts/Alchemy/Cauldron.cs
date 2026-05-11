@@ -20,7 +20,7 @@ public class Cauldron : NetworkBehaviour, IInteractable
     [SerializeField] private Status _explosionStatus;
     [SerializeField] private float _explosionStatusDuration = 5f;
     
-    private NetworkList<int> _contents = new();
+    private List<int> _contents = new();
 
     private void OnTriggerEnter(Collider other)
     {
