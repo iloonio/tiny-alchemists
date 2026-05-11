@@ -4,7 +4,6 @@ using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerMove))]
 [RequireComponent(typeof(PlayerLook))]
-[RequireComponent(typeof(PlayerPush))]
 [RequireComponent(typeof(PlayerInteract))]
 public class NetworkClient : NetworkBehaviour
 {

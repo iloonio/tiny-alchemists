@@ -33,5 +33,5 @@ EditorBuildSettings:
     path: Assets/Scenes/SetupTestScene.unity
     guid: 03c3701e31badbb4489a1b1d756161a6
   m_configObjects:
-    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 57dc85a00c9386b4b82e0e70dbfae12b, type: 3}
   m_UseUCBPForAssetBundles: 0

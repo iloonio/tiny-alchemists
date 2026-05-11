@@ -1,8 +1,10 @@
+using System.Collections;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
-public class PlayerInteract : MonoBehaviour
+public class PlayerInteract : NetworkBehaviour
 {
     [Header("Interact")]
     [SerializeField] private Transform _playerCamera;
@@ -62,7 +64,7 @@ public class PlayerInteract : MonoBehaviour
     {
         _held.Drop();
         Physics.IgnoreCollision(_collider, _heldCollider, false);
-        RemoveOwnershipRpc(_held.NetworkObject);
+        RemoveOwnershipServerRpc(_held.NetworkObject);
         _held = null;
         _heldCollider = null;
     }
@@ -84,7 +86,7 @@ public class PlayerInteract : MonoBehaviour
         else if (hit.collider.TryGetComponent(out Holdable holdable)
             && holdable.NetworkObject.IsOwnedByServer)
         {
-            PickUp(holdable, hit.collider);
+            StartCoroutine(PickUp(holdable, hit.collider));
         }
     }
 
@@ -93,17 +95,20 @@ public class PlayerInteract : MonoBehaviour
         interactable.Interact();
     }
 
-    private void PickUp(Holdable holdable, Collider collider)
+    private IEnumerator PickUp(Holdable holdable, Collider collider)
     {
         _held = holdable;
         _heldCollider = collider;
+
+        AcquireOwnershipServerRpc(_held.NetworkObject);
+        yield return new WaitUntil(() => _held.IsOwner);
+
         _held.PickUp();
-        AcquireOwnershipRpc(_held.NetworkObject);
         Physics.IgnoreCollision(_collider, _heldCollider, true);
     }
 
-    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-    private void AcquireOwnershipRpc(NetworkObjectReference targetNetObjRef, ServerRpcParams rpcParams = default)
+    [ServerRpc]
+    private void AcquireOwnershipServerRpc(NetworkObjectReference targetNetObjRef, ServerRpcParams rpcParams = default)
     {
         if (targetNetObjRef.TryGet(out NetworkObject targetNetObj))
         {
@@ -115,8 +120,8 @@ public class PlayerInteract : MonoBehaviour
         }
     }
 
-    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-    private void RemoveOwnershipRpc(NetworkObjectReference targetNetObjRef, ServerRpcParams rpcParams = default)
+    [ServerRpc]
+    private void RemoveOwnershipServerRpc(NetworkObjectReference targetNetObjRef, ServerRpcParams rpcParams = default)
     {
         if (targetNetObjRef.TryGet(out NetworkObject targetNetObj))
         {

@@ -49,8 +49,8 @@ public class Cauldron : NetworkBehaviour, IInteractable
         else
         {
             StartCoroutine(SpawnPotions(baseIngredientId, modifierIngredientIds));        
-            _contents.Clear();
         }
+        _contents.Clear();
     }
 
     private bool BuildPotion(out int baseIngredientId, out List<int> modifierIngredientIds)
