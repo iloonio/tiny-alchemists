@@ -52,9 +52,9 @@ public class PlayerInteract : NetworkBehaviour
 
     private void Drop()
     {
-        _held.Drop();
+        Physics.IgnoreCollision(_collider, _heldCollider, false);
 
-        RemoveOwnershipServerRpc(_held.NetworkObject);
+        RemoveOwnershipServerRpc(_held.NetworkObject, NetworkObject);
         
         _held = null;
         _heldCollider = null;
@@ -92,6 +92,7 @@ public class PlayerInteract : NetworkBehaviour
         _heldCollider = collider;
 
         AcquireOwnershipServerRpc(_held.NetworkObject, NetworkObject);
+        Physics.IgnoreCollision(_collider, _heldCollider, true);
     }
 
     [ServerRpc]
@@ -109,14 +110,15 @@ public class PlayerInteract : NetworkBehaviour
     }
 
     [ServerRpc]
-    public void RemoveOwnershipServerRpc(NetworkObjectReference targetNetObjRef, ServerRpcParams rpcParams = default)
+    public void RemoveOwnershipServerRpc(NetworkObjectReference targetNetObjRef, NetworkObjectReference playerNetObjRef, ServerRpcParams rpcParams = default)
     {
-        if (targetNetObjRef.TryGet(out NetworkObject targetNetObj))
+        if (targetNetObjRef.TryGet(out NetworkObject targetNetObj) && playerNetObjRef.TryGet(out NetworkObject playerNetObj))
         {
             ulong clientId = rpcParams.Receive.SenderClientId;
 
             Debug.Log($"Server: Relinquishing ownership of {targetNetObj.name} by Client {clientId}");
 
+            Physics.IgnoreCollision(playerNetObj.GetComponent<Collider>(), targetNetObj.GetComponent<Collider>(), false);
             targetNetObj.GetComponent<Holdable>().Drop();
         }
     }
