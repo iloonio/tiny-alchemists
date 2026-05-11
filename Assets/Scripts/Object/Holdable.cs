@@ -4,7 +4,11 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Holdable : NetworkBehaviour
 {
+    [SerializeField] private float _followPositionAcceleration = 50f;
+    [SerializeField] private float _followRotationAcceleration = 30f;
+
     private Rigidbody _rb;
+    private Transform _holdPoint;
     private bool _isHeld = false;
     public bool IsHeld => _isHeld;
 
@@ -16,11 +20,12 @@ public class Holdable : NetworkBehaviour
         _rb = GetComponent<Rigidbody>();
     }
 
-    public void PickUp()
+    public void PickUp(Transform holdPoint)
     {
         if (IsHeld) return;
 
         _isHeld = true;
+        _holdPoint = holdPoint;
 
         _savedAngularDamping = _rb.angularDamping;
         _savedLinearDamping = _rb.linearDamping;
@@ -45,17 +50,25 @@ public class Holdable : NetworkBehaviour
         _rb.AddForce(force, ForceMode.Impulse);
     }
 
-    public void Follow(Transform holdPoint, float positionAcceleration, float rotationAcceleration)
+    private void FixedUpdate()
     {
-        Vector3 toTarget = holdPoint.position - _rb.position;
+        if (IsHeld)
+        {
+            Follow();
+        }
+    }
 
-        Vector3 desiredVelocity = toTarget * positionAcceleration;
+    public void Follow()
+    {
+        Vector3 toTarget = _holdPoint.position - _rb.position;
+
+        Vector3 desiredVelocity = toTarget * _followPositionAcceleration;
 
         Vector3 velocityChange = desiredVelocity - _rb.linearVelocity;
 
         _rb.AddForce(velocityChange, ForceMode.Acceleration);
 
-        Quaternion targetRotation = Quaternion.LookRotation(holdPoint.forward, Vector3.up);
+        Quaternion targetRotation = Quaternion.LookRotation(_holdPoint.forward, Vector3.up);
 
         Quaternion delta = targetRotation * Quaternion.Inverse(_rb.rotation);
 
@@ -66,7 +79,7 @@ public class Holdable : NetworkBehaviour
 
         if (Mathf.Abs(angle) > 0.01f)
         {
-            Vector3 angularVelocityTarget = axis * angle * Mathf.Deg2Rad * rotationAcceleration;
+            Vector3 angularVelocityTarget = axis * angle * Mathf.Deg2Rad * _followRotationAcceleration;
 
             Vector3 angularVelocityChange = angularVelocityTarget - _rb.angularVelocity;
 

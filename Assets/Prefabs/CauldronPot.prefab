@@ -275,6 +275,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Holdable
   ShowTopMostFoldoutHeaderGroup: 1
+  _followPositionAcceleration: 100
+  _followRotationAcceleration: 50
 --- !u!1 &8065159795559180490
 GameObject:
   m_ObjectHideFlags: 0

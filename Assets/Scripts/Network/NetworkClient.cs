@@ -7,12 +7,15 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerInteract))]
 public class NetworkClient : NetworkBehaviour
 {
+    public NetworkVariable<float> LookPitch = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
     private PlayerInput _playerInput;
     private PlayerMove _playerMovement;
     private PlayerLook _playerLook;
     private PlayerPush _playerPush;
     private PlayerInteract _playerInteract;
-    private GameObject _playerCamera;
+    private Camera _playerCamera;
+    private AudioListener _audioListener;
 
     private void Awake()
     {
@@ -21,14 +24,16 @@ public class NetworkClient : NetworkBehaviour
         _playerLook = GetComponent<PlayerLook>();
         _playerPush = GetComponent<PlayerPush>();
         _playerInteract = GetComponent<PlayerInteract>();
-        _playerCamera = GetComponentInChildren<Camera>().gameObject;
+        _playerCamera = GetComponentInChildren<Camera>();
+        _audioListener = GetComponentInChildren<AudioListener>();
 
         _playerInput.enabled = false;
         _playerMovement.enabled = false;
         _playerLook.enabled = false;
         _playerPush.enabled = false;
         _playerInteract.enabled = false;
-        _playerCamera.gameObject.SetActive(false);
+        _playerCamera.enabled = false;
+        _audioListener.enabled = false;
     }
 
     public override void OnNetworkSpawn()
@@ -40,7 +45,24 @@ public class NetworkClient : NetworkBehaviour
             _playerLook.enabled = true;
             _playerPush.enabled = true;
             _playerInteract.enabled = true;
-            _playerCamera.gameObject.SetActive(true);
+            _playerCamera.enabled = true;
+            _audioListener.enabled = true;
+        }
+
+        if (IsServer)
+        {
+            LookPitch.OnValueChanged += OnLookPitchChanged;
         }
     }
+
+    public override void OnNetworkDespawn()
+    {
+        LookPitch.OnValueChanged -= OnLookPitchChanged;
+    }
+
+    private void OnLookPitchChanged(float previous, float current)
+    {
+        _playerCamera.gameObject.transform.localRotation = Quaternion.Euler(current, 0f, 0f);
+    }
+
 }

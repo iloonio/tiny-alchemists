@@ -13,6 +13,7 @@ public class PlayerInteract : NetworkBehaviour
 
     [Header("Hold")]
     [SerializeField] private Transform _holdPoint;
+    public Transform HoldPoint => _holdPoint;
     [SerializeField] private float _followPositionSpeed = 30f;
     [SerializeField] private float _followRotationSpeed = 10f;
 
@@ -27,17 +28,6 @@ public class PlayerInteract : NetworkBehaviour
     private void Awake()
     {
         _collider = GetComponent<Collider>();
-    }
-
-    private void Update()
-    {
-        FollowHoldPoint();
-    }
-
-    private void FollowHoldPoint()
-    {
-        if (!IsHolding) return;
-        _held.Follow(_holdPoint, _followPositionSpeed, _followRotationSpeed);
     }
 
     private void OnInteract()
@@ -63,7 +53,6 @@ public class PlayerInteract : NetworkBehaviour
     private void Drop()
     {
         _held.Drop();
-        Physics.IgnoreCollision(_collider, _heldCollider, false);
 
         RemoveOwnershipServerRpc(_held.NetworkObject);
         
@@ -73,7 +62,7 @@ public class PlayerInteract : NetworkBehaviour
     
     private void Toss()
     {
-        _held.Toss(_playerCamera.forward * _throwForce);
+        ThrowServerRpc(_held.NetworkObject, _playerCamera.forward * _throwForce);
         Drop();
     }
 
@@ -101,8 +90,6 @@ public class PlayerInteract : NetworkBehaviour
     {
         _held = holdable;
         _heldCollider = collider;
-        _held.PickUp();
-        Physics.IgnoreCollision(_collider, _heldCollider, true);
 
         AcquireOwnershipServerRpc(_held.NetworkObject, NetworkObject);
     }
@@ -116,7 +103,7 @@ public class PlayerInteract : NetworkBehaviour
 
             Debug.Log($"Server: Transferring ownership of {targetNetObj.name} to Client {clientId}");
 
-            targetNetObj.ChangeOwnership(clientId);
+            targetNetObj.GetComponent<Holdable>().PickUp(playerNetObj.GetComponent<PlayerInteract>().HoldPoint);
             Physics.IgnoreCollision(playerNetObj.GetComponent<Collider>(), targetNetObj.GetComponent<Collider>(), true);
         }
     }
@@ -130,7 +117,16 @@ public class PlayerInteract : NetworkBehaviour
 
             Debug.Log($"Server: Relinquishing ownership of {targetNetObj.name} by Client {clientId}");
 
-            targetNetObj.RemoveOwnership();
+            targetNetObj.GetComponent<Holdable>().Drop();
+        }
+    }
+
+    [ServerRpc]
+    public void ThrowServerRpc(NetworkObjectReference targetNetObjRef, Vector3 throwForce)
+    {
+        if (targetNetObjRef.TryGet(out NetworkObject targetNetObj))
+        {
+            targetNetObj.GetComponent<Holdable>().Toss(throwForce);
         }
     }
 

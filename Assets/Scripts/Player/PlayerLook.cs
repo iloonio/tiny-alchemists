@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,6 +13,12 @@ public class PlayerLook : MonoBehaviour
 
     private Vector2 _lookInput;
     private float _pitch;
+    private NetworkClient _networkClient;
+
+    private void Awake()
+    {
+        _networkClient = GetComponent<NetworkClient>();
+    }
 
     private void Start()
     {
@@ -38,6 +45,11 @@ public class PlayerLook : MonoBehaviour
         _camera.localRotation = Quaternion.Euler(_pitch, 0f, 0f);
 
         transform.Rotate(Vector3.up * look.x);
+    }
+
+    private void FixedUpdate()
+    {
+        _networkClient.LookPitch.Value = _pitch;
     }
 
     
