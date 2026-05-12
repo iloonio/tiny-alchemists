@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class StatusAffectable : NetworkBehaviour
 {
-
     private NetworkList<int> statusIds = new();
     private Dictionary<int, float> durations = new();
+    private readonly List<Status> _toRemove = new();
 
     public void AddStatus(Status status, float duration)
     {
+        if (!IsServer) return;
+
         int statusId = (int) status;
         if (!statusIds.Contains(statusId))
         {
@@ -19,13 +21,15 @@ public class StatusAffectable : NetworkBehaviour
         }
         else
         {
-            durations[statusId] = Mathf.Min(durations[statusId], duration);
+            durations[statusId] = Mathf.Max(durations[statusId], duration);
         }
     }
 
     private void Update()
     {
-        List<Status> statusesToRemove = new();
+        if (!IsServer) return;
+
+        _toRemove.Clear();
 
         foreach (int statusId in statusIds)
         {
@@ -33,19 +37,17 @@ public class StatusAffectable : NetworkBehaviour
             status.OnUpdate(gameObject);
             durations[statusId] -= Time.deltaTime;
             if (durations[statusId] < 0)
-            {
-                statusesToRemove.Add(status);
-            }
+                _toRemove.Add(status);
         }
 
-        foreach (Status statusToRemove in statusesToRemove)
-        {
-            RemoveStatus(statusToRemove);
-        }
+        foreach (Status s in _toRemove)
+            RemoveStatus(s);
     }
 
     public void RemoveStatus(Status status)
     {
+        if (!IsServer) return;
+
         int statusId = (int) status;
         if (statusIds.Remove(statusId))
         {
@@ -53,5 +55,4 @@ public class StatusAffectable : NetworkBehaviour
             status.OnEnd(gameObject);
         }
     }
-
 }

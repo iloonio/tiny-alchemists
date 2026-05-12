@@ -4,11 +4,10 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Holdable : NetworkBehaviour
 {
-    [SerializeField] private float _followPositionAcceleration = 50f;
-    [SerializeField] private float _followRotationAcceleration = 30f;
-
     private Rigidbody _rb;
     private Transform _holdPoint;
+    private Transform _camera;
+    private float _collisionRadius = 0.25f;
     private bool _isHeld = false;
     public bool IsHeld => _isHeld;
 
@@ -20,19 +19,19 @@ public class Holdable : NetworkBehaviour
         _rb = GetComponent<Rigidbody>();
     }
 
-    public void PickUp(Transform holdPoint)
+    public void PickUp(Transform holdPoint, Transform camera = null, float collisionRadius = 0.25f)
     {
         if (IsHeld) return;
 
         _isHeld = true;
         _holdPoint = holdPoint;
+        _camera = camera;
+        _collisionRadius = collisionRadius;
 
         _savedAngularDamping = _rb.angularDamping;
         _savedLinearDamping = _rb.linearDamping;
 
-        _rb.useGravity = false;
-        _rb.linearDamping = 10f;
-        _rb.angularDamping = 10f;
+        _rb.isKinematic = true;
     }
 
     public void Drop()
@@ -40,6 +39,7 @@ public class Holdable : NetworkBehaviour
         if (!IsHeld) return;
 
         _isHeld = false;
+        _rb.isKinematic = false;
         _rb.useGravity = true;
         _rb.linearDamping = _savedLinearDamping;
         _rb.angularDamping = _savedAngularDamping;
@@ -47,45 +47,36 @@ public class Holdable : NetworkBehaviour
 
     public void Toss(Vector3 force)
     {
+        Drop();
         _rb.AddForce(force, ForceMode.Impulse);
     }
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
-        if (IsHeld)
+        if (!_isHeld || _holdPoint == null) return;
+
+        Vector3 targetPos = _holdPoint.position;
+
+        // Wall avoidance
+        if (_camera != null)
         {
-            Follow();
+            Vector3 camPos = _camera.position;
+            Vector3 toTarget = targetPos - camPos;
+            float dist = toTarget.magnitude;
+
+            if (dist > 0.01f && Physics.SphereCast(camPos, _collisionRadius,
+                    toTarget.normalized, out RaycastHit wallHit, dist,
+                    ~0, QueryTriggerInteraction.Ignore))
+            {
+                if (wallHit.collider.gameObject != gameObject)
+                {
+                    float safeDist = Mathf.Max(wallHit.distance - _collisionRadius, 0.1f);
+                    targetPos = camPos + toTarget.normalized * safeDist;
+                }
+            }
         }
+
+        transform.position = targetPos;
+        transform.rotation = Quaternion.LookRotation(_holdPoint.forward, Vector3.up);
     }
-
-    public void Follow()
-    {
-        Vector3 toTarget = _holdPoint.position - _rb.position;
-
-        Vector3 desiredVelocity = toTarget * _followPositionAcceleration;
-
-        Vector3 velocityChange = desiredVelocity - _rb.linearVelocity;
-
-        _rb.AddForce(velocityChange, ForceMode.Acceleration);
-
-        Quaternion targetRotation = Quaternion.LookRotation(_holdPoint.forward, Vector3.up);
-
-        Quaternion delta = targetRotation * Quaternion.Inverse(_rb.rotation);
-
-        delta.ToAngleAxis(out float angle, out Vector3 axis);
-
-        if (angle > 180f)
-            angle -= 360f;
-
-        if (Mathf.Abs(angle) > 0.01f)
-        {
-            Vector3 angularVelocityTarget = axis * angle * Mathf.Deg2Rad * _followRotationAcceleration;
-
-            Vector3 angularVelocityChange = angularVelocityTarget - _rb.angularVelocity;
-
-            _rb.AddTorque(angularVelocityChange, ForceMode.Acceleration);
-        }
-    }
-
 }
-
