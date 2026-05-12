@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7344928163cc9e46a1df92832809692, type: 3}
+  m_Name: BouncyModifier
+  m_EditorClassIdentifier: Assembly-CSharp::BouncyModifierIngredientType
+  _id: 5
+  _color: {r: 0, g: 1, b: 0.08719444, a: 0}
+  _ingredientPrefab: {fileID: 9196376099781582157, guid: 0d6fdfe23665ec045b1b7c5d385fc764, type: 3}

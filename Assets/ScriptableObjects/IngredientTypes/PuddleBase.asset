@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5250b2a1ae678e24dae894887935b9c8, type: 3}
+  m_Name: PuddleBase
+  m_EditorClassIdentifier: Assembly-CSharp::PuddleBaseIngredientType
+  _id: 3
+  _color: {r: 1, g: 0, b: 0.90511465, a: 0}
+  _ingredientPrefab: {fileID: 9196376099781582157, guid: 99f57f198e40cbe4280025b3e02ac13d, type: 3}
+  _potionEffectPrefab: {fileID: 1944947861877657522, guid: 6bd4366d5b525f24aafbb47152128f1a, type: 3}
+  _duration: 120
