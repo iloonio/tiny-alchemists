@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -14,8 +12,6 @@ public class PlayerInteract : NetworkBehaviour
     [Header("Hold")]
     [SerializeField] private Transform _holdPoint;
     public Transform HoldPoint => _holdPoint;
-    [SerializeField] private float _followPositionSpeed = 30f;
-    [SerializeField] private float _followRotationSpeed = 10f;
 
     [Header("Throw")]
     [SerializeField] private float _throwForce = 5f;
@@ -75,7 +71,7 @@ public class PlayerInteract : NetworkBehaviour
             Interact(interactable);
         }
         else if (hit.collider.TryGetComponent(out Holdable holdable)
-            && holdable.NetworkObject.IsOwnedByServer)
+            && !holdable.IsHeld)
         {
             PickUp(holdable, hit.collider);
         }
