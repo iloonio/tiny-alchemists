@@ -1,17 +1,27 @@
 using UnityEngine;
+using Unity.Netcode;
 
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerPush : MonoBehaviour
+public class PlayerPush : NetworkBehaviour
 {
     private void OnCollisionStay(Collision collision)
     {
-        Pushable pushable = collision.gameObject.GetComponent<Pushable>();
-
-        if (pushable == null) return;
+        if (!collision.gameObject.TryGetComponent<Pushable>(out var pushable))
+        {
+            Debug.Log("No Pushable component found! How was this called?");
+            return;
+        }
 
         foreach (ContactPoint contact in collision.contacts)
         {
             pushable.PushServerRpc(-collision.impulse, contact.point);
         }
+    }
+
+    [Rpc(SendTo.Owner, InvokePermission = RpcInvokePermission.Everyone)]
+    public void ApplyForceToPlayerClientRpc()
+    {
+        // Logic here
+        Debug.Log("Applying force to player on client!");
     }
 }

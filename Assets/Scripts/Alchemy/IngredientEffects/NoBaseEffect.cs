@@ -15,7 +15,12 @@ public class NoBaseEffect : BaseEffect
     {
         foreach (var collider in Physics.OverlapSphere(effect.transform.position, Radius))
         {
-            if (collider.TryGetComponent(out Rigidbody rb))
+
+            if (collider.CompareTag("Player")) // Check to see if we hit a player first
+            {
+
+            }
+            else if (collider.TryGetComponent(out Rigidbody rb)) // Then handle server Authoritative parts
             {
                 rb.AddExplosionForce(ExplosionForce, effect.transform.position, Radius, 1f, ForceMode.Impulse);
             }
