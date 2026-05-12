@@ -1,14 +1,9 @@
 using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 
 /// Attach to any environment prop that can catch fire and be destroyed.
-/// 
-/// UNITY SETUP:
-///   - Tag the GameObject as "Flammable"
-///   - Add a Collider (can be trigger or solid)
-///   - Nearby Flammable objects within spreadRadius will also ignite
-
-public class FlammableObject : MonoBehaviour
+public class FlammableObject : NetworkBehaviour
 {
     [Tooltip("Time in seconds before this object is destroyed after igniting")]
     public float burnDuration = 3f;
@@ -21,9 +16,18 @@ public class FlammableObject : MonoBehaviour
 
     private bool _isBurning;
 
-    /// <summary>Call this to set the object on fire.</summary>
+    /*
     public void Ignite()
     {
+        if (_isBurning) return;
+        _isBurning = true;
+        StartCoroutine(BurnRoutine());
+    }
+    */
+
+    public void IgniteServer()
+    {
+        if (!IsServer) return;
         if (_isBurning) return;
         _isBurning = true;
         StartCoroutine(BurnRoutine());
@@ -49,6 +53,8 @@ public class FlammableObject : MonoBehaviour
 
     private void SpreadFire()
     {
+        if (!IsServer) return;
+
         Collider[] nearby = Physics.OverlapSphere(transform.position, spreadRadius);
         foreach (var col in nearby)
         {
@@ -56,7 +62,7 @@ public class FlammableObject : MonoBehaviour
             if (!col.CompareTag("Flammable")) continue;
 
             FlammableObject other = col.GetComponent<FlammableObject>();
-            if (other != null) other.Ignite();
+            if (other != null) other.IgniteServer();
         }
     }
 }
