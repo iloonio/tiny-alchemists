@@ -288,7 +288,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   _baseMoveAcceleration: 30
-  _baseMaxMoveSpeed: 5
+  _baseMaxMoveSpeed: 3
   _groundFriction: 20
   _baseJumpForce: 5
   _groundPoint: {fileID: 3998428015643916026}
@@ -298,6 +298,8 @@ MonoBehaviour:
   _groundLayer:
     serializedVersion: 2
     m_Bits: 448
+  MoveSpeedMultiplier: 1
+  JumpForceMultiplier: 1
 --- !u!114 &7087578872628324299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -357,6 +359,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _holdPoint: {fileID: 4782861426301992930}
+  _carryCollisionRadius: 0.25
   _throwForce: 10
 --- !u!114 &-423047658715276379
 MonoBehaviour:
@@ -434,6 +437,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccaba3187637e354ca32b003a4813885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerPush
+  ShowTopMostFoldoutHeaderGroup: 1
+  _pushForce: 8
 --- !u!114 &4991892091454183797
 MonoBehaviour:
   m_ObjectHideFlags: 0
