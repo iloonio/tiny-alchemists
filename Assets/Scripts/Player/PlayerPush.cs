@@ -9,7 +9,6 @@ public class PlayerPush : NetworkBehaviour
     {
         if (!collision.gameObject.TryGetComponent<Pushable>(out var pushable))
         {
-            Debug.Log("No Pushable component found! How was this called?");
             return;
         }
 
