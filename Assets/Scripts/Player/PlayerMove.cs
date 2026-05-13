@@ -64,7 +64,7 @@ public class PlayerMove : MonoBehaviour
 
     private void ClampHorizontalSpeed()
     {
-        float maxSpeed = _baseMaxMoveSpeed * _moveSpeedMultiplier;
+        float maxSpeed = _baseMaxMoveSpeed * MoveSpeedMultiplier;
         Vector3 horizontal = new Vector3(_rb.linearVelocity.x, 0f, _rb.linearVelocity.z);
 
         if (horizontal.magnitude > maxSpeed * 1.5f)
