@@ -20,7 +20,9 @@ public class PlayerMove : MonoBehaviour
     private Rigidbody _rb;
     private Vector2 _moveInput;
     private RaycastHit _groundHit;
-    private float _moveSpeedMultiplier = 1f;
+
+    [HideInInspector] public float MoveSpeedMultiplier = 1f;
+    [HideInInspector] public float JumpForceMultiplier = 1f;
 
     private void Start()
     {
@@ -46,10 +48,10 @@ public class PlayerMove : MonoBehaviour
     private void Move()
     {
         float horizontalSpeed = Vector3.Magnitude(new Vector3(_rb.linearVelocity.x, 0f, _rb.linearVelocity.z));
-        if (horizontalSpeed > _baseMaxMoveSpeed * _moveSpeedMultiplier) return;
+        if (horizontalSpeed > _baseMaxMoveSpeed * MoveSpeedMultiplier) return;
 
         Vector3 moveDir = transform.forward * _moveInput.y + transform.right * _moveInput.x;
-        float moveAcceleration = _baseMoveAcceleration * _moveSpeedMultiplier;
+        float moveAcceleration = _baseMoveAcceleration * MoveSpeedMultiplier;
 
         if (IsGrounded())
         {
@@ -73,7 +75,7 @@ public class PlayerMove : MonoBehaviour
     private void Jump()
     {
         if (!IsGrounded()) return;
-        _rb.AddForce(Vector3.up * _baseJumpForce, ForceMode.Impulse);
+        _rb.AddForce(Vector3.up * _baseJumpForce * JumpForceMultiplier, ForceMode.Impulse);
     }
 
     public bool IsMoving()
@@ -88,10 +90,5 @@ public class PlayerMove : MonoBehaviour
 
         float angle = Vector3.Angle(_groundHit.normal, Vector3.up);
         return angle <= _maxGroundAngle;
-    }
-
-    public void MultiplyMoveSpeed(float multiplier)
-    {
-        _moveSpeedMultiplier *= multiplier;
     }
 }

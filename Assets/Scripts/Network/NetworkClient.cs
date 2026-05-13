@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -7,6 +8,8 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerInteract))]
 public class NetworkClient : NetworkBehaviour
 {
+    public static readonly HashSet<NetworkClient> Players = new();
+
     public NetworkVariable<float> LookPitch = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     private PlayerInput _playerInput;
@@ -38,6 +41,8 @@ public class NetworkClient : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        Players.Add(this);
+
         if (IsOwner)
         {
             _playerInput.enabled = true;
@@ -57,7 +62,12 @@ public class NetworkClient : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
-        LookPitch.OnValueChanged -= OnLookPitchChanged;
+        Players.Remove(this);
+        
+        if (IsServer)
+        {
+            LookPitch.OnValueChanged -= OnLookPitchChanged;
+        }
     }
 
     private void OnLookPitchChanged(float previous, float current)
