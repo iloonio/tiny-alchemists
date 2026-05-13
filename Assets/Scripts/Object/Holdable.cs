@@ -6,13 +6,13 @@ public class Holdable : NetworkBehaviour
 {
     private Rigidbody _rb;
     private Transform _holdPoint;
-    private Transform _camera;
-    private float _collisionRadius = 0.25f;
     private bool _isHeld = false;
     public bool IsHeld => _isHeld;
 
+    private bool _savedGravity;
     private float _savedLinearDamping;
     private float _savedAngularDamping;
+    private RigidbodyInterpolation _savedInterpolation;
 
     private void Awake()
     {
@@ -25,13 +25,16 @@ public class Holdable : NetworkBehaviour
 
         _isHeld = true;
         _holdPoint = holdPoint;
-        _camera = camera;
-        _collisionRadius = collisionRadius;
 
+        _savedGravity = _rb.useGravity;
         _savedAngularDamping = _rb.angularDamping;
         _savedLinearDamping = _rb.linearDamping;
+        _savedInterpolation = _rb.interpolation;
 
-        _rb.isKinematic = true;
+        _rb.useGravity = false;
+        _rb.linearDamping = 10f;
+        _rb.angularDamping = 10f;
+        _rb.interpolation = RigidbodyInterpolation.Interpolate;
     }
 
     public void Drop()
@@ -39,10 +42,10 @@ public class Holdable : NetworkBehaviour
         if (!IsHeld) return;
 
         _isHeld = false;
-        _rb.isKinematic = false;
-        _rb.useGravity = true;
+        _rb.useGravity = _savedGravity;
         _rb.linearDamping = _savedLinearDamping;
         _rb.angularDamping = _savedAngularDamping;
+        _rb.interpolation = _savedInterpolation;
     }
 
     public void Toss(Vector3 force)
@@ -51,32 +54,13 @@ public class Holdable : NetworkBehaviour
         _rb.AddForce(force, ForceMode.Impulse);
     }
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         if (!_isHeld || _holdPoint == null) return;
 
-        Vector3 targetPos = _holdPoint.position;
+        _rb.MovePosition(Vector3.Lerp(_rb.position, _holdPoint.position, 20f * Time.fixedDeltaTime));
 
-        // Wall avoidance
-        if (_camera != null)
-        {
-            Vector3 camPos = _camera.position;
-            Vector3 toTarget = targetPos - camPos;
-            float dist = toTarget.magnitude;
-
-            if (dist > 0.01f && Physics.SphereCast(camPos, _collisionRadius,
-                    toTarget.normalized, out RaycastHit wallHit, dist,
-                    ~0, QueryTriggerInteraction.Ignore))
-            {
-                if (wallHit.collider.gameObject != gameObject)
-                {
-                    float safeDist = Mathf.Max(wallHit.distance - _collisionRadius, 0.1f);
-                    targetPos = camPos + toTarget.normalized * safeDist;
-                }
-            }
-        }
-
-        transform.position = targetPos;
-        transform.rotation = Quaternion.LookRotation(_holdPoint.forward, Vector3.up);
+        Quaternion targetRot = Quaternion.LookRotation(_holdPoint.forward, Vector3.up);
+        _rb.MoveRotation(Quaternion.Slerp(_rb.rotation, targetRot, 20f * Time.fixedDeltaTime));
     }
 }
