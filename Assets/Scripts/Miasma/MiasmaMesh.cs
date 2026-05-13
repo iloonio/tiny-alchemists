@@ -1,7 +1,6 @@
 using UnityEngine;
 using Unity.Netcode;
 using System.Collections.Generic;
-using System;
 
 public class MiasmaMesh : NetworkBehaviour 
 {

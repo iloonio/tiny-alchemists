@@ -1,7 +1,9 @@
 using UnityEngine;
+using Unity.Netcode;
 
+// This file handles all physics involving players, which includes players pushing & being pushed by objects.
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerPush : MonoBehaviour
+public class PlayerPush : NetworkBehaviour
 {
     [SerializeField] private float _pushForce = 8f;
 
@@ -14,8 +16,10 @@ public class PlayerPush : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
-        Pushable pushable = collision.gameObject.GetComponent<Pushable>();
-        if (pushable == null) return;
+        if (!collision.gameObject.TryGetComponent<Pushable>(out var pushable))
+        {
+            return;
+        }
 
         Vector3 pushDir = collision.transform.position - transform.position;
         pushDir.y = 0f;
@@ -30,5 +34,13 @@ public class PlayerPush : MonoBehaviour
         {
             pushable.PushServerRpc(pushDir * _pushForce, collision.GetContact(0).point);
         }
+    }
+
+    [Rpc(SendTo.Owner, InvokePermission = RpcInvokePermission.Everyone)]
+    public void ApplyForceToPlayerClientRpc(float ExplosionForce, Vector3 ForceOrigin, float ExplosionRadius)
+    {
+        // THIS SHOULD WORK?
+        gameObject.GetComponent<Rigidbody>().AddExplosionForce(ExplosionForce, ForceOrigin, ExplosionRadius, 1f, ForceMode.Impulse);
+        Debug.Log($"Applied {ExplosionForce} force to player on the client-side from the point: {ForceOrigin}");
     }
 }

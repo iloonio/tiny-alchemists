@@ -20,7 +20,9 @@ public class PlayerMove : MonoBehaviour
     private Rigidbody _rb;
     private Vector2 _moveInput;
     private RaycastHit _groundHit;
-    private float _moveSpeedMultiplier = 1f;
+
+    [HideInInspector] public float MoveSpeedMultiplier = 1f;
+    [HideInInspector] public float JumpForceMultiplier = 1f;
 
     private void Start()
     {
@@ -47,11 +49,11 @@ public class PlayerMove : MonoBehaviour
 
     private void Move()
     {
-        float horizontalSpeed = new Vector3(_rb.linearVelocity.x, 0f, _rb.linearVelocity.z).magnitude;
-        if (horizontalSpeed > _baseMaxMoveSpeed * _moveSpeedMultiplier) return;
+        float horizontalSpeed = Vector3.Magnitude(new Vector3(_rb.linearVelocity.x, 0f, _rb.linearVelocity.z));
+        if (horizontalSpeed > _baseMaxMoveSpeed * MoveSpeedMultiplier) return;
 
         Vector3 moveDir = transform.forward * _moveInput.y + transform.right * _moveInput.x;
-        float moveAcceleration = _baseMoveAcceleration * _moveSpeedMultiplier;
+        float moveAcceleration = _baseMoveAcceleration * MoveSpeedMultiplier;
 
         if (IsGrounded())
             moveDir = Vector3.ProjectOnPlane(moveDir, _groundHit.normal);
@@ -82,7 +84,7 @@ public class PlayerMove : MonoBehaviour
     private void Jump()
     {
         if (!IsGrounded()) return;
-        _rb.AddForce(Vector3.up * _baseJumpForce, ForceMode.Impulse);
+        _rb.AddForce(Vector3.up * _baseJumpForce * JumpForceMultiplier, ForceMode.Impulse);
     }
 
     public bool IsMoving() => _moveInput.sqrMagnitude > 0.01f;
@@ -92,10 +94,5 @@ public class PlayerMove : MonoBehaviour
         bool hit = Physics.SphereCast(_groundPoint.position, _groundCheckRadius, Vector3.down, out _groundHit, _groundCheckDistance, _groundLayer, QueryTriggerInteraction.Ignore);
         if (!hit) return false;
         return Vector3.Angle(_groundHit.normal, Vector3.up) <= _maxGroundAngle;
-    }
-
-    public void MultiplyMoveSpeed(float multiplier)
-    {
-        _moveSpeedMultiplier *= multiplier;
     }
 }

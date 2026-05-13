@@ -1,58 +1,107 @@
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
 public class StatusAffectable : NetworkBehaviour
 {
-    private NetworkList<int> statusIds = new();
-    private Dictionary<int, float> durations = new();
-    private readonly List<Status> _toRemove = new();
 
-    public void AddStatus(Status status, float duration)
+    private List<Status> _statuses = new();
+    private NetworkList<int> _statusIds = new();
+    private Dictionary<int, float> _durations = new();
+
+
+    public override void OnNetworkSpawn()
     {
-        if (!IsServer) return;
+        _statusIds.OnListChanged += OnStatusChanged;
+    }
 
-        int statusId = (int) status;
-        if (!statusIds.Contains(statusId))
+    public override void OnNetworkDespawn()
+    {
+        _statusIds.OnListChanged -= OnStatusChanged;
+    }
+
+    private void OnStatusChanged(NetworkListEvent<int> changeEvent)
+    {
+        Status status = (Status) changeEvent.Value;
+
+        switch (changeEvent.Type) 
         {
-            statusIds.Add(statusId);
-            durations.Add(statusId, duration);
-            status.OnStart(gameObject);
-        }
-        else
-        {
-            durations[statusId] = Mathf.Max(durations[statusId], duration);
+            case NetworkListEvent<int>.EventType.Add:
+                status.OnStatusStart(gameObject);   
+                _statuses.Add(status);
+                Debug.Log("Added status " + status.name + " to " + gameObject.name);
+                break;
+
+            case NetworkListEvent<int>.EventType.Remove:
+                status.OnStatusEnd(gameObject);
+                _statuses.Remove(status);
+                Debug.Log("Removed status " + status.name + " from " + gameObject.name);
+                break;
+            
+            default:
+                break;
         }
     }
 
+    private void FixedUpdate()
+    {
+        foreach (Status status in _statuses)
+        {
+            status.OnStatusFixedUpdate(gameObject);
+        }
+    }
+
+    public void AddStatus(Status status, float duration)
+    {
+        AddStatusRpc((int) status, duration);
+    }
+
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    public void AddStatusRpc(int statusId, float duration)
+    {
+        if (!_statusIds.Contains(statusId))
+        {
+            _statusIds.Add(statusId);
+            _durations[statusId] = duration;
+        }
+        else
+        {
+            _durations[statusId] = Mathf.Max(_durations[statusId], duration);
+        }
+    }
+    
     private void Update()
     {
         if (!IsServer) return;
 
-        _toRemove.Clear();
+        List<int> remove = new();
 
-        foreach (int statusId in statusIds)
+        foreach (var statusId in _durations.Keys.ToList())
         {
-            Status status = (Status) statusId;
-            status.OnUpdate(gameObject);
-            durations[statusId] -= Time.deltaTime;
-            if (durations[statusId] < 0)
-                _toRemove.Add(status);
+            _durations[statusId] -= Time.deltaTime;
+            if (_durations[statusId] < 0)
+            {
+                remove.Add(statusId);
+            }
         }
 
-        foreach (Status s in _toRemove)
-            RemoveStatus(s);
+        foreach (int statusId in remove)
+        {
+            _statusIds.Remove(statusId);
+            _durations.Remove(statusId);
+        }
     }
 
     public void RemoveStatus(Status status)
     {
-        if (!IsServer) return;
+        RemoveStatusRpc((int) status);
+    }
 
-        int statusId = (int) status;
-        if (statusIds.Remove(statusId))
-        {
-            durations.Remove(statusId);
-            status.OnEnd(gameObject);
-        }
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    public void RemoveStatusRpc(int statusId)
+    {
+        _statusIds.Remove(statusId);
+        _durations.Remove(statusId);
     }
 }
