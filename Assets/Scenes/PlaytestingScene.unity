@@ -344,7 +344,7 @@ MonoBehaviour:
   _sides: 0
   _bottom: 0
   _thickness: 2
-  _rate: 5
+  _rate: 1
   _threshold: 0
   _startActive: 0
 --- !u!1001 &32908293
@@ -11576,10 +11576,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MiasmaManager
   ShowTopMostFoldoutHeaderGroup: 1
   _cellSize: 0.5
-  _origin: {x: -32, y: 0, z: -32}
+  _origin: {x: -32, y: -2, z: -32}
   _gridSize: {x: 64, y: 10, z: 64}
   _growthInterval: 2
-  _growthBaseRate: 0.01
+  _growthBaseRate: 0.001
   _spawnBaseRate: 0.0001
   _influenceDecay: 0.8
   _status: {fileID: 11400000, guid: 19afbb7df7c25cf4c851796fd27bd8d9, type: 2}
@@ -13245,7 +13245,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a9660d3938999f245b81a896fbfea96a, type: 2}
+  - {fileID: 2100000, guid: 1b5d1f44d456a53cfa12d7b27a00ee1b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
