@@ -343,7 +343,7 @@ MonoBehaviour:
   _top: 1
   _sides: 0
   _bottom: 0
-  _thickness: 2
+  _thickness: 1
   _rate: 1
   _threshold: 0
   _startActive: 0
@@ -464,7 +464,7 @@ MonoBehaviour:
   _top: 1
   _sides: 0
   _bottom: 0
-  _thickness: 1
+  _thickness: 0.5
   _rate: 1
   _threshold: 0
   _startActive: 0
@@ -2813,7 +2813,7 @@ MonoBehaviour:
   _top: 1
   _sides: 0
   _bottom: 0
-  _thickness: 1
+  _thickness: 0.5
   _rate: 1
   _threshold: 0
   _startActive: 0
@@ -2832,7 +2832,7 @@ MonoBehaviour:
   _top: 1
   _sides: 0
   _bottom: 0
-  _thickness: 1
+  _thickness: 0.5
   _rate: 1
   _threshold: 0
   _startActive: 0
@@ -3496,7 +3496,7 @@ MonoBehaviour:
   _top: 1
   _sides: 0
   _bottom: 0
-  _thickness: 2
+  _thickness: 1
   _rate: 1
   _threshold: 0
   _startActive: 0
@@ -3849,7 +3849,7 @@ MonoBehaviour:
   _top: 1
   _sides: 0
   _bottom: 0
-  _thickness: 2
+  _thickness: 1
   _rate: 1
   _threshold: 0
   _startActive: 0
@@ -4719,7 +4719,7 @@ MonoBehaviour:
   _top: 1
   _sides: 0
   _bottom: 0
-  _thickness: 2
+  _thickness: 1
   _rate: 1
   _threshold: 0
   _startActive: 0
@@ -5756,7 +5756,7 @@ MonoBehaviour:
   _top: 1
   _sides: 0
   _bottom: 0
-  _thickness: 1
+  _thickness: 0.5
   _rate: 1
   _threshold: 0
   _startActive: 0
@@ -6079,7 +6079,7 @@ MonoBehaviour:
   _top: 1
   _sides: 0
   _bottom: 0
-  _thickness: 2
+  _thickness: 1
   _rate: 1
   _threshold: 0
   _startActive: 0
@@ -9826,7 +9826,7 @@ MonoBehaviour:
   _top: 1
   _sides: 0
   _bottom: 0
-  _thickness: 2
+  _thickness: 1
   _rate: 1
   _threshold: 0
   _startActive: 0
@@ -10923,7 +10923,7 @@ MonoBehaviour:
   _top: 1
   _sides: 0
   _bottom: 0
-  _thickness: 2
+  _thickness: 1
   _rate: 1
   _threshold: 0
   _startActive: 0
