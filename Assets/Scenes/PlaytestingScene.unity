@@ -5892,7 +5892,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2863783995
+  GlobalObjectIdHash: 619795460
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -6905,7 +6905,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7707588260297293554, guid: 990282b106e1944a286dc7ff887f758e, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 1243576998
+      value: 1002321293
       objectReference: {fileID: 0}
     - target: {fileID: 7707588260297293554, guid: 990282b106e1944a286dc7ff887f758e, type: 3}
       propertyPath: SceneMigrationSynchronization
@@ -7146,7 +7146,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7707588260297293554, guid: 990282b106e1944a286dc7ff887f758e, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 2604092454
+      value: 72765579
       objectReference: {fileID: 0}
     - target: {fileID: 7707588260297293554, guid: 990282b106e1944a286dc7ff887f758e, type: 3}
       propertyPath: SceneMigrationSynchronization
@@ -7205,67 +7205,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 990282b106e1944a286dc7ff887f758e, type: 3}
---- !u!1001 &1193665805
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1138126831973367691, guid: 752ea64f91e95544fa1fcd882251438a, type: 3}
-      propertyPath: NetworkConfig.PlayerPrefab
-      value: 
-      objectReference: {fileID: 4288260960102316284, guid: 61287e896f6339442b2520406243670f, type: 3}
-    - target: {fileID: 1260447976095545285, guid: 752ea64f91e95544fa1fcd882251438a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1260447976095545285, guid: 752ea64f91e95544fa1fcd882251438a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1260447976095545285, guid: 752ea64f91e95544fa1fcd882251438a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1260447976095545285, guid: 752ea64f91e95544fa1fcd882251438a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1260447976095545285, guid: 752ea64f91e95544fa1fcd882251438a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1260447976095545285, guid: 752ea64f91e95544fa1fcd882251438a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1260447976095545285, guid: 752ea64f91e95544fa1fcd882251438a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1260447976095545285, guid: 752ea64f91e95544fa1fcd882251438a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1260447976095545285, guid: 752ea64f91e95544fa1fcd882251438a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1260447976095545285, guid: 752ea64f91e95544fa1fcd882251438a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8042928099181787055, guid: 752ea64f91e95544fa1fcd882251438a, type: 3}
-      propertyPath: m_Name
-      value: NetworkManager
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 752ea64f91e95544fa1fcd882251438a, type: 3}
 --- !u!1001 &1195039144
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7478,7 +7417,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1933533967
+  GlobalObjectIdHash: 2358602719
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -11450,7 +11389,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7707588260297293554, guid: 990282b106e1944a286dc7ff887f758e, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 699032649
+      value: 403009282
       objectReference: {fileID: 0}
     - target: {fileID: 7707588260297293554, guid: 990282b106e1944a286dc7ff887f758e, type: 3}
       propertyPath: SceneMigrationSynchronization
@@ -12696,7 +12635,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7707588260297293554, guid: 990282b106e1944a286dc7ff887f758e, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 2713782370
+      value: 4000650790
       objectReference: {fileID: 0}
     - target: {fileID: 7707588260297293554, guid: 990282b106e1944a286dc7ff887f758e, type: 3}
       propertyPath: SceneMigrationSynchronization
@@ -13119,7 +13058,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 946663962}
-  - {fileID: 1193665805}
   - {fileID: 1003277586}
   - {fileID: 1230741579}
   - {fileID: 1745022717}
