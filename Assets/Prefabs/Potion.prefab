@@ -289,4 +289,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Potion
   ShowTopMostFoldoutHeaderGroup: 1
-  _breakSpeed: 5
+  _breakSpeed: 10
