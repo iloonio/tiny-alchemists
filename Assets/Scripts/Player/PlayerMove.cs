@@ -31,8 +31,10 @@ public class PlayerMove : MonoBehaviour
 
     private void FixedUpdate()
     {
+        _rb.rotation = transform.rotation;
         ApplyFriction();
         Move();
+        ClampHorizontalSpeed();
     }
 
     private void OnMove(InputValue value)
@@ -54,21 +56,28 @@ public class PlayerMove : MonoBehaviour
         float moveAcceleration = _baseMoveAcceleration * MoveSpeedMultiplier;
 
         if (IsGrounded())
-        {
             moveDir = Vector3.ProjectOnPlane(moveDir, _groundHit.normal);
-        }
 
         Vector3 acceleration = moveDir.normalized * moveAcceleration * Time.fixedDeltaTime;
-
         _rb.linearVelocity += acceleration;
+    }
+
+    private void ClampHorizontalSpeed()
+    {
+        float maxSpeed = _baseMaxMoveSpeed * _moveSpeedMultiplier;
+        Vector3 horizontal = new Vector3(_rb.linearVelocity.x, 0f, _rb.linearVelocity.z);
+
+        if (horizontal.magnitude > maxSpeed * 1.5f)
+        {
+            horizontal = horizontal.normalized * maxSpeed * 1.5f;
+            _rb.linearVelocity = new Vector3(horizontal.x, _rb.linearVelocity.y, horizontal.z);
+        }
     }
 
     private void ApplyFriction()
     {
         if (!IsGrounded()) return;
-
         float friction = _groundFriction * Time.fixedDeltaTime;
-
         _rb.linearVelocity = Vector3.MoveTowards(_rb.linearVelocity, Vector3.zero, friction);
     }
 
@@ -78,17 +87,12 @@ public class PlayerMove : MonoBehaviour
         _rb.AddForce(Vector3.up * _baseJumpForce * JumpForceMultiplier, ForceMode.Impulse);
     }
 
-    public bool IsMoving()
-    {
-        return _moveInput.sqrMagnitude > 0.01f;
-    }
+    public bool IsMoving() => _moveInput.sqrMagnitude > 0.01f;
 
     public bool IsGrounded()
     {
         bool hit = Physics.SphereCast(_groundPoint.position, _groundCheckRadius, Vector3.down, out _groundHit, _groundCheckDistance, _groundLayer, QueryTriggerInteraction.Ignore);
         if (!hit) return false;
-
-        float angle = Vector3.Angle(_groundHit.normal, Vector3.up);
-        return angle <= _maxGroundAngle;
+        return Vector3.Angle(_groundHit.normal, Vector3.up) <= _maxGroundAngle;
     }
 }

@@ -5,6 +5,15 @@ using Unity.Netcode;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerPush : NetworkBehaviour
 {
+    [SerializeField] private float _pushForce = 8f;
+
+    private Rigidbody _rb;
+
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody>();
+    }
+
     private void OnCollisionStay(Collision collision)
     {
         if (!collision.gameObject.TryGetComponent<Pushable>(out var pushable))
@@ -12,9 +21,18 @@ public class PlayerPush : NetworkBehaviour
             return;
         }
 
-        foreach (ContactPoint contact in collision.contacts)
+        Vector3 pushDir = collision.transform.position - transform.position;
+        pushDir.y = 0f;
+        pushDir.Normalize();
+
+        if (pushDir.sqrMagnitude < 0.01f) return;
+
+        float dot = Vector3.Dot(_rb.linearVelocity.normalized, pushDir);
+        if (dot < 0.3f) return;
+
+        if (collision.contactCount > 0)
         {
-            pushable.PushServerRpc(-collision.impulse, contact.point);
+            pushable.PushServerRpc(pushDir * _pushForce, collision.GetContact(0).point);
         }
     }
 
