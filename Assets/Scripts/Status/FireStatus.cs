@@ -5,19 +5,19 @@ public class FireStatus : Status
 {
     [SerializeField] private float _speedMultiplier = 1.5f;
 
-    public override void OnStart(GameObject target)
+    public override void OnStatusStart(GameObject target)
     {
         if (target.TryGetComponent(out PlayerMove playerMove))
         {
-            playerMove.MultiplyMoveSpeed(_speedMultiplier);
+            playerMove.MoveSpeedMultiplier *= _speedMultiplier;
         }
     }
 
-    public override void OnEnd(GameObject target)
+    public override void OnStatusEnd(GameObject target)
     {
         if (target.TryGetComponent(out PlayerMove playerMove))
         {
-            playerMove.MultiplyMoveSpeed(1f / _speedMultiplier);
+            playerMove.MoveSpeedMultiplier *= 1f / _speedMultiplier;
         }
     }
 }

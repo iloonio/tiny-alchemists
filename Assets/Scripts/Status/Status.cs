@@ -38,7 +38,7 @@ public abstract class Status : ScriptableObject
         return _byId.TryGetValue(id, out var value) ? value : null;
     }
 
-    public virtual void OnStart(GameObject target) {}
-    public virtual void OnUpdate(GameObject target) {}
-    public virtual void OnEnd(GameObject target) {}
+    public virtual void OnStatusStart(GameObject target) {}
+    public virtual void OnStatusFixedUpdate(GameObject target) {}
+    public virtual void OnStatusEnd(GameObject target) {}
 }
