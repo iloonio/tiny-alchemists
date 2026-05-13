@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 
+// This file handles all physics involving players, which includes players pushing & being pushed by objects.
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerPush : NetworkBehaviour
 {
@@ -19,9 +20,10 @@ public class PlayerPush : NetworkBehaviour
     }
 
     [Rpc(SendTo.Owner, InvokePermission = RpcInvokePermission.Everyone)]
-    public void ApplyForceToPlayerClientRpc()
+    public void ApplyForceToPlayerClientRpc(float ExplosionForce, Vector3 ForceOrigin, float ExplosionRadius)
     {
-        // Logic here
-        Debug.Log("Applying force to player on client!");
+        // THIS SHOULD WORK?
+        gameObject.GetComponent<Rigidbody>().AddExplosionForce(ExplosionForce, ForceOrigin, ExplosionRadius, 1f, ForceMode.Impulse);
+        Debug.Log($"Applied {ExplosionForce} force to player on the client-side from the point: {ForceOrigin}");
     }
 }
