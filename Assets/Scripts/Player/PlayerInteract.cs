@@ -23,9 +23,49 @@ public class PlayerInteract : NetworkBehaviour
     private Collider _heldCollider;
     private Collider _collider;
 
+    private InteractHintUI _hintUI;
+
     private void Awake()
     {
         _collider = GetComponent<Collider>();
+        _hintUI = GetComponent<InteractHintUI>();
+    }
+
+    private void Update()
+    {
+        if (!IsOwner) return;
+        UpdateHint();
+    }
+
+    private void UpdateHint()
+    {
+        // don't show hints while holding something
+        if (IsHolding)
+        {
+            _hintUI.Hide();
+            return;
+        }
+
+        if (!Physics.Raycast(_playerCamera.position, _playerCamera.forward,
+                out RaycastHit hit, _interactDistance, _interactLayer))
+        {
+            _hintUI.Hide();
+            return;
+        }
+
+        if (hit.collider.TryGetComponent(out Holdable holdable) && !holdable.IsHeld)
+        {
+            string objectName = holdable.gameObject.name.Replace("(Clone)", "").Trim();
+            string hint = holdable.GetComponent<Ingredient>() != null
+                ? $"[LMB] Pick up {objectName} (ingredient)"
+                : $"[LMB] Pick up {objectName}";
+
+            _hintUI.Show(hint);
+        }
+        else
+        {
+            _hintUI.Hide();
+        }
     }
 
     private void OnInteract()
