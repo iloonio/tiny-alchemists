@@ -189,7 +189,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5475370442558850855}
-  - component: {fileID: 5656226439880718289}
   - component: {fileID: 4470771613325480202}
   - component: {fileID: 6316426580575182204}
   - component: {fileID: 7087578872628324299}
@@ -200,6 +199,7 @@ GameObject:
   - component: {fileID: 8194370698836893795}
   - component: {fileID: 4991892091454183797}
   - component: {fileID: 6698906886167099103}
+  - component: {fileID: 4466554834649858101}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -225,29 +225,6 @@ Transform:
   - {fileID: 3998428015643916026}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &5656226439880718289
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4288260960102316284}
-  m_Material: {fileID: 13400000, guid: fcbd7e1d43024ec4cb0d8b262b422373, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.25
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &4470771613325480202
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -357,8 +334,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _holdPoint: {fileID: 4782861426301992930}
-  _followPositionSpeed: 100
-  _followRotationSpeed: 50
   _throwForce: 10
 --- !u!114 &-423047658715276379
 MonoBehaviour:
@@ -419,6 +394,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkClient
   ShowTopMostFoldoutHeaderGroup: 1
+  LookPitch:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
 --- !u!114 &8194370698836893795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -474,6 +454,27 @@ MonoBehaviour:
   m_DefaultActionMap: Game
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 3752168555914677271}
+--- !u!65 &4466554834649858101
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4288260960102316284}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6305013888629111460
 GameObject:
   m_ObjectHideFlags: 0
