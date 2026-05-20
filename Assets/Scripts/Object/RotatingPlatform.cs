@@ -7,7 +7,7 @@ using UnityEditor;
 public class RotatingPlatform : MonoBehaviour
 {
     [Header("Rotation Settings")]
-    [Tooltip("Degrees per second around each local axis (X,Y,Z")]
+    [Tooltip("Degrees per second around each local axis (X,Y,Z)")]
     [SerializeField] private Vector3 rotationSpeed = new(0, 45f, 0);
 
     // public properties for the editor to see

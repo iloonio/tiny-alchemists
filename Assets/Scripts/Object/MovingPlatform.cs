@@ -4,20 +4,42 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
+
+/// MovingPlatform handles movement of platforms, and it communicates with PlayerMove.cs
+/// In order to ensure that the player is affected by the velocity of the platform when they
+/// are standing on it.
+///
+[RequireComponent(typeof(Rigidbody))]
 public class MovingPlatform : MonoBehaviour
 {
     [Header("MovementSettings")]
     [SerializeField] private Vector3 localPointA = new(-3, 0, 0);
     [SerializeField] private Vector3 localPointB = new(3, 0, 0);
     [SerializeField] private float speed = 3f;
+    [Tooltip("whether the speed of the platform should change linearly or remain constant as it moves. Set to true to have it change linearly.")]
+    [SerializeField] private bool useEasing = true;
 
     // public properties for the editor to see
     public Vector3 LocalPointA { get => localPointA; set => localPointA = value; }
     public Vector3 LocalPointB { get => localPointB; set => localPointB = value; }
+    public bool UseEasing { get => useEasing; set => useEasing = value; }
+    public Vector3 Velocity { get; private set; }
 
+    private Rigidbody _rb;
     private Vector3 worldPointA;
     private Vector3 worldPointB;
-    private Vector3 nextTarget;
+    private float progress = 0f; //0 = at A, 1 = at B
+    private int direction = 1; // are we moving towards A, or towards B?
+    private Vector3 _lastPosition; // tracks position of platform from the previous fixed update.
+    private Vector3 _targetPosition;
+
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody>();
+        _rb.isKinematic = true;
+        _rb.useGravity = false;
+        _rb.interpolation = RigidbodyInterpolation.Interpolate;
+    }
 
     private void Start()
     {
@@ -25,19 +47,30 @@ public class MovingPlatform : MonoBehaviour
         worldPointB = transform.TransformPoint(localPointB);
 
         // start at Point A, move towards point B.
-        transform.position = worldPointA;
-        nextTarget = worldPointB;
+        _targetPosition = worldPointA;
+        _rb.position = worldPointA;
+        _lastPosition = _rb.position;
     }
 
     private void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, nextTarget, speed * Time.deltaTime);
+        float step = (speed * Time.deltaTime) / Vector3.Distance(worldPointA, worldPointB);
+        progress += step * direction;
 
-        // switch targets if we are close enough
-        if (Vector3.Distance(transform.position, nextTarget) < 0.001f)
-        {
-            nextTarget = (nextTarget == worldPointA) ? worldPointB : worldPointA;
-        }
+        //alternate between 0 and 1
+        if (progress >= 1f || progress <= 0f) direction *= -1; //inverse direction when we reach A or B
+        progress = Mathf.Clamp01(progress); //Clamp01 specifically clamps between 0 and 1.
+
+        float t = useEasing ? Mathf.SmoothStep(0f, 1f, progress) : progress;
+        _targetPosition = Vector3.Lerp(worldPointA, worldPointB, t);
+    }
+
+    // Move the kinematic rigidbody in FixedUpdate so physics samples a smooth velocity.
+    private void FixedUpdate()
+    {
+        _rb.MovePosition(_targetPosition);
+        Velocity = (_rb.position - _lastPosition) / Time.fixedDeltaTime;
+        _lastPosition = _rb.position;
     }
 }
 
@@ -46,6 +79,13 @@ public class MovingPlatform : MonoBehaviour
 public class MovingPlatformEditor : Editor
 {
     // NOTICE: this was made with the help of Gemini
+
+    public override void OnInspectorGUI()
+    {
+        //not sure what this accomplishes. but ummm thanks gemini?
+        base.OnInspectorGUI();
+    }
+
     private void OnSceneGUI()
     {
         MovingPlatform platform = (MovingPlatform)target;
