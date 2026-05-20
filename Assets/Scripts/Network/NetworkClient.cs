@@ -19,6 +19,7 @@ public class NetworkClient : NetworkBehaviour
     private PlayerInteract _playerInteract;
     private Camera _playerCamera;
     private AudioListener _audioListener;
+    private InteractHintUI _interactHintUI;
 
     private void Awake()
     {
@@ -29,6 +30,7 @@ public class NetworkClient : NetworkBehaviour
         _playerInteract = GetComponent<PlayerInteract>();
         _playerCamera = GetComponentInChildren<Camera>();
         _audioListener = GetComponentInChildren<AudioListener>();
+        _interactHintUI = GetComponent<InteractHintUI>();
 
         _playerInput.enabled = false;
         _playerMovement.enabled = false;
@@ -37,6 +39,9 @@ public class NetworkClient : NetworkBehaviour
         _playerInteract.enabled = false;
         _playerCamera.enabled = false;
         _audioListener.enabled = false;
+
+        if (_interactHintUI != null && _interactHintUI.Canvas != null)
+            _interactHintUI.Canvas.enabled = false;
     }
 
     public override void OnNetworkSpawn()
@@ -52,6 +57,7 @@ public class NetworkClient : NetworkBehaviour
             _playerInteract.enabled = true;
             _playerCamera.enabled = true;
             _audioListener.enabled = true;
+            // InteractHintUI is enabled — its canvas visibility is controlled by Show()/Hide() during gameplay.
         }
 
         if (IsServer)
