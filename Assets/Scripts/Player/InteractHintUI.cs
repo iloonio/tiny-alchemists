@@ -20,6 +20,10 @@ public class InteractHintUI : MonoBehaviour
     private void Awake()
     {
         // --- Canvas (screen-space overlay, owned by this player) ---
+
+        // TODO: do not spawn new game objects in this manner!
+        // Instead, add a canvas element to the player prefab
+        // and update NetworkClient.cs to enable the canvas for owner only.
         GameObject canvasObj = new GameObject("HintCanvas");
         canvasObj.transform.SetParent(transform);
 
@@ -41,6 +45,8 @@ public class InteractHintUI : MonoBehaviour
         _text.fontSize = _fontSize;
         _text.color = Color.white;
         _text.alignment = TextAlignmentOptions.Center;
+
+        // TODO: This is deprecated. Use EnabledWordWrapping property instead.
         _text.enableWordWrapping = false;
 
         // outline for readability
