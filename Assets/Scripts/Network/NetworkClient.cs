@@ -19,6 +19,7 @@ public class NetworkClient : NetworkBehaviour
     private PlayerInteract _playerInteract;
     private Camera _playerCamera;
     private AudioListener _audioListener;
+    private Canvas _canvas;
 
     private void Awake()
     {
@@ -29,6 +30,7 @@ public class NetworkClient : NetworkBehaviour
         _playerInteract = GetComponent<PlayerInteract>();
         _playerCamera = GetComponentInChildren<Camera>();
         _audioListener = GetComponentInChildren<AudioListener>();
+        _canvas = GetComponentInChildren<Canvas>();
 
         _playerInput.enabled = false;
         _playerMovement.enabled = false;
@@ -37,6 +39,7 @@ public class NetworkClient : NetworkBehaviour
         _playerInteract.enabled = false;
         _playerCamera.enabled = false;
         _audioListener.enabled = false;
+        _canvas.enabled = false;
     }
 
     public override void OnNetworkSpawn()
@@ -52,6 +55,7 @@ public class NetworkClient : NetworkBehaviour
             _playerInteract.enabled = true;
             _playerCamera.enabled = true;
             _audioListener.enabled = true;
+            _canvas.enabled = true;
         }
 
         if (IsServer)
@@ -63,7 +67,7 @@ public class NetworkClient : NetworkBehaviour
     public override void OnNetworkDespawn()
     {
         Players.Remove(this);
-        
+
         if (IsServer)
         {
             LookPitch.OnValueChanged -= OnLookPitchChanged;
