@@ -13195,6 +13195,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MiasmaMesh
   ShowTopMostFoldoutHeaderGroup: 1
+  tileScale: 0.25
 --- !u!114 &2003805141
 MonoBehaviour:
   m_ObjectHideFlags: 0
