@@ -42,9 +42,10 @@ public class PotionEffect : NetworkBehaviour
 
     private void Start()
     {
+        EffectSetup();
+
         if (!IsServer) return;
 
-        EffectSetup();
         EffectStart();
         StartCoroutine(DespawnAfter(_baseEffect.Duration));
     }
