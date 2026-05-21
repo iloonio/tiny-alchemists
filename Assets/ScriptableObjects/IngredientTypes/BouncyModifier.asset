@@ -15,3 +15,7 @@ MonoBehaviour:
   _id: 5
   _color: {r: 0, g: 1, b: 0.08719444, a: 0}
   _ingredientPrefab: {fileID: 9196376099781582157, guid: 0d6fdfe23665ec045b1b7c5d385fc764, type: 3}
+  _bouncyStatus: {fileID: 11400000, guid: 8c9187f08bab6b849a3fcea0b44e8e6e, type: 2}
+  _statusDuration: 5
+  _knockbackMultiplier: 2
+  _bounciness: 0.8
