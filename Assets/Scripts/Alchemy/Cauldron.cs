@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -30,19 +31,75 @@ public class Cauldron : NetworkBehaviour, IInteractable
     [SerializeField] private Status _explosionStatus;
     [SerializeField] private float _explosionStatusDuration = 5f;
 
+    [Header("Player Stuck Detection")]
+    [Tooltip("Seconds a player can stay inside before the cauldron explodes")]
+    [SerializeField] private float _playerStuckTime = 3f;
+
     private List<int> _contents = new();
     private bool _isBrewing;
+
+    private Dictionary<PlayerPush, float> _playersInside = new();
 
     private void OnTriggerEnter(Collider other)
     {
         if (!IsServer) return;
 
-        if (!other.TryGetComponent(out Ingredient ingredient)) return;
+        if (other.TryGetComponent(out Ingredient ingredient))
+        {
+            _contents.Add((int)ingredient.Type);
+            ingredient.NetworkObject.Despawn();
+            return;
+        }
 
-        _contents.Add((int)ingredient.Type);
-        ingredient.NetworkObject.Despawn();
+        if (other.TryGetComponent(out PlayerPush playerPush))
+        {
+            if (!_playersInside.ContainsKey(playerPush))
+                _playersInside[playerPush] = 0f;
+        }
     }
 
+    private void OnTriggerExit(Collider other)
+    {
+        if (!IsServer) return;
+
+        // Player left �� cancel timer
+        if (other.TryGetComponent(out PlayerPush playerPush))
+        {
+            _playersInside.Remove(playerPush);
+        }
+    }
+
+    private void Update()
+    {
+        if (!IsServer) return;
+        if (_playersInside.Count == 0) return;
+
+        List<PlayerPush> toExplode = null;
+        var keys = new List<PlayerPush>(_playersInside.Keys);
+
+        foreach (var key in keys)
+        {
+            _playersInside[key] += Time.deltaTime;
+
+            if (_playersInside[key] >= _playerStuckTime)
+            {
+                toExplode ??= new List<PlayerPush>();
+                toExplode.Add(key);
+            }
+        }
+
+        if (toExplode == null) return;
+
+        Explode();
+
+        foreach (var playerPush in toExplode)
+        {
+            Vector3 launchForce = Vector3.up * _explosionForce;
+            playerPush.LaunchPlayerClientRpc(launchForce);
+            _playersInside.Remove(playerPush);
+        }
+    }
+    
     public void Interact()
     {
         BrewServerRpc();
@@ -125,7 +182,7 @@ public class Cauldron : NetworkBehaviour, IInteractable
 
             potion.NetworkObject.Spawn();
 
-            Vector2 randomCircle = Random.insideUnitCircle.normalized;
+            Vector2 randomCircle = UnityEngine.Random.insideUnitCircle.normalized;
             Vector3 horizontalDirection = new Vector3(randomCircle.x, 0f, randomCircle.y);
             Vector3 force = Vector3.up * _potionSpawnVerticalForce + horizontalDirection * _potionSpawnHorizontalForce;
             potion.Rb.AddForce(force, ForceMode.Impulse);
