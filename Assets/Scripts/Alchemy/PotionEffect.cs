@@ -130,9 +130,5 @@ public class PotionEffect : NetworkBehaviour
             modifierEffect.OnEffectTriggerExit(other, this, _baseEffect, _modifierEffects);
         }
     }
-
-    public BaseEffect GetBaseEffect()
-    {
-        return _baseEffect;
-    }
+}
 }
