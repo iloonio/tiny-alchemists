@@ -16,18 +16,18 @@ public class InteractHintUI : MonoBehaviour
     private void Awake()
     {
         if (_canvas != null)
-            _canvas.enabled = false;
+            _text.enabled = false;
     }
 
     public void Show(string message)
     {
         _text.text = message;
-        _canvas.enabled = true;
+        _text.enabled = true;
     }
 
     public void Hide()
     {
-        if (_canvas != null && _canvas.enabled)
-            _canvas.enabled = false;
+        if (_canvas != null && _text.enabled)
+            _text.enabled = false;
     }
 }
