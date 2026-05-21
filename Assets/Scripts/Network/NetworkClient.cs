@@ -69,7 +69,7 @@ public class NetworkClient : NetworkBehaviour
     public override void OnNetworkDespawn()
     {
         Players.Remove(this);
-        
+
         if (IsServer)
         {
             LookPitch.OnValueChanged -= OnLookPitchChanged;
