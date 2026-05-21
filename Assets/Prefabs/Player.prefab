@@ -668,6 +668,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4782861426301992930}
+  - {fileID: 7969911165510143504}
   m_Father: {fileID: 5475370442558850855}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &3752168555914677271
@@ -702,16 +703,16 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.1
-  far clip plane: 1000
+  far clip plane: 600
   field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 991
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
+  m_TargetTexture: {fileID: 8400000, guid: efe4a3e6e9c921b279915a048b2209fc, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
