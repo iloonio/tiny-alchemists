@@ -24,19 +24,19 @@ public class PotionEffect : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (IsServer) 
+        if (IsServer)
         {
             _baseEffectIdNetwork.Value = _baseEffectId;
             foreach (var modifierEffectId in _modifierEffectIds)
             {
                 _modifierEffectIdsNetwork.Add(modifierEffectId);
             }
-        } 
-         
-        _baseEffect = (BaseEffect) ((IngredientType) _baseEffectIdNetwork.Value).CreateEffect();
+        }
+
+        _baseEffect = (BaseEffect)((IngredientType)_baseEffectIdNetwork.Value).CreateEffect();
         foreach (var modifierEffectId in _modifierEffectIdsNetwork)
         {
-            _modifierEffects.Add((ModifierEffect) ((IngredientType) modifierEffectId).CreateEffect());
+            _modifierEffects.Add((ModifierEffect)((IngredientType)modifierEffectId).CreateEffect());
         }
     }
 
@@ -50,7 +50,7 @@ public class PotionEffect : NetworkBehaviour
     }
 
     private void Update()
-    {        
+    {
         if (!IsServer) return;
 
         EffectUpdate();
@@ -129,5 +129,10 @@ public class PotionEffect : NetworkBehaviour
         {
             modifierEffect.OnEffectTriggerExit(other, this, _baseEffect, _modifierEffects);
         }
+    }
+
+    public BaseEffect GetBaseEffect()
+    {
+        return _baseEffect;
     }
 }
