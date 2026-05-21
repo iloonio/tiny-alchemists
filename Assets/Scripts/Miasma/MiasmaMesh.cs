@@ -6,11 +6,14 @@ public class MiasmaMesh : NetworkBehaviour
 {
     private MeshFilter _meshFilter;
     private Mesh _mesh;
+    private MeshRenderer _meshRenderer;
+    public float tileScale = 1f;
     private bool _isBatchUpdate;
 
     private void Start()
     {
         _meshFilter = GetComponent<MeshFilter>();
+        _meshRenderer = GetComponent<MeshRenderer>();
         _mesh = new Mesh {
             name = "MiasmaMesh"
         };
@@ -47,22 +50,24 @@ public class MiasmaMesh : NetworkBehaviour
     {
         List<Vector3> vertices = new List<Vector3>();
         List<int> triangles = new List<int>();
+        List<Vector2> uvs = new List<Vector2>();
 
         int vertexIndex = 0;
 
         foreach (Node node in MiasmaManager.Instance.GetActiveNodes())
         {
-            AddCube(node, vertices, triangles, ref vertexIndex);
+            AddCube(node, vertices, triangles, ref vertexIndex, uvs);
         }
 
         _mesh.Clear();
         _mesh.SetVertices(vertices);
+        _mesh.SetUVs(0, uvs);
         _mesh.SetTriangles(triangles, 0);
         _mesh.RecalculateNormals();
         _mesh.RecalculateBounds();
     }
 
-    private void AddCube(Node node, List<Vector3> vertices, List<int> triangles, ref int vertexIndex)
+    private void AddCube(Node node, List<Vector3> vertices, List<int> triangles, ref int vertexIndex, List<Vector2> uvs)
     {
         float h = MiasmaManager.Instance.CellSize * 0.5f;
 
@@ -90,6 +95,35 @@ public class MiasmaMesh : NetworkBehaviour
             vertices.Add(b);
             vertices.Add(c);
             vertices.Add(d);
+
+            // Compute face normal to decide projection plane for continuous world-space UVs
+            Vector3 normal = Vector3.Cross(b - a, d - a).normalized;
+            float scale = tileScale / MiasmaManager.Instance.CellSize;
+
+            // Helper to compute UV from a world-space vertex based on face orientation
+            Vector2 WorldUV(Vector3 v)
+            {
+                // Top/bottom faces -> project XZ
+                if (Mathf.Abs(normal.y) > Mathf.Abs(normal.x) && Mathf.Abs(normal.y) > Mathf.Abs(normal.z))
+                {
+                    return new Vector2(v.x, v.z) * scale;
+                }
+                // Left/right faces -> project ZY
+                else if (Mathf.Abs(normal.x) > Mathf.Abs(normal.y) && Mathf.Abs(normal.x) > Mathf.Abs(normal.z))
+                {
+                    return new Vector2(v.z, v.y) * scale;
+                }
+                // Front/back faces -> project XY
+                else
+                {
+                    return new Vector2(v.x, v.y) * scale;
+                }
+            }
+
+            uvs.Add(WorldUV(a));
+            uvs.Add(WorldUV(b));
+            uvs.Add(WorldUV(c));
+            uvs.Add(WorldUV(d));
 
             triangles.Add(vertexIndex + 0);
             triangles.Add(vertexIndex + 2);
