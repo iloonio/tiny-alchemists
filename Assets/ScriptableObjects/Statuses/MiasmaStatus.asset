@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: MiasmaStatus
   m_EditorClassIdentifier: Assembly-CSharp::MiasmaStatus
   _id: 6
-  _moveSpeedMultiplierDecreasePerSecond: 0.1
+  _moveSpeedMultiplierDecreasePerSecond: 0.3
   _moveSpeedMultiplierMin: 0.05
-  _moveSpeedMultiplierMax: 0.5
+  _moveSpeedMultiplierMax: 0.75
   _jumpForceMultiplierDecreasePerSecond: 0.2
   _jumpForceMultiplierMin: 0.2
   _jumpForceMultiplierMax: 0.6
