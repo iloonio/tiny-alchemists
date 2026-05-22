@@ -389,7 +389,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5475370442558850855}
-  - component: {fileID: 5656226439880718289}
   - component: {fileID: 4470771613325480202}
   - component: {fileID: 6316426580575182204}
   - component: {fileID: 7087578872628324299}
@@ -401,6 +400,7 @@ GameObject:
   - component: {fileID: 4991892091454183797}
   - component: {fileID: 6698906886167099103}
   - component: {fileID: 4919468137404618544}
+  - component: {fileID: 927732974370626359}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -427,29 +427,6 @@ Transform:
   - {fileID: 2983796501308078933}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &5656226439880718289
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4288260960102316284}
-  m_Material: {fileID: 13400000, guid: fcbd7e1d43024ec4cb0d8b262b422373, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.25
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &4470771613325480202
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -491,7 +468,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   _baseMoveAcceleration: 30
   _baseMaxMoveSpeed: 3
-  _groundFriction: 20
+  _groundFriction: 10
   _baseJumpForce: 5
   _groundPoint: {fileID: 3998428015643916026}
   _groundCheckRadius: 0.2
@@ -698,6 +675,27 @@ MonoBehaviour:
   _canvas: {fileID: 3879485635226405824}
   _text: {fileID: 3469528244901046127}
   _majorText: {fileID: 7676008789757717242}
+--- !u!65 &927732974370626359
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4288260960102316284}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.5, y: 1, z: 0.5}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6238399612091387915
 GameObject:
   m_ObjectHideFlags: 0
