@@ -2079,6 +2079,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: rockC (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 348546415127170404, guid: bf155e4f72fe84513aa2f86d1bf43e99, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 1125224474779867102, guid: bf155e4f72fe84513aa2f86d1bf43e99, type: 3}
       propertyPath: m_LocalScale.x
       value: 2.5
@@ -2130,6 +2134,10 @@ PrefabInstance:
     - target: {fileID: 1125224474779867102, guid: bf155e4f72fe84513aa2f86d1bf43e99, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7522734327190339811, guid: bf155e4f72fe84513aa2f86d1bf43e99, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7617005081768293972, guid: bf155e4f72fe84513aa2f86d1bf43e99, type: 3}
       propertyPath: m_Convex
@@ -4211,6 +4219,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: rockC
       objectReference: {fileID: 0}
+    - target: {fileID: 348546415127170404, guid: bf155e4f72fe84513aa2f86d1bf43e99, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 1125224474779867102, guid: bf155e4f72fe84513aa2f86d1bf43e99, type: 3}
       propertyPath: m_LocalScale.x
       value: 2.5
@@ -4262,6 +4274,10 @@ PrefabInstance:
     - target: {fileID: 1125224474779867102, guid: bf155e4f72fe84513aa2f86d1bf43e99, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7522734327190339811, guid: bf155e4f72fe84513aa2f86d1bf43e99, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7617005081768293972, guid: bf155e4f72fe84513aa2f86d1bf43e99, type: 3}
       propertyPath: m_Convex
@@ -7065,6 +7081,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: rockC (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 348546415127170404, guid: bf155e4f72fe84513aa2f86d1bf43e99, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 1125224474779867102, guid: bf155e4f72fe84513aa2f86d1bf43e99, type: 3}
       propertyPath: m_LocalScale.x
       value: 2.5
@@ -7116,6 +7136,10 @@ PrefabInstance:
     - target: {fileID: 1125224474779867102, guid: bf155e4f72fe84513aa2f86d1bf43e99, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7522734327190339811, guid: bf155e4f72fe84513aa2f86d1bf43e99, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7617005081768293972, guid: bf155e4f72fe84513aa2f86d1bf43e99, type: 3}
       propertyPath: m_Convex
@@ -9991,6 +10015,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: rockC (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 348546415127170404, guid: bf155e4f72fe84513aa2f86d1bf43e99, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 1125224474779867102, guid: bf155e4f72fe84513aa2f86d1bf43e99, type: 3}
       propertyPath: m_LocalScale.x
       value: 2.5
@@ -10042,6 +10070,10 @@ PrefabInstance:
     - target: {fileID: 1125224474779867102, guid: bf155e4f72fe84513aa2f86d1bf43e99, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7522734327190339811, guid: bf155e4f72fe84513aa2f86d1bf43e99, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7617005081768293972, guid: bf155e4f72fe84513aa2f86d1bf43e99, type: 3}
       propertyPath: m_Convex
