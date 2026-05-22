@@ -14,22 +14,24 @@ public class NetworkSceneManager : NetworkBehaviour
     {
         if (SceneAsset != null)
         {
-            _sceneName = SceneAsset.name;
+            _gameSceneName = SceneAsset.name;
         }
     }
     #endif
 
-    [SerializeField] private string _sceneName;
+    [SerializeField] private string _setupSceneName;
+    [SerializeField] private string _gameSceneName;
     [SerializeField] private GameObject _playerPrefab;
     private SpawnPoint[] _spawnPoints;
     private int _spawnPointIndex = 0;
+    private bool _isShutdown = false;
 
     private LoadingScreen _loadingScreen;
 
     private void Awake() 
     {
-        DontDestroyOnLoad(gameObject);
         _loadingScreen = GetComponent<LoadingScreen>();
+        DontDestroyOnLoad(gameObject);
     }
 
     public override void OnNetworkSpawn()
@@ -46,11 +48,16 @@ public class NetworkSceneManager : NetworkBehaviour
         {
             NetworkManager.SceneManager.OnLoadComplete -= OnClientLoadedScene;
         }
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        SceneManager.LoadScene(_setupSceneName);
+        Destroy(gameObject);
     }
 
     public void ChangeScene()
     {
-        if (IsServer && !string.IsNullOrEmpty(_sceneName))
+        if (IsServer && !string.IsNullOrEmpty(_gameSceneName))
         {
             // Tell ALL clients (including host) to fade to black,
             // then the server actually loads the scene.
@@ -68,10 +75,10 @@ public class NetworkSceneManager : NetworkBehaviour
         else
             yield return new WaitForSeconds(0.5f);
 
-        var status = NetworkManager.SceneManager.LoadScene(_sceneName, LoadSceneMode.Single);
+        var status = NetworkManager.SceneManager.LoadScene(_gameSceneName, LoadSceneMode.Single);
         if (status != SceneEventProgressStatus.Started)
         {
-            Debug.LogWarning($"Failed to load {_sceneName} "
+            Debug.LogWarning($"Failed to load {_gameSceneName} "
                 + $"with a {nameof(SceneEventProgressStatus)}: {status}");
         }
         else
@@ -90,7 +97,7 @@ public class NetworkSceneManager : NetworkBehaviour
 
     private void OnClientLoadedScene(ulong clientId, string sceneName, LoadSceneMode loadSceneMode)
     {
-        if (sceneName == _sceneName)
+        if (sceneName == _gameSceneName)
         {
             StartCoroutine(SpawnPlayer(clientId));
 
@@ -127,5 +134,27 @@ public class NetworkSceneManager : NetworkBehaviour
         playerInstance.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId);
 
         Debug.Log($"Spawned player prefab for Client ID: {clientId}");
+    }
+
+    public void Shutdown()
+    {
+        if (!IsServer || _isShutdown) return;
+
+        _isShutdown = true;
+        _spawnPoints = null;
+        _spawnPointIndex = 0;
+
+        StartCoroutine(ShutdownRoutine());
+    }
+
+    private IEnumerator ShutdownRoutine()
+    {
+        yield return new WaitForSeconds(5f);
+
+        FadeInClientRpc();
+
+        yield return new WaitForSeconds(0.5f);
+
+        NetworkManager.Shutdown();
     }
 }
