@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -7,6 +8,8 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerInteract))]
 public class NetworkClient : NetworkBehaviour
 {
+    public static readonly HashSet<NetworkClient> Players = new();
+
     public NetworkVariable<float> LookPitch = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     private PlayerInput _playerInput;
@@ -16,6 +19,8 @@ public class NetworkClient : NetworkBehaviour
     private PlayerInteract _playerInteract;
     private Camera _playerCamera;
     private AudioListener _audioListener;
+    private InteractHintUI _interactHintUI;
+    private Camera _uiCamera;
 
     private void Awake()
     {
@@ -26,6 +31,8 @@ public class NetworkClient : NetworkBehaviour
         _playerInteract = GetComponent<PlayerInteract>();
         _playerCamera = GetComponentInChildren<Camera>();
         _audioListener = GetComponentInChildren<AudioListener>();
+        _interactHintUI = GetComponent<InteractHintUI>();
+        _uiCamera = _playerCamera.gameObject.GetComponentInChildren<Camera>();
 
         _playerInput.enabled = false;
         _playerMovement.enabled = false;
@@ -34,10 +41,14 @@ public class NetworkClient : NetworkBehaviour
         _playerInteract.enabled = false;
         _playerCamera.enabled = false;
         _audioListener.enabled = false;
+        _interactHintUI.enabled = false;
+        _uiCamera.enabled = false;
     }
 
     public override void OnNetworkSpawn()
     {
+        Players.Add(this);
+
         if (IsOwner)
         {
             _playerInput.enabled = true;
@@ -47,6 +58,8 @@ public class NetworkClient : NetworkBehaviour
             _playerInteract.enabled = true;
             _playerCamera.enabled = true;
             _audioListener.enabled = true;
+            _interactHintUI.enabled = true;
+            _uiCamera.enabled = true;
         }
 
         if (IsServer)
@@ -57,7 +70,12 @@ public class NetworkClient : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
-        LookPitch.OnValueChanged -= OnLookPitchChanged;
+        Players.Remove(this);
+
+        if (IsServer)
+        {
+            LookPitch.OnValueChanged -= OnLookPitchChanged;
+        }
     }
 
     private void OnLookPitchChanged(float previous, float current)

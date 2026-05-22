@@ -17,11 +17,10 @@ public class Pushable : NetworkBehaviour
         _rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
     }
 
+    
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     public void PushServerRpc(Vector3 force, Vector3 hitPoint)
     {
-        _rb.AddForceAtPosition(force, hitPoint, ForceMode.Impulse);
+        _rb.AddForceAtPosition(force, hitPoint, ForceMode.Force);
     }
-
-
 }

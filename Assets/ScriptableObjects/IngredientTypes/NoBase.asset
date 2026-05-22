@@ -16,6 +16,6 @@ MonoBehaviour:
   _color: {r: 1, g: 1, b: 1, a: 0}
   _ingredientPrefab: {fileID: 0}
   _potionEffectPrefab: {fileID: 3143509383519786549, guid: 23afaa2fce93edb49a62533c866ff875, type: 3}
-  _duration: 0.5
+  _duration: 2.2
   _radius: 2
   _explosionForce: 10

@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5507866183920149665}
   - component: {fileID: 4969218658746121016}
   - component: {fileID: 711497786359873004}
-  - component: {fileID: 2126776325110040698}
   m_Layer: 0
   m_Name: Fireboom
   m_TagString: Untagged
@@ -5031,19 +5030,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &2126776325110040698
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2680803822344808849}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4c582ec13a34e1d4b339613bd56a0a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DespawnTimer
-  timeUntilDestroyed: 2
 --- !u!1 &3151227542267437962
 GameObject:
   m_ObjectHideFlags: 0
@@ -5056,7 +5042,6 @@ GameObject:
   - component: {fileID: 3871995083350419789}
   - component: {fileID: 7802345286846636356}
   - component: {fileID: 8088164649233531630}
-  - component: {fileID: 1513939515339514322}
   m_Layer: 0
   m_Name: Highlight
   m_TagString: Untagged
@@ -10073,19 +10058,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1513939515339514322
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3151227542267437962}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4c582ec13a34e1d4b339613bd56a0a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DespawnTimer
-  timeUntilDestroyed: 2
 --- !u!1 &4167040556123251932
 GameObject:
   m_ObjectHideFlags: 0
@@ -10098,7 +10070,6 @@ GameObject:
   - component: {fileID: 3047682132250550993}
   - component: {fileID: 8639744756717844745}
   - component: {fileID: 4674305976061105573}
-  - component: {fileID: 5291176268644633949}
   m_Layer: 0
   m_Name: Smog
   m_TagString: Untagged
@@ -15115,16 +15086,3 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &5291176268644633949
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4167040556123251932}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4c582ec13a34e1d4b339613bd56a0a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DespawnTimer
-  timeUntilDestroyed: 2

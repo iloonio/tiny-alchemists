@@ -251,7 +251,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6327157567209807330, guid: b9e19a0127b8b6a4b9ccc573d6dffdd5, type: 3}
   m_PrefabInstance: {fileID: 4208715036991298662}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 4208715036991298663}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 13130f88368b1554eac1f32249715ee3, type: 3}
@@ -577,11 +577,40 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6327157567209807330, guid: b9e19a0127b8b6a4b9ccc573d6dffdd5, type: 3}
+      propertyPath: SceneAsset
+      value: 
+      objectReference: {fileID: 102900000, guid: f962e24ba94c59a00a654c62ec80151e, type: 3}
+    - target: {fileID: 6327157567209807330, guid: b9e19a0127b8b6a4b9ccc573d6dffdd5, type: 3}
+      propertyPath: _sceneName
+      value: PlaytestingScene
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1190256580796559430, guid: b9e19a0127b8b6a4b9ccc573d6dffdd5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4208715036991298664}
   m_SourcePrefab: {fileID: 100100000, guid: b9e19a0127b8b6a4b9ccc573d6dffdd5, type: 3}
+--- !u!1 &4208715036991298663 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1190256580796559430, guid: b9e19a0127b8b6a4b9ccc573d6dffdd5, type: 3}
+  m_PrefabInstance: {fileID: 4208715036991298662}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4208715036991298664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4208715036991298663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5edc89409c99bc5df8362d7e68bbe0fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LoadingScreen
+  _fadeDuration: 1
 --- !u!1001 &5110690337747845562
 PrefabInstance:
   m_ObjectHideFlags: 0
