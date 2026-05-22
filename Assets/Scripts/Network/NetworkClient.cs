@@ -19,7 +19,7 @@ public class NetworkClient : NetworkBehaviour
     private PlayerInteract _playerInteract;
     private Camera _playerCamera;
     private AudioListener _audioListener;
-    private InteractHintUI _interactHintUI;
+    private PlayerUI _playerUI;
     private Camera _uiCamera;
 
     private void Awake()
@@ -31,7 +31,7 @@ public class NetworkClient : NetworkBehaviour
         _playerInteract = GetComponent<PlayerInteract>();
         _playerCamera = GetComponentInChildren<Camera>();
         _audioListener = GetComponentInChildren<AudioListener>();
-        _interactHintUI = GetComponent<InteractHintUI>();
+        _playerUI = GetComponent<PlayerUI>();
         _uiCamera = _playerCamera.gameObject.GetComponentInChildren<Camera>();
 
         _playerInput.enabled = false;
@@ -41,7 +41,7 @@ public class NetworkClient : NetworkBehaviour
         _playerInteract.enabled = false;
         _playerCamera.enabled = false;
         _audioListener.enabled = false;
-        _interactHintUI.enabled = false;
+        _playerUI.enabled = false;
         _uiCamera.enabled = false;
     }
 
@@ -58,7 +58,7 @@ public class NetworkClient : NetworkBehaviour
             _playerInteract.enabled = true;
             _playerCamera.enabled = true;
             _audioListener.enabled = true;
-            _interactHintUI.enabled = true;
+            _playerUI.enabled = true;
             _uiCamera.enabled = true;
         }
 

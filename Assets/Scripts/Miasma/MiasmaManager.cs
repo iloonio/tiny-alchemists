@@ -26,6 +26,7 @@ public class MiasmaManager : NetworkBehaviour
     [Header("Status")]
     [SerializeField] private Status _status;
     [SerializeField] private CapsuleCollider _playerCollider;
+    [SerializeField] private float _lossTimeThreshold = 5f;
 
     [Header("Debug")]
     [SerializeField] private bool _debugDraw = true;
@@ -38,6 +39,7 @@ public class MiasmaManager : NetworkBehaviour
     private HashSet<Node> _allNodes;
     private HashSet<Node> _activeNodes;
     private Vector3Int _playerCellExtents;
+    private float _lossTimer = 0f;
 
     private NetworkList<Vector3Int> _activeCells;
     public NetworkList<Vector3Int> ActiveCells => _activeCells;
@@ -259,6 +261,14 @@ public class MiasmaManager : NetworkBehaviour
     {
         if (!IsServer) return;
 
+        _lossTimer += Time.deltaTime;
+        if (_lossTimer >= _lossTimeThreshold)
+        {
+            LoseClientRpc();
+            FindAnyObjectByType<NetworkSceneManager>().Shutdown();
+            return;
+        }
+
         foreach (NetworkClient player in NetworkClient.Players)
         {
             Vector3Int center = WorldToGrid(player.transform.position);
@@ -277,9 +287,19 @@ public class MiasmaManager : NetworkBehaviour
             }
 
             player.GetComponent<StatusAffectable>().RemoveStatus(_status);
+            _lossTimer = 0f;
 
             Next:;
         }       
+    }
+
+    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone)]
+    private void LoseClientRpc()
+    {
+        foreach (NetworkClient client in NetworkClient.Players)
+        {
+            client.GetComponent<PlayerUI>().ShowMajor("DEFEAT!");
+        }
     }
 
     private void OnDrawGizmos()

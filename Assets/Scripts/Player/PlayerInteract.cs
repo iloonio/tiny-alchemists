@@ -11,7 +11,6 @@ public class PlayerInteract : NetworkBehaviour
 
     [Header("Hold")]
     [SerializeField] private Transform _holdPoint;
-    [SerializeField] private float _carryCollisionRadius = 0.25f;
     public Transform HoldPoint => _holdPoint;
     public Transform PlayerCamera => _playerCamera;
 
@@ -23,12 +22,12 @@ public class PlayerInteract : NetworkBehaviour
     private Collider _heldCollider;
     private Collider _collider;
 
-    private InteractHintUI _hintUI;
+    private PlayerUI _playerUI;
 
     private void Awake()
     {
         _collider = GetComponent<Collider>();
-        _hintUI = GetComponent<InteractHintUI>();
+        _playerUI = GetComponent<PlayerUI>();
     }
 
     private void Update()
@@ -42,14 +41,14 @@ public class PlayerInteract : NetworkBehaviour
         // don't show hints while holding something
         if (IsHolding)
         {
-            _hintUI.Hide();
+            _playerUI.Hide();
             return;
         }
 
         if (!Physics.Raycast(_playerCamera.position, _playerCamera.forward,
                 out RaycastHit hit, _interactDistance, _interactLayer))
         {
-            _hintUI.Hide();
+            _playerUI.Hide();
             return;
         }
 
@@ -60,11 +59,11 @@ public class PlayerInteract : NetworkBehaviour
                 ? $"[LMB] Pick up {objectName} (ingredient)"
                 : $"[LMB] Pick up {objectName}";
 
-            _hintUI.Show(hint);
+            _playerUI.Show(hint);
         }
         else
         {
-            _hintUI.Hide();
+            _playerUI.Hide();
         }
     }
 

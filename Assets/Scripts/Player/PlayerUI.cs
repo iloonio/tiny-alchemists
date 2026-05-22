@@ -1,22 +1,20 @@
 using TMPro;
 using UnityEngine;
 
-/// InteractHintUI
-/// =============================================================
-/// Shows a pop-up hint near the crosshair when looking at a
-/// holdable object.
-/// =============================================================
-public class InteractHintUI : MonoBehaviour
+public class PlayerUI : MonoBehaviour
 {
     [SerializeField] private Canvas _canvas;
     [SerializeField] private TextMeshProUGUI _text;
+    [SerializeField] private TextMeshProUGUI _majorText;
 
     public Canvas Canvas => _canvas;
 
     private void Awake()
     {
-        if (_canvas != null)
+        if (_canvas != null) {
             _text.enabled = false;
+            _majorText.enabled = false;
+        }
     }
 
     public void Show(string message)
@@ -29,5 +27,18 @@ public class InteractHintUI : MonoBehaviour
     {
         if (_canvas != null && _text.enabled)
             _text.enabled = false;
+    }
+
+    public void ShowMajor(string message)
+    {
+        Hide();
+        _majorText.text = message;
+        _majorText.enabled = true;
+    }
+
+    public void HideMajor()
+    {
+        if (_canvas != null && _majorText.enabled)
+            _majorText.enabled = false;
     }
 }
