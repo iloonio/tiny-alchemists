@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1083703230791016153
+--- !u!1 &3192033226335763099
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,89 +8,13 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2872464640752297079}
-  - component: {fileID: 8254622324207815898}
-  - component: {fileID: 1342886172775196516}
-  m_Layer: 8
-  m_Name: PlantPotEarth
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2872464640752297079
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1083703230791016153}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 8846447188341971811}
-  - {fileID: 1234670125113851380}
-  m_Father: {fileID: 8975923696890765432}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &8254622324207815898
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1083703230791016153}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.35
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1342886172775196516
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1083703230791016153}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 517b4d2ab5de34141bfd10a8a0355b43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlantPot
-  ShowTopMostFoldoutHeaderGroup: 1
-  growTime: 5
-  _harvestSpawnPoint: {fileID: 6539465283003886987}
-  _harvestSpawnCount: 2
-  _harvestSpawnVerticalForce: 1.5
-  _harvestSpawnHorizontalForce: 3
-  _harvestSpawnInterval: 0.5
-  _cooldownAfterHarvest: 1
---- !u!1 &2838587713435855066
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8975923696890765432}
-  - component: {fileID: 4488611983888849146}
-  - component: {fileID: 2968612136212314364}
-  - component: {fileID: 503613426927796179}
-  - component: {fileID: 7215751098732819908}
-  - component: {fileID: 3171973159409264124}
-  - component: {fileID: 2598059880362052706}
+  - component: {fileID: 4064019836674549920}
+  - component: {fileID: 3038226997571665127}
+  - component: {fileID: 7190822613555297888}
+  - component: {fileID: 7357112030970547145}
+  - component: {fileID: 3370467029222967905}
+  - component: {fileID: 9187629621301036684}
+  - component: {fileID: 9022001080723146923}
   m_Layer: 8
   m_Name: PlantPot
   m_TagString: Untagged
@@ -98,30 +22,30 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8975923696890765432
+--- !u!4 &4064019836674549920
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2838587713435855066}
+  m_GameObject: {fileID: 3192033226335763099}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2872464640752297079}
-  - {fileID: 6539465283003886987}
+  - {fileID: 7955175563322544049}
+  - {fileID: 2552299316262756258}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &4488611983888849146
+--- !u!54 &3038226997571665127
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2838587713435855066}
+  m_GameObject: {fileID: 3192033226335763099}
   serializedVersion: 5
   m_Mass: 1
   m_LinearDamping: 0
@@ -142,13 +66,13 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &2968612136212314364
+--- !u!114 &7190822613555297888
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2838587713435855066}
+  m_GameObject: {fileID: 3192033226335763099}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
@@ -167,13 +91,13 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &503613426927796179
+--- !u!114 &7357112030970547145
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2838587713435855066}
+  m_GameObject: {fileID: 3192033226335763099}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
@@ -213,26 +137,26 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &7215751098732819908
+--- !u!114 &3370467029222967905
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2838587713435855066}
+  m_GameObject: {fileID: 3192033226335763099}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b6d49fda60de524da39e0eb03950312, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MoveableObject
   ShowTopMostFoldoutHeaderGroup: 1
---- !u!65 &3171973159409264124
+--- !u!65 &9187629621301036684
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2838587713435855066}
+  m_GameObject: {fileID: 3192033226335763099}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -245,22 +169,22 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 0.88107884, z: 1}
-  m_Center: {x: 0, y: -0.05946058, z: 0}
---- !u!114 &2598059880362052706
+  m_Size: {x: 0.6, y: 0.57, z: 0.69}
+  m_Center: {x: 0, y: -0.2, z: -0.03}
+--- !u!114 &9022001080723146923
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2838587713435855066}
+  m_GameObject: {fileID: 3192033226335763099}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a40d5cf10b78010478f1683922e1cb9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Holdable
   ShowTopMostFoldoutHeaderGroup: 1
---- !u!1 &8536611091256278215
+--- !u!1 &3814233537467835562
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -268,9 +192,40 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8846447188341971811}
-  - component: {fileID: 6826182234218966215}
-  - component: {fileID: 1660670949140928940}
+  - component: {fileID: 2552299316262756258}
+  m_Layer: 8
+  m_Name: HarvestSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2552299316262756258
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3814233537467835562}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.06, z: 0}
+  m_LocalScale: {x: 1, y: 2, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4064019836674549920}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6131247475654380738
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6073380736671616704}
+  - component: {fileID: 8285712821104088232}
+  - component: {fileID: 6289456651321135783}
   m_Layer: 8
   m_Name: Model
   m_TagString: Untagged
@@ -278,28 +233,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8846447188341971811
+--- !u!4 &6073380736671616704
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8536611091256278215}
+  m_GameObject: {fileID: 6131247475654380738}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_LocalPosition: {x: 0.012, y: -0.074, z: -0.031}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 2872464640752297079}
+  m_Father: {fileID: 7955175563322544049}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &6826182234218966215
+--- !u!23 &8285712821104088232
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8536611091256278215}
+  m_GameObject: {fileID: 6131247475654380738}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -342,15 +297,15 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &1660670949140928940
+--- !u!33 &6289456651321135783
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8536611091256278215}
+  m_GameObject: {fileID: 6131247475654380738}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &8764454938355454131
+--- !u!1 &6693627912366199593
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -358,48 +313,93 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6539465283003886987}
+  - component: {fileID: 7955175563322544049}
+  - component: {fileID: 3562798016269481911}
+  - component: {fileID: 810345781584589600}
   m_Layer: 8
-  m_Name: HarvestSpawnPoint
+  m_Name: PlantPotEarth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6539465283003886987
+--- !u!4 &7955175563322544049
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8764454938355454131}
+  m_GameObject: {fileID: 6693627912366199593}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.06, z: 0}
-  m_LocalScale: {x: 1, y: 2, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8975923696890765432}
+  m_Children:
+  - {fileID: 6073380736671616704}
+  - {fileID: 4335030844097191945}
+  m_Father: {fileID: 4064019836674549920}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &8430651409688933229
+--- !u!135 &3562798016269481911
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6693627912366199593}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.25
+  m_Center: {x: 0.009, y: 0, z: -0.03}
+--- !u!114 &810345781584589600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6693627912366199593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 517b4d2ab5de34141bfd10a8a0355b43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlantPot
+  ShowTopMostFoldoutHeaderGroup: 1
+  growTime: 5
+  _harvestSpawnPoint: {fileID: 2552299316262756258}
+  _harvestSpawnCount: 2
+  _harvestSpawnVerticalForce: 1.5
+  _harvestSpawnHorizontalForce: 3
+  _harvestSpawnInterval: 0.5
+  _cooldownAfterHarvest: 1
+--- !u!1001 &6482019826965638800
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 2872464640752297079}
+    m_TransformParent: {fileID: 7955175563322544049}
     m_Modifications:
     - target: {fileID: 7340266122116402841, guid: d5d7350f146fc46cb9bad7dbce382032, type: 3}
       propertyPath: m_LocalScale.x
-      value: 200
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 7340266122116402841, guid: d5d7350f146fc46cb9bad7dbce382032, type: 3}
       propertyPath: m_LocalScale.y
-      value: 200
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 7340266122116402841, guid: d5d7350f146fc46cb9bad7dbce382032, type: 3}
       propertyPath: m_LocalScale.z
-      value: 200
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 7340266122116402841, guid: d5d7350f146fc46cb9bad7dbce382032, type: 3}
       propertyPath: m_LocalPosition.x
@@ -441,6 +441,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7340266122116402841, guid: d5d7350f146fc46cb9bad7dbce382032, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7968571474202416163, guid: d5d7350f146fc46cb9bad7dbce382032, type: 3}
       propertyPath: m_Name
       value: pot_B_small
@@ -450,8 +454,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d5d7350f146fc46cb9bad7dbce382032, type: 3}
---- !u!4 &1234670125113851380 stripped
+--- !u!4 &4335030844097191945 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7340266122116402841, guid: d5d7350f146fc46cb9bad7dbce382032, type: 3}
-  m_PrefabInstance: {fileID: 8430651409688933229}
+  m_PrefabInstance: {fileID: 6482019826965638800}
   m_PrefabAsset: {fileID: 0}
