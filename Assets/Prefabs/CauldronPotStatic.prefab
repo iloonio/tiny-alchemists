@@ -58,6 +58,7 @@ MonoBehaviour:
   _explosionForce: 12
   _explosionStatus: {fileID: 11400000, guid: 4fec010c417574a43a0a16eac6fe4a07, type: 2}
   _explosionStatusDuration: 5
+  _playerStuckTime: 3
 --- !u!135 &6823386885821307834
 SphereCollider:
   m_ObjectHideFlags: 0

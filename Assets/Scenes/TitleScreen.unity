@@ -609,14 +609,14 @@ PrefabInstance:
     - target: {fileID: 6327157567209807330, guid: b9e19a0127b8b6a4b9ccc573d6dffdd5, type: 3}
       propertyPath: SceneAsset
       value: 
-      objectReference: {fileID: 102900000, guid: f962e24ba94c59a00a654c62ec80151e, type: 3}
+      objectReference: {fileID: 102900000, guid: 2c7dec487ab6643b49e93613168695f4, type: 3}
     - target: {fileID: 6327157567209807330, guid: b9e19a0127b8b6a4b9ccc573d6dffdd5, type: 3}
       propertyPath: _sceneName
       value: PlaytestingScene
       objectReference: {fileID: 0}
     - target: {fileID: 6327157567209807330, guid: b9e19a0127b8b6a4b9ccc573d6dffdd5, type: 3}
       propertyPath: _gameSceneName
-      value: PlaytestingScene
+      value: GreenHouseDemo
       objectReference: {fileID: 0}
     - target: {fileID: 6327157567209807330, guid: b9e19a0127b8b6a4b9ccc573d6dffdd5, type: 3}
       propertyPath: _setupSceneName

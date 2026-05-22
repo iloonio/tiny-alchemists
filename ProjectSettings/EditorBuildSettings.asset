@@ -27,16 +27,19 @@ EditorBuildSettings:
     path: Assets/Scenes/MultiplayerTestQuick.unity
     guid: b0832fe61f1a25845ba56a2e571d1306
   - enabled: 1
-    path: Assets/Scenes/GameTestScene.unity
-    guid: 6537133881614224489e6e81566be1e1
-  - enabled: 1
-    path: Assets/Scenes/PlaytestingScene.unity
-    guid: f962e24ba94c59a00a654c62ec80151e
-  - enabled: 1
-    path: Assets/Scenes/SetupTestScene.unity
+    path: Assets/Scenes/TitleScreen.unity
     guid: 03c3701e31badbb4489a1b1d756161a6
   - enabled: 1
-    path: Assets/Scenes/QuickPlaytestingScene.unity
+    path: Assets/Scenes/GreenHouseDemo.unity
+    guid: 2c7dec487ab6643b49e93613168695f4
+  - enabled: 1
+    path: Assets/Scenes/Deprecated Scenes/GameTestScene.unity
+    guid: 6537133881614224489e6e81566be1e1
+  - enabled: 1
+    path: Assets/Scenes/Deprecated Scenes/PlaytestingScene.unity
+    guid: f962e24ba94c59a00a654c62ec80151e
+  - enabled: 1
+    path: Assets/Scenes/Deprecated Scenes/QuickPlaytestingScene.unity
     guid: 5ea779c1e7fd217ffb48173decc6c3b8
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 57dc85a00c9386b4b82e0e70dbfae12b, type: 3}
