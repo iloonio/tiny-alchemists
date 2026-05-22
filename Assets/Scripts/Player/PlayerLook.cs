@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerLook : MonoBehaviour
 {
-
     [Header("Look")]
     [SerializeField] private float _lookSensitivity = 20f;
     [SerializeField] private float _maxVerticalLookAngle = 80f;
@@ -51,6 +50,4 @@ public class PlayerLook : MonoBehaviour
     {
         _networkClient.LookPitch.Value = _pitch;
     }
-
-    
 }
