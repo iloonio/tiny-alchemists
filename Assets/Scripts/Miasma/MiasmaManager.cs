@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System;
 using System.Linq;
 using UnityEngine;
 using Unity.Netcode;
@@ -24,6 +23,10 @@ public class MiasmaManager : NetworkBehaviour
     [SerializeField] private float _spawnBaseRate = 0.01f;
     [SerializeField] private float _influenceDecay = 0.5f;
 
+    [Header("Status")]
+    [SerializeField] private Status _status;
+    [SerializeField] private CapsuleCollider _playerCollider;
+
     [Header("Debug")]
     [SerializeField] private bool _debugDraw = true;
     [SerializeField] private bool _debugShowInactive = true;
@@ -34,6 +37,7 @@ public class MiasmaManager : NetworkBehaviour
     private Node[,,] _grid;
     private HashSet<Node> _allNodes;
     private HashSet<Node> _activeNodes;
+    private Vector3Int _playerCellExtents;
 
     private NetworkList<Vector3Int> _activeCells;
     public NetworkList<Vector3Int> ActiveCells => _activeCells;
@@ -48,23 +52,42 @@ public class MiasmaManager : NetworkBehaviour
         _activeNodes = new();
         _activeCells = new NetworkList<Vector3Int>();
         _isBatchUpdate = new();
+        _playerCellExtents = CalculatePlayerCellExtents();
+    }
+
+    private Vector3Int CalculatePlayerCellExtents()
+    {
+        Bounds bounds = _playerCollider.bounds;
+        return new Vector3Int(
+            Mathf.CeilToInt(bounds.extents.x / CellSize) + 1,
+            Mathf.CeilToInt(bounds.extents.y / CellSize) + 1,
+            Mathf.CeilToInt(bounds.extents.z / CellSize) + 1
+        );
     }
 
     public override void OnNetworkSpawn()
     {
-
-        if (!IsServer) return;
-        
-        foreach (Node node in _activeNodes)
-        {
-            _activeCells.Add(node.coord);
-        }
-        
-        _isBatchUpdate.Value = false;
-        
         _activeCells.OnListChanged += OnActiveCellsChanged;
 
-        InvokeRepeating(nameof(Grow), _growthInterval, _growthInterval);  
+        foreach (Vector3Int coord in _activeCells)
+        {
+            _activeNodes.Add(GetNode(coord));
+        }
+
+        if (IsServer)
+        {    
+            foreach (Node node in _allNodes)
+            {
+                if (node.startActive)
+                {
+                    ActivateNode(node);   
+                }
+            }
+            
+            _isBatchUpdate.Value = false;        
+
+            InvokeRepeating(nameof(Grow), _growthInterval, _growthInterval);  
+        }
     }
 
     public override void OnNetworkDespawn()
@@ -90,7 +113,7 @@ public class MiasmaManager : NetworkBehaviour
         }
     }
 
-    public void AddNode(Node node, bool startActive)
+    public void AddNode(Node node)
     {
         Vector3Int coord = node.coord;
         if (!InBounds(coord)) return;
@@ -100,7 +123,6 @@ public class MiasmaManager : NetworkBehaviour
         {
             _grid[coord.x, coord.y, coord.z] = node;
             _allNodes.Add(node);
-            if (startActive) _activeNodes.Add(node);
         }
         else
         {
@@ -233,6 +255,33 @@ public class MiasmaManager : NetworkBehaviour
                c.z >= 0 && c.z < _gridSize.z;
     }
 
+    private void Update()
+    {
+        if (!IsServer) return;
+
+        foreach (NetworkClient player in NetworkClient.Players)
+        {
+            Vector3Int center = WorldToGrid(player.transform.position);
+
+            for (int x = -_playerCellExtents.x; x <= _playerCellExtents.x; x++)
+            for (int y = -_playerCellExtents.y; y <= _playerCellExtents.y; y++)
+            for (int z = -_playerCellExtents.z; z <= _playerCellExtents.z; z++)
+            {
+                Node node = GetNode(center + new Vector3Int(x, y, z));
+
+                if (_activeNodes.Contains(node))
+                {
+                    player.GetComponent<StatusAffectable>().AddStatus(_status, 10000f);
+                    goto Next;
+                }
+            }
+
+            player.GetComponent<StatusAffectable>().RemoveStatus(_status);
+
+            Next:;
+        }       
+    }
+
     private void OnDrawGizmos()
     {
         if (!_debugDraw) return;
@@ -275,4 +324,5 @@ public class Node
     public float rate;
     public float threshold;
     public float influence;
+    public bool startActive;
 }

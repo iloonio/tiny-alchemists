@@ -41,8 +41,9 @@ public class MiasmaSurface : MonoBehaviour
                 worldPos = worldPos,
                 rate = _rate,
                 threshold = _threshold,
-                influence = _startActive ? 1f : 0f
-            }, _startActive);
+                influence = _startActive ? 1f : 0f,
+                startActive = _startActive
+            });
         }
     }
 

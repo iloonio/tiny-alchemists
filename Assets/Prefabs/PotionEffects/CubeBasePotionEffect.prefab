@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3145752545948673579}
   - component: {fileID: 1837083253497848568}
   - component: {fileID: 5699060183159732925}
-  - component: {fileID: -6530120684737741797}
+  - component: {fileID: -4525584150150004491}
   m_Layer: 0
   m_Name: CubeBasePotionEffect
   m_TagString: Untagged
@@ -184,7 +184,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pushable
   ShowTopMostFoldoutHeaderGroup: 1
---- !u!114 &-6530120684737741797
+--- !u!114 &-4525584150150004491
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

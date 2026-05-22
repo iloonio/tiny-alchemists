@@ -30,6 +30,9 @@ EditorBuildSettings:
     path: Assets/Scenes/GameTestScene.unity
     guid: 6537133881614224489e6e81566be1e1
   - enabled: 1
+    path: Assets/Scenes/PlaytestingScene.unity
+    guid: f962e24ba94c59a00a654c62ec80151e
+  - enabled: 1
     path: Assets/Scenes/SetupTestScene.unity
     guid: 03c3701e31badbb4489a1b1d756161a6
   - enabled: 1
