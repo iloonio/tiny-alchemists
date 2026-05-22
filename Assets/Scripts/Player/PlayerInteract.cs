@@ -11,7 +11,9 @@ public class PlayerInteract : NetworkBehaviour
 
     [Header("Hold")]
     [SerializeField] private Transform _holdPoint;
+    [SerializeField] private float _carryCollisionRadius = 0.25f;
     public Transform HoldPoint => _holdPoint;
+    public Transform PlayerCamera => _playerCamera;
 
     [Header("Throw")]
     [SerializeField] private float _throwForce = 5f;
@@ -21,37 +23,69 @@ public class PlayerInteract : NetworkBehaviour
     private Collider _heldCollider;
     private Collider _collider;
 
+    private InteractHintUI _hintUI;
+
     private void Awake()
     {
         _collider = GetComponent<Collider>();
+        _hintUI = GetComponent<InteractHintUI>();
+    }
+
+    private void Update()
+    {
+        if (!IsOwner) return;
+        UpdateHint();
+    }
+
+    private void UpdateHint()
+    {
+        // don't show hints while holding something
+        if (IsHolding)
+        {
+            _hintUI.Hide();
+            return;
+        }
+
+        if (!Physics.Raycast(_playerCamera.position, _playerCamera.forward,
+                out RaycastHit hit, _interactDistance, _interactLayer))
+        {
+            _hintUI.Hide();
+            return;
+        }
+
+        if (hit.collider.TryGetComponent(out Holdable holdable) && !holdable.IsHeld)
+        {
+            string objectName = holdable.gameObject.name.Replace("(Clone)", "").Trim();
+            string hint = holdable.GetComponent<Ingredient>() != null
+                ? $"[LMB] Pick up {objectName} (ingredient)"
+                : $"[LMB] Pick up {objectName}";
+
+            _hintUI.Show(hint);
+        }
+        else
+        {
+            _hintUI.Hide();
+        }
     }
 
     private void OnInteract()
     {
         if (IsHolding)
-        {
             Drop();
-        }
         else
-        {
             TryInteract();
-        }
     }
 
     private void OnThrow()
     {
         if (IsHolding)
-        {
             Toss();
-        }
     }
 
     private void Drop()
     {
         Physics.IgnoreCollision(_collider, _heldCollider, false);
-
         RemoveOwnershipServerRpc(_held.NetworkObject, NetworkObject);
-        
         _held = null;
         _heldCollider = null;
     }
@@ -59,7 +93,10 @@ public class PlayerInteract : NetworkBehaviour
     private void Toss()
     {
         ThrowServerRpc(_held.NetworkObject, _playerCamera.forward * _throwForce);
-        Drop();
+        Physics.IgnoreCollision(_collider, _heldCollider, false);
+        RemoveOwnershipServerRpc(_held.NetworkObject, NetworkObject);
+        _held = null;
+        _heldCollider = null;
     }
 
     private void TryInteract()
@@ -86,7 +123,6 @@ public class PlayerInteract : NetworkBehaviour
     {
         _held = holdable;
         _heldCollider = collider;
-
         AcquireOwnershipServerRpc(_held.NetworkObject, NetworkObject);
         Physics.IgnoreCollision(_collider, _heldCollider, true);
     }
@@ -96,11 +132,8 @@ public class PlayerInteract : NetworkBehaviour
     {
         if (targetNetObjRef.TryGet(out NetworkObject targetNetObj) && playerNetObjRef.TryGet(out NetworkObject playerNetObj))
         {
-            ulong clientId = rpcParams.Receive.SenderClientId;
-
-            Debug.Log($"Server: Transferring ownership of {targetNetObj.name} to Client {clientId}");
-
-            targetNetObj.GetComponent<Holdable>().PickUp(playerNetObj.GetComponent<PlayerInteract>().HoldPoint);
+            var interact = playerNetObj.GetComponent<PlayerInteract>();
+            targetNetObj.GetComponent<Holdable>().PickUp(interact.HoldPoint, interact.PlayerCamera);
             Physics.IgnoreCollision(playerNetObj.GetComponent<Collider>(), targetNetObj.GetComponent<Collider>(), true);
         }
     }
@@ -110,10 +143,6 @@ public class PlayerInteract : NetworkBehaviour
     {
         if (targetNetObjRef.TryGet(out NetworkObject targetNetObj) && playerNetObjRef.TryGet(out NetworkObject playerNetObj))
         {
-            ulong clientId = rpcParams.Receive.SenderClientId;
-
-            Debug.Log($"Server: Relinquishing ownership of {targetNetObj.name} by Client {clientId}");
-
             Physics.IgnoreCollision(playerNetObj.GetComponent<Collider>(), targetNetObj.GetComponent<Collider>(), false);
             targetNetObj.GetComponent<Holdable>().Drop();
         }
@@ -123,9 +152,6 @@ public class PlayerInteract : NetworkBehaviour
     public void ThrowServerRpc(NetworkObjectReference targetNetObjRef, Vector3 throwForce)
     {
         if (targetNetObjRef.TryGet(out NetworkObject targetNetObj))
-        {
             targetNetObj.GetComponent<Holdable>().Toss(throwForce);
-        }
     }
-
 }

@@ -24,9 +24,12 @@ public class NetworkSceneManager : NetworkBehaviour
     private SpawnPoint[] _spawnPoints;
     private int _spawnPointIndex = 0;
 
+    private LoadingScreen _loadingScreen;
+
     private void Awake() 
     {
         DontDestroyOnLoad(gameObject);
+        _loadingScreen = GetComponent<LoadingScreen>();
     }
 
     public override void OnNetworkSpawn()
@@ -49,17 +52,40 @@ public class NetworkSceneManager : NetworkBehaviour
     {
         if (IsServer && !string.IsNullOrEmpty(_sceneName))
         {
-            var status = NetworkManager.SceneManager.LoadScene(_sceneName, LoadSceneMode.Single);
-            if (status != SceneEventProgressStatus.Started)
-            {
-                Debug.LogWarning($"Failed to load {_sceneName} " 
-                + $"with a {nameof(SceneEventProgressStatus)}: {status}");
-            } 
-            else
-            {
-                Debug.Log("Successfully loaded into scene");
-            }
+            // Tell ALL clients (including host) to fade to black,
+            // then the server actually loads the scene.
+            FadeInClientRpc();
+
+            StartCoroutine(LoadSceneAfterFade());
         }
+    }
+
+    private IEnumerator LoadSceneAfterFade()
+    {
+        // Wait for the fade-in to finish before loading
+        if (_loadingScreen != null)
+            yield return _loadingScreen.Transition(null);
+        else
+            yield return new WaitForSeconds(0.5f);
+
+        var status = NetworkManager.SceneManager.LoadScene(_sceneName, LoadSceneMode.Single);
+        if (status != SceneEventProgressStatus.Started)
+        {
+            Debug.LogWarning($"Failed to load {_sceneName} "
+                + $"with a {nameof(SceneEventProgressStatus)}: {status}");
+        }
+        else
+        {
+            Debug.Log("Successfully loaded into scene");
+        }
+    }
+
+    [Rpc(SendTo.NotServer)]
+    private void FadeInClientRpc()
+    {
+        // Non-host clients fade to black on their own
+        if (_loadingScreen != null)
+            StartCoroutine(_loadingScreen.Transition(null));
     }
 
     private void OnClientLoadedScene(ulong clientId, string sceneName, LoadSceneMode loadSceneMode)
@@ -67,7 +93,17 @@ public class NetworkSceneManager : NetworkBehaviour
         if (sceneName == _sceneName)
         {
             StartCoroutine(SpawnPlayer(clientId));
+
+            // Tell this specific client to fade out
+            FadeOutClientRpc(RpcTarget.Single(clientId, RpcTargetUse.Temp));
         }
+    }
+
+    [Rpc(SendTo.SpecifiedInParams)]
+    private void FadeOutClientRpc(RpcParams rpcParams)
+    {
+        if (_loadingScreen != null)
+            StartCoroutine(_loadingScreen.FadeOut());
     }
 
     private IEnumerator SpawnPlayer(ulong clientId)
