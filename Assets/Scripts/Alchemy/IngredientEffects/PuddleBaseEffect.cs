@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class PuddleBaseEffect : BaseEffect
 {
-    public PuddleBaseEffect(float duration) : base(duration)
-    {
-    }
 
+    public float AuraRadius;
+
+    public PuddleBaseEffect(float duration, float auraRadius) : base(duration)
+    {
+        AuraRadius = auraRadius;
+    }
 }

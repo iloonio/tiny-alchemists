@@ -22,10 +22,11 @@ public class PlayerMove : MonoBehaviour
     private RaycastHit _groundHit;
     private Vector3 _platformVelocity; // velocity sampled from a MovingPlatform when standing on one
     private Transform _currentPlatform;
+    private bool _isInputOverridden = false;
+    private Vector2 _inputOverride = Vector2.zero;
 
     [HideInInspector] public float MoveSpeedMultiplier = 1f;
     [HideInInspector] public float JumpForceMultiplier = 1f;
-    [HideInInspector] public Vector2 InputOverride = Vector2.zero;
 
     private void Start()
     {
@@ -52,14 +53,7 @@ public class PlayerMove : MonoBehaviour
 
     private void OnMove(InputValue value)
     {
-        if (InputOverride != Vector2.zero)
-        {
-            _moveInput = InputOverride;
-        } 
-        else
-        {
-            _moveInput = value.Get<Vector2>();
-        }
+        _moveInput = value.Get<Vector2>();
     }
 
     private void OnJump()
@@ -69,6 +63,11 @@ public class PlayerMove : MonoBehaviour
 
     private void Move()
     {
+        if (_isInputOverridden)
+        {
+            _moveInput = _inputOverride;
+        } 
+
         float horizontalSpeed = Vector3.Magnitude(new Vector3(_rb.linearVelocity.x, 0f, _rb.linearVelocity.z));
         if (horizontalSpeed > _baseMaxMoveSpeed * MoveSpeedMultiplier) return;
 
@@ -136,5 +135,18 @@ public class PlayerMove : MonoBehaviour
         }
 
         return Vector3.Angle(_groundHit.normal, Vector3.up) <= _maxGroundAngle;
+    }
+
+    public void OverrideInput(Vector2 input)
+    {
+        _inputOverride = input;
+        _isInputOverridden = true;
+    }
+
+    public void ClearInputOverride()
+    {
+        _inputOverride = Vector2.zero;
+        _isInputOverridden = false;
+        _moveInput = Vector2.zero;
     }
 }

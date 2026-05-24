@@ -11,7 +11,7 @@ public class FireStatus : Status
         if (target.TryGetComponent(out PlayerMove playerMove))
         {
             playerMove.MoveSpeedMultiplier = _speedMultiplier;
-            playerMove.InputOverride = _inputOverride;
+            playerMove.OverrideInput(_inputOverride);
         }
     }
 
@@ -28,7 +28,7 @@ public class FireStatus : Status
         if (target.TryGetComponent(out PlayerMove playerMove))
         {
             playerMove.MoveSpeedMultiplier = 1f;
-            playerMove.InputOverride = Vector2.zero;
+            playerMove.ClearInputOverride();
         }
     }
 }

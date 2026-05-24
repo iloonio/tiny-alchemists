@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class CubeBaseEffect : BaseEffect
 {
-    public CubeBaseEffect(float duration) : base(duration)
-    {
-    }
+    public float AuraRadius;
 
+    public CubeBaseEffect(float duration, float auraRadius) : base(duration)
+    {
+        AuraRadius = auraRadius;
+    }
 }

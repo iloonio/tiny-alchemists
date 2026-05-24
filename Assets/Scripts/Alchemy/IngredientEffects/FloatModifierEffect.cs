@@ -61,21 +61,11 @@ public class FloatModifierEffect : ModifierEffect
     // ── Puddle base ──────────────────────────────────────────
     // Continuous upward force pushing away from puddle
 
-    public override void OnEffectTriggerEnter(Collider other, PotionEffect effect, PuddleBaseEffect puddleBase, List<ModifierEffect> modifierEffects)
-    {
-        _puddleAffected.Add(other);
-    }
-
-    public override void OnEffectTriggerExit(Collider other, PotionEffect effect, PuddleBaseEffect puddleBase, List<ModifierEffect> modifierEffects)
-    {
-        _puddleAffected.Remove(other);
-    }
-
     public override void OnEffectUpdate(PotionEffect effect, PuddleBaseEffect puddleBase, List<ModifierEffect> modifierEffects)
     {
         if (!effect.IsServer) return;
 
-        foreach (Collider collider in _puddleAffected)
+        foreach (Collider collider in Physics.OverlapSphere(effect.transform.position, puddleBase.AuraRadius))
         {
             if (collider == null) continue;
 
