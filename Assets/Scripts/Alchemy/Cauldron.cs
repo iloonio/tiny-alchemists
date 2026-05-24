@@ -208,8 +208,14 @@ public class Cauldron : NetworkBehaviour, IInteractable
 
         foreach (var collider in Physics.OverlapSphere(_potionSpawnPoint.position, _explosionRadius))
         {
-            if (collider.TryGetComponent(out Rigidbody rb))
+            if (collider.TryGetComponent(out PlayerPush playerPush))
+            {
+                playerPush.AddExplosionForceClientRpc(_explosionForce, _potionSpawnPoint.position, _explosionRadius);
+            }
+            else if (collider.TryGetComponent(out Rigidbody rb))
+            {
                 rb.AddExplosionForce(_explosionForce, _potionSpawnPoint.position, _explosionRadius, 1f, ForceMode.Impulse);
+            }
 
             if (collider.TryGetComponent(out StatusAffectable statusAffectable))
                 statusAffectable.AddStatus(_explosionStatus, _explosionStatusDuration);
