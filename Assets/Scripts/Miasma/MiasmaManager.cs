@@ -1,13 +1,15 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Unity.Netcode;
 using Random = UnityEngine.Random;
+using System;
 
 public class MiasmaManager : NetworkBehaviour
 {
 
     public static MiasmaManager Instance;
+
+    public event EventHandler OnUpdate;
 
     [Header("Grid")]
     [SerializeField] private float _cellSize = 0.5f;
@@ -38,13 +40,12 @@ public class MiasmaManager : NetworkBehaviour
     private Node[,,] _grid;
     private HashSet<Node> _allNodes;
     private HashSet<Node> _activeNodes;
+    private bool _activeNodesDirty;
     private Vector3Int _playerCellExtents;
     private float _lossTimer = 0f;
 
     private NetworkList<Vector3Int> _activeCells;
     public NetworkList<Vector3Int> ActiveCells => _activeCells;
-    private NetworkVariable<bool> _isBatchUpdate;
-    public NetworkVariable<bool> IsBatchUpdate => _isBatchUpdate;
 
     private void Awake()
     {
@@ -53,7 +54,6 @@ public class MiasmaManager : NetworkBehaviour
         _allNodes = new();
         _activeNodes = new();
         _activeCells = new NetworkList<Vector3Int>();
-        _isBatchUpdate = new();
         _playerCellExtents = CalculatePlayerCellExtents();
     }
 
@@ -86,8 +86,6 @@ public class MiasmaManager : NetworkBehaviour
                 }
             }
             
-            _isBatchUpdate.Value = false;        
-
             InvokeRepeating(nameof(Grow), _growthInterval, _growthInterval);  
         }
     }
@@ -113,6 +111,8 @@ public class MiasmaManager : NetworkBehaviour
                 _activeNodes.Clear();
                 break;
         }
+
+        _activeNodesDirty = true;
     }
 
     public void AddNode(Node node)
@@ -212,24 +212,10 @@ public class MiasmaManager : NetworkBehaviour
             }
         }
 
-        BatchUpdate(nodesToActivate);
-    }
-
-    private void BatchUpdate(List<Node> nodesToActivate)
-    {
-        if (nodesToActivate.Count == 0) return;
-
-        _isBatchUpdate.Value = true;
-        Node firstNode = nodesToActivate.First();
-        nodesToActivate.Remove(firstNode);
-
         foreach (Node node in nodesToActivate)
         {
             ActivateNode(node);
         }
-
-        _isBatchUpdate.Value = false;
-        ActivateNode(firstNode);
     }
 
     public Vector3Int WorldToGrid(Vector3 worldPos)
@@ -291,6 +277,15 @@ public class MiasmaManager : NetworkBehaviour
 
             Next:;
         }       
+    }
+
+    private void LateUpdate()
+    {
+        if (_activeNodesDirty)
+        {
+            OnUpdate?.Invoke(this, EventArgs.Empty);
+            _activeNodesDirty = false;
+        }
     }
 
     [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone)]

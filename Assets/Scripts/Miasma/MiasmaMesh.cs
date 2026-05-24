@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 using System.Collections.Generic;
+using System;
 
 public class MiasmaMesh : NetworkBehaviour 
 {
@@ -8,7 +9,6 @@ public class MiasmaMesh : NetworkBehaviour
     private Mesh _mesh;
     private MeshRenderer _meshRenderer;
     public float tileScale = 1f;
-    private bool _isBatchUpdate;
 
     private void Start()
     {
@@ -23,27 +23,17 @@ public class MiasmaMesh : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        MiasmaManager.Instance.ActiveCells.OnListChanged += OnActiveCellsChanged;
-        MiasmaManager.Instance.IsBatchUpdate.OnValueChanged += OnBatchUpdate;
+        MiasmaManager.Instance.OnUpdate += OnUpdate;
     }
 
     public override void OnNetworkDespawn()
     {
-        MiasmaManager.Instance.ActiveCells.OnListChanged -= OnActiveCellsChanged;
-        MiasmaManager.Instance.IsBatchUpdate.OnValueChanged -= OnBatchUpdate;
+        MiasmaManager.Instance.OnUpdate -= OnUpdate;
     }
 
-    private void OnBatchUpdate(bool previous, bool current)
-    {  
-        _isBatchUpdate = current;
-    }
-
-    private void OnActiveCellsChanged(NetworkListEvent<Vector3Int> changeEvent)
+    private void OnUpdate(object sender, EventArgs e)
     {
-        if (!_isBatchUpdate)
-        {
-            Redraw();
-        }
+        Redraw();
     }
 
     private void Redraw()
