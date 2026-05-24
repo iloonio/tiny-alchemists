@@ -25,6 +25,7 @@ public class PlayerMove : MonoBehaviour
 
     [HideInInspector] public float MoveSpeedMultiplier = 1f;
     [HideInInspector] public float JumpForceMultiplier = 1f;
+    [HideInInspector] public Vector2 InputOverride = Vector2.zero;
 
     private void Start()
     {
@@ -51,7 +52,14 @@ public class PlayerMove : MonoBehaviour
 
     private void OnMove(InputValue value)
     {
-        _moveInput = value.Get<Vector2>();
+        if (InputOverride != Vector2.zero)
+        {
+            _moveInput = InputOverride;
+        } 
+        else
+        {
+            _moveInput = value.Get<Vector2>();
+        }
     }
 
     private void OnJump()

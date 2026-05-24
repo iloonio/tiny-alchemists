@@ -25,7 +25,7 @@ public class MiasmaManager : NetworkBehaviour
 
     [Header("Status")]
     [SerializeField] private Status _status;
-    [SerializeField] private CapsuleCollider _playerCollider;
+    [SerializeField] private Collider _playerCollider;
     [SerializeField] private float _lossTimeThreshold = 5f;
 
     [Header("Debug")]

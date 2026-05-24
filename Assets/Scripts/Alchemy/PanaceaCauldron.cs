@@ -58,7 +58,7 @@ public class PanaceaCauldron : NetworkBehaviour
     {
         if (_playersInside.Count == 0) return;
 
-        foreach (var key in _playersInside.Keys)
+        foreach (var key in new List<PlayerPush>(_playersInside.Keys))
         {
             _playersInside[key] += Time.deltaTime;
 
