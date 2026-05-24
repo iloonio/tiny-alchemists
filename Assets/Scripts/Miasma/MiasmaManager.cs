@@ -71,21 +71,8 @@ public class MiasmaManager : NetworkBehaviour
     {
         _activeCells.OnListChanged += OnActiveCellsChanged;
 
-        foreach (Vector3Int coord in _activeCells)
-        {
-            _activeNodes.Add(GetNode(coord));
-        }
-
         if (IsServer)
-        {    
-            foreach (Node node in _allNodes)
-            {
-                if (node.startActive)
-                {
-                    ActivateNode(node);   
-                }
-            }
-            
+        {
             InvokeRepeating(nameof(Grow), _growthInterval, _growthInterval);  
         }
     }
@@ -100,7 +87,11 @@ public class MiasmaManager : NetworkBehaviour
         switch (changeEvent.Type)
         {
             case NetworkListEvent<Vector3Int>.EventType.Add:
-                _activeNodes.Add(GetNode(changeEvent.Value));
+                Node node = GetNode(changeEvent.Value);
+                if (_allNodes.Contains(node))
+                {
+                    _activeNodes.Add(node);
+                }
                 break;
 
             case NetworkListEvent<Vector3Int>.EventType.Remove:
@@ -125,10 +116,22 @@ public class MiasmaManager : NetworkBehaviour
         {
             _grid[coord.x, coord.y, coord.z] = node;
             _allNodes.Add(node);
+
+            if (node.startActive || _activeCells.Contains(node.coord))
+            {
+                _activeNodes.Add(node);
+                ActivateNode(node);
+            }
         }
         else
         {
             MergeNodes(currentNode, node);
+
+            if ((node.startActive || _activeCells.Contains(node.coord)) && !_activeNodes.Contains(currentNode))
+            {
+                _activeNodes.Add(currentNode);
+                ActivateNode(currentNode);
+            }
         }
     }
 
