@@ -11,4 +11,9 @@ public class PuddleBaseEffect : BaseEffect
     {
         AuraRadius = auraRadius;
     }
+
+    public override void OnEffectSetup(PotionEffect effect)
+    {
+        effect.GetComponentInChildren<Renderer>().material.SetColor("_Color", effect.Color);
+    }
 }
