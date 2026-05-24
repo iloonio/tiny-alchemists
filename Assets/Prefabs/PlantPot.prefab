@@ -261,6 +261,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Holdable
   ShowTopMostFoldoutHeaderGroup: 1
+  _hintName: Plant Pot
 --- !u!114 &463886378190780142
 MonoBehaviour:
   m_ObjectHideFlags: 0

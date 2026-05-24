@@ -99,7 +99,19 @@ public class Cauldron : NetworkBehaviour, IInteractable
             _playersInside.Remove(playerPush);
         }
     }
-    
+
+    public string Hint()
+    {
+        if (_contents.Count > 0)
+        {
+            return "Brew Potion";
+        } 
+        else
+        {
+            return "";
+        }
+    }
+
     public void Interact()
     {
         BrewServerRpc();

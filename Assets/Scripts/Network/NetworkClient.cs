@@ -21,6 +21,7 @@ public class NetworkClient : NetworkBehaviour
     private AudioListener _audioListener;
     private PlayerUI _playerUI;
     private Camera _uiCamera;
+    private Canvas _uiCanvas;
 
     private void Awake()
     {
@@ -32,6 +33,7 @@ public class NetworkClient : NetworkBehaviour
         _playerCamera = GetComponentInChildren<Camera>();
         _audioListener = GetComponentInChildren<AudioListener>();
         _playerUI = GetComponent<PlayerUI>();
+        _uiCanvas = GetComponentInChildren<Canvas>();
         _uiCamera = _playerCamera.gameObject.GetComponentInChildren<Camera>();
 
         _playerInput.enabled = false;
@@ -43,6 +45,7 @@ public class NetworkClient : NetworkBehaviour
         _audioListener.enabled = false;
         _playerUI.enabled = false;
         _uiCamera.enabled = false;
+        _uiCanvas.enabled = false;
     }
 
     public override void OnNetworkSpawn()
@@ -60,6 +63,7 @@ public class NetworkClient : NetworkBehaviour
             _audioListener.enabled = true;
             _playerUI.enabled = true;
             _uiCamera.enabled = true;
+            _uiCanvas.enabled = true;
         }
 
         if (IsServer)

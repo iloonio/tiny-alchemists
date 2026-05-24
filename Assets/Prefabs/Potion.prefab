@@ -275,6 +275,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Holdable
   ShowTopMostFoldoutHeaderGroup: 1
+  _hintName: Potion
 --- !u!114 &5362075143917337665
 MonoBehaviour:
   m_ObjectHideFlags: 0

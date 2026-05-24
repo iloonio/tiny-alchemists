@@ -275,6 +275,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Holdable
   ShowTopMostFoldoutHeaderGroup: 1
+  _hintName: Floaty Ingredient
 --- !u!114 &3325197152410463699
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -4,6 +4,10 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Holdable : NetworkBehaviour
 {
+
+    [SerializeField] private string _hintName;
+    public string HintName => _hintName;
+
     private Rigidbody _rb;
     private Transform _holdPoint;
     private bool _isHeld = false;
