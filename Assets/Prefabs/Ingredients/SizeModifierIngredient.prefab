@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 7048312572333856761}
   - component: {fileID: 1357258421107590579}
   - component: {fileID: 3325197152410463699}
+  - component: {fileID: 6142377213520964652}
   m_Layer: 8
   m_Name: SizeModifierIngredient
   m_TagString: Untagged
@@ -184,8 +185,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Holdable
   ShowTopMostFoldoutHeaderGroup: 1
-  _followPositionAcceleration: 100
-  _followRotationAcceleration: 50
 --- !u!114 &3325197152410463699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,6 +199,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Ingredient
   ShowTopMostFoldoutHeaderGroup: 1
   _type: {fileID: 11400000, guid: 2edd4f2555f7d9e459d52bb97727380a, type: 2}
+--- !u!114 &6142377213520964652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9196376099781582157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b7bcf61377355543a7fd7286e420628, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!1001 &3343216561318285031
 PrefabInstance:
   m_ObjectHideFlags: 0

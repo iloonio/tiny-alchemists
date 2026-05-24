@@ -65,7 +65,7 @@ public class PanaceaCauldron : NetworkBehaviour
             if (_playersInside[key] >= _playerStuckTime)
             {
                 Vector3 launchForce = Vector3.up * _explosionForce;
-                key.LaunchPlayerClientRpc(launchForce);
+                key.AddForceClientRpc(launchForce);
                 _playersInside.Remove(key);
             }
         }

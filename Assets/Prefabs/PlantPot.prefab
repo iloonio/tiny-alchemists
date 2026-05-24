@@ -91,6 +91,7 @@ GameObject:
   - component: {fileID: 7215751098732819908}
   - component: {fileID: 3171973159409264124}
   - component: {fileID: 2598059880362052706}
+  - component: {fileID: 463886378190780142}
   m_Layer: 8
   m_Name: PlantPot
   m_TagString: Untagged
@@ -259,6 +260,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a40d5cf10b78010478f1683922e1cb9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Holdable
+  ShowTopMostFoldoutHeaderGroup: 1
+--- !u!114 &463886378190780142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2838587713435855066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b7bcf61377355543a7fd7286e420628, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
   ShowTopMostFoldoutHeaderGroup: 1
 --- !u!1 &8536611091256278215
 GameObject:

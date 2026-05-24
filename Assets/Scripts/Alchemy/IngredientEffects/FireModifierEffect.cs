@@ -12,6 +12,8 @@ public class FireModifierEffect : ModifierEffect
         FireStatusDuration = fireStatusDuration;
     }
 
+    // ── No base ──────────────────────────────────────────────
+    // Affected players/objects/miasma set on fire
     public override void OnEffectStart(PotionEffect effect, NoBaseEffect noBaseEffect, List<ModifierEffect> modifierEffects)
     {
         foreach (Collider collider in Physics.OverlapSphere(effect.transform.position, noBaseEffect.Radius))
@@ -23,6 +25,8 @@ public class FireModifierEffect : ModifierEffect
         MiasmaManager.Instance.DestroySphere(effect.transform.position, noBaseEffect.Radius);
     }
 
+    // ── Cloud base ──────────────────────────────────────────────
+    // Affected players/objects/miasma set on fire
     public override void OnEffectUpdate(PotionEffect effect, CloudBaseEffect cloudBaseEffect, List<ModifierEffect> modifierEffects)
     {
         foreach (Collider collider in cloudBaseEffect.Affected)
@@ -34,6 +38,8 @@ public class FireModifierEffect : ModifierEffect
         MiasmaManager.Instance.DestroySphere(effect.transform.position, effect.GetComponent<SphereCollider>().radius);
     }
 
+    // ── Cube base ──────────────────────────────────────────────
+    // Players/objects/miasma inside aura set on fire
     public override void OnEffectUpdate(PotionEffect effect, CubeBaseEffect cubeBaseEffect, List<ModifierEffect> modifierEffects)
     {   
         Vector3 halfExtents = effect.GetComponent<Collider>().bounds.size / 2 + Vector3.one * cubeBaseEffect.AuraRadius;
@@ -47,6 +53,8 @@ public class FireModifierEffect : ModifierEffect
         MiasmaManager.Instance.DestroySphere(effect.transform.position, halfExtents.magnitude);
     }
 
+    // ── Puddle base ──────────────────────────────────────────────
+    // Players/objects/miasma inside aura set on fire
     public override void OnEffectUpdate(PotionEffect effect, PuddleBaseEffect puddleBaseEffect, List<ModifierEffect> modifierEffects)
     {
         foreach (Collider collider in Physics.OverlapSphere(effect.transform.position, puddleBaseEffect.AuraRadius))

@@ -106,6 +106,7 @@ GameObject:
   - component: {fileID: 4892682120741282943}
   - component: {fileID: 3108648740871576591}
   - component: {fileID: 5362075143917337665}
+  - component: {fileID: 592572199096519250}
   m_Layer: 8
   m_Name: Potion
   m_TagString: Untagged
@@ -274,8 +275,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Holdable
   ShowTopMostFoldoutHeaderGroup: 1
-  _followPositionAcceleration: 100
-  _followRotationAcceleration: 50
 --- !u!114 &5362075143917337665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -290,3 +289,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Potion
   ShowTopMostFoldoutHeaderGroup: 1
   _breakSpeed: 10
+--- !u!114 &592572199096519250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4986591635374473630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b7bcf61377355543a7fd7286e420628, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
+  ShowTopMostFoldoutHeaderGroup: 1

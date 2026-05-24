@@ -95,7 +95,7 @@ public class Cauldron : NetworkBehaviour, IInteractable
         foreach (var playerPush in toExplode)
         {
             Vector3 launchForce = Vector3.up * _explosionForce;
-            playerPush.LaunchPlayerClientRpc(launchForce);
+            playerPush.AddForceClientRpc(launchForce);
             _playersInside.Remove(playerPush);
         }
     }
