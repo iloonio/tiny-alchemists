@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1837083253497848568}
   - component: {fileID: 5699060183159732925}
   - component: {fileID: -4525584150150004491}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CubeBasePotionEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -212,7 +212,7 @@ GameObject:
   - component: {fileID: 2020721975739879872}
   - component: {fileID: 4160203676597686381}
   - component: {fileID: 320080909482816955}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}

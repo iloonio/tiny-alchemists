@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3955827139910508775}
   - component: {fileID: 1944947861877657522}
   - component: {fileID: 5135833739389691560}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PuddleBasePotionEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -153,7 +153,7 @@ GameObject:
   - component: {fileID: 9047077457014407119}
   - component: {fileID: 3770874244236953247}
   - component: {fileID: 8979222888723145791}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
