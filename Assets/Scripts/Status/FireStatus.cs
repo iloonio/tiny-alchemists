@@ -15,6 +15,14 @@ public class FireStatus : Status
         }
     }
 
+    public override void OnStatusFixedUpdate(GameObject target)
+    {
+        if (target.TryGetComponent(out Flammable flammable))
+        {
+            flammable.Burn(Time.fixedDeltaTime);
+        }
+    }
+
     public override void OnStatusEnd(GameObject target)
     {
         if (target.TryGetComponent(out PlayerMove playerMove))
