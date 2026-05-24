@@ -297,6 +297,32 @@ public class MiasmaManager : NetworkBehaviour
         }
     }
 
+    public void DestroySphere(Vector3 worldPos, float radius)
+    {
+        DestroySphereRpc(worldPos, radius);
+    }
+
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    private void DestroySphereRpc(Vector3 worldPos, float radius)
+    {
+        Vector3Int center = WorldToGrid(worldPos);
+        int cellRadius = Mathf.CeilToInt(radius / CellSize);
+
+        for (int x = -cellRadius; x <= cellRadius; x++)
+        for (int y = -cellRadius; y <= cellRadius; y++)
+        for (int z = -cellRadius; z <= cellRadius; z++)
+        {
+            Vector3Int coord = center + new Vector3Int(x, y, z);
+            if (!InBounds(coord)) continue;
+
+            Node node = GetNode(coord);
+            if (IsNodeActive(node))
+            {
+                DeactivateNode(node);
+            }
+        }
+    }
+
     private void OnDrawGizmos()
     {
         if (!_debugDraw) return;

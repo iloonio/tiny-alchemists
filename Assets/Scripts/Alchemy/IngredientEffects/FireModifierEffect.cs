@@ -21,16 +21,20 @@ public class FireModifierEffect : ModifierEffect
             if (collider.TryGetComponent(out StatusAffectable statusAffectable))
                 statusAffectable.AddStatus(FireStatus, FireStatusDuration);
         }        
+
+        MiasmaManager.Instance.DestroySphere(effect.transform.position, noBaseEffect.Radius);
     }
 
-    public override void OnEffectUpdate(PotionEffect effect, CloudBaseEffect baseEffect, List<ModifierEffect> modifierEffects)
+    public override void OnEffectUpdate(PotionEffect effect, CloudBaseEffect cloudBaseEffect, List<ModifierEffect> modifierEffects)
     {
         if (!effect.IsServer) return;
 
-        foreach (Collider collider in baseEffect.Affected)
+        foreach (Collider collider in cloudBaseEffect.Affected)
         {
             if (collider != null && collider.TryGetComponent(out StatusAffectable statusAffectable))
                 statusAffectable.AddStatus(FireStatus, FireStatusDuration);
         }
+
+        MiasmaManager.Instance.DestroySphere(effect.transform.position, effect.GetComponent<SphereCollider>().radius);
     }
 }
