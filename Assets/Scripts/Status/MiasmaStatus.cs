@@ -20,12 +20,12 @@ public class MiasmaStatus : Status
             if (playerMove.MoveSpeedMultiplier > _moveSpeedMultiplierMin)
             {            
                 playerMove.MoveSpeedMultiplier -= _moveSpeedMultiplierDecreasePerSecond * Time.fixedDeltaTime;
-                playerMove.MoveSpeedMultiplier = Mathf.Max(playerMove.MoveSpeedMultiplier, _moveSpeedMultiplierMin);
+                playerMove.MoveSpeedMultiplier = Mathf.Min(playerMove.MoveSpeedMultiplier, _moveSpeedMultiplierMax);
             }
             if (playerMove.JumpForceMultiplier > _jumpForceMultiplierMin)
             {
                 playerMove.JumpForceMultiplier -= _jumpForceMultiplierDecreasePerSecond * Time.fixedDeltaTime;
-                playerMove.JumpForceMultiplier = Mathf.Max(playerMove.JumpForceMultiplier, _jumpForceMultiplierMin);
+                playerMove.JumpForceMultiplier = Mathf.Min(playerMove.JumpForceMultiplier, _jumpForceMultiplierMax);
             }
         }
     }
