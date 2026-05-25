@@ -18,6 +18,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private LayerMask _groundLayer;
 
     private Rigidbody _rb;
+    private NetworkClient _networkClient;
     private Vector2 _moveInput;
     private RaycastHit _groundHit;
     private Vector3 _platformVelocity; // velocity sampled from a MovingPlatform when standing on one
@@ -28,9 +29,10 @@ public class PlayerMove : MonoBehaviour
     [HideInInspector] public float MoveSpeedMultiplier = 1f;
     [HideInInspector] public float JumpForceMultiplier = 1f;
 
-    private void Start()
+    private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
+        _networkClient = GetComponent<NetworkClient>();
     }
 
     private void FixedUpdate()
@@ -49,6 +51,9 @@ public class PlayerMove : MonoBehaviour
         }
 
         ClampHorizontalSpeed();
+
+        _networkClient.IsMoving.Value = IsMoving();
+        _networkClient.IsGrounded.Value = IsGrounded(); 
     }
 
     private void OnMove(InputValue value)
@@ -106,7 +111,7 @@ public class PlayerMove : MonoBehaviour
         _rb.AddForce(_baseJumpForce * JumpForceMultiplier * Vector3.up, ForceMode.Impulse);
     }
 
-    public bool IsMoving() => _moveInput.sqrMagnitude > 0.01f;
+    public bool IsMoving() => (_isInputOverridden ? _inputOverride : _moveInput).sqrMagnitude > 0.0001f;
 
     /// IsGrounded checks for slopes and if we are standing on moving platforms using spherecasts.
     /// Returns false if it doesn't hit anything, or if the Angle of the sloped surface is greater than _maxGroundAngle.

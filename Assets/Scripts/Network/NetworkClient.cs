@@ -11,6 +11,8 @@ public class NetworkClient : NetworkBehaviour
     public static readonly HashSet<NetworkClient> Players = new();
 
     public NetworkVariable<float> LookPitch = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<bool> IsGrounded = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<bool> IsMoving = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     private PlayerInput _playerInput;
     private PlayerMove _playerMovement;
@@ -22,6 +24,7 @@ public class NetworkClient : NetworkBehaviour
     private PlayerUI _playerUI;
     private Camera _uiCamera;
     private Canvas _uiCanvas;
+    private GameObject _model;
 
     private void Awake()
     {
@@ -35,6 +38,7 @@ public class NetworkClient : NetworkBehaviour
         _playerUI = GetComponent<PlayerUI>();
         _uiCanvas = GetComponentInChildren<Canvas>();
         _uiCamera = _playerCamera.gameObject.GetComponentInChildren<Camera>();
+        _model = GetComponentInChildren<Animator>().gameObject;
 
         _playerInput.enabled = false;
         _playerMovement.enabled = false;
@@ -46,6 +50,7 @@ public class NetworkClient : NetworkBehaviour
         _playerUI.enabled = false;
         _uiCamera.enabled = false;
         _uiCanvas.enabled = false;
+        _model.SetActive(true);
     }
 
     public override void OnNetworkSpawn()
@@ -64,6 +69,7 @@ public class NetworkClient : NetworkBehaviour
             _playerUI.enabled = true;
             _uiCamera.enabled = true;
             _uiCanvas.enabled = true;
+            _model.SetActive(false);
         }
 
         if (IsServer)
