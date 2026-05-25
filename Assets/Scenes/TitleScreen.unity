@@ -620,7 +620,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6327157567209807330, guid: b9e19a0127b8b6a4b9ccc573d6dffdd5, type: 3}
       propertyPath: _setupSceneName
-      value: SetupTestScene
+      value: Title Screen
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
