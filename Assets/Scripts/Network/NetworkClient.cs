@@ -69,7 +69,7 @@ public class NetworkClient : NetworkBehaviour
             _playerUI.enabled = true;
             _uiCamera.enabled = true;
             _uiCanvas.enabled = true;
-            _model.SetActive(false);
+            //_model.SetActive(false);
         }
 
         if (IsServer)
