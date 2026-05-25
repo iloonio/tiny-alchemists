@@ -95,11 +95,23 @@ public class Cauldron : NetworkBehaviour, IInteractable
         foreach (var playerPush in toExplode)
         {
             Vector3 launchForce = Vector3.up * _explosionForce;
-            playerPush.LaunchPlayerClientRpc(launchForce);
+            playerPush.AddForceClientRpc(launchForce);
             _playersInside.Remove(playerPush);
         }
     }
-    
+
+    public string Hint()
+    {
+        if (_contents.Count > 0)
+        {
+            return "Brew Potion";
+        } 
+        else
+        {
+            return "";
+        }
+    }
+
     public void Interact()
     {
         BrewServerRpc();
@@ -208,8 +220,14 @@ public class Cauldron : NetworkBehaviour, IInteractable
 
         foreach (var collider in Physics.OverlapSphere(_potionSpawnPoint.position, _explosionRadius))
         {
-            if (collider.TryGetComponent(out Rigidbody rb))
+            if (collider.TryGetComponent(out PlayerPush playerPush))
+            {
+                playerPush.AddExplosionForceClientRpc(_explosionForce, _potionSpawnPoint.position, _explosionRadius);
+            }
+            else if (collider.TryGetComponent(out Rigidbody rb))
+            {
                 rb.AddExplosionForce(_explosionForce, _potionSpawnPoint.position, _explosionRadius, 1f, ForceMode.Impulse);
+            }
 
             if (collider.TryGetComponent(out StatusAffectable statusAffectable))
                 statusAffectable.AddStatus(_explosionStatus, _explosionStatusDuration);

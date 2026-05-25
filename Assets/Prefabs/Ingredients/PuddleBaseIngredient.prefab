@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 7048312572333856761}
   - component: {fileID: 1357258421107590579}
   - component: {fileID: 3325197152410463699}
+  - component: {fileID: 6879829441870621265}
   m_Layer: 8
   m_Name: PuddleBaseIngredient
   m_TagString: Untagged
@@ -184,6 +185,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Holdable
   ShowTopMostFoldoutHeaderGroup: 1
+  _hintName: Puddle Ingredient
 --- !u!114 &3325197152410463699
 MonoBehaviour:
   m_ObjectHideFlags: 0

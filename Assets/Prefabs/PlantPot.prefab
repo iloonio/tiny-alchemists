@@ -185,7 +185,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Holdable
   ShowTopMostFoldoutHeaderGroup: 1
---- !u!1 &3881887313962582425
+  _hintName: Plant Pot
+--- !u!114 &463886378190780142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2838587713435855066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b7bcf61377355543a7fd7286e420628, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
+  ShowTopMostFoldoutHeaderGroup: 1
+--- !u!1 &8536611091256278215
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
