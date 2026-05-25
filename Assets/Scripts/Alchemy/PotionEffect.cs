@@ -14,6 +14,7 @@ public class PotionEffect : NetworkBehaviour
 
     private NetworkVariable<int> _baseEffectIdNetwork = new();
     private NetworkList<int> _modifierEffectIdsNetwork = new();
+    private NetworkVariable<Vector3> _colorNetwork = new();
 
     public void Initialize(int baseIngredientId, List<int> modifierEffectIds, Color color)
     {
@@ -34,6 +35,7 @@ public class PotionEffect : NetworkBehaviour
             {
                 _modifierEffectIdsNetwork.Add(modifierEffectId);
             }
+            _colorNetwork.Value = new Vector3(_color.r, _color.g, _color.b);
         }
 
         _baseEffect = (BaseEffect)((IngredientType)_baseEffectIdNetwork.Value).CreateEffect();
@@ -41,6 +43,7 @@ public class PotionEffect : NetworkBehaviour
         {
             _modifierEffects.Add((ModifierEffect)((IngredientType)modifierEffectId).CreateEffect());
         }
+        _color = new Color(_colorNetwork.Value.x, _colorNetwork.Value.y, _colorNetwork.Value.z);
     }
 
     private void Start()
