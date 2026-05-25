@@ -215,7 +215,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ac9dd964a0b8c47eb9856ca3374d1574, type: 3}
       propertyPath: m_Name
-      value: model (2)
+      value: Plant Rack 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -224,6 +224,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ac9dd964a0b8c47eb9856ca3374d1574, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3251513582255470557}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ac9dd964a0b8c47eb9856ca3374d1574, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1247002703588122904}
   m_SourcePrefab: {fileID: 100100000, guid: ac9dd964a0b8c47eb9856ca3374d1574, type: 3}
 --- !u!4 &2821051187502908759 stripped
 Transform:
@@ -256,6 +259,33 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.8260578, y: 2.1748054, z: 0.40718177}
   m_Center: {x: -0.102042355, y: 0.094860315, z: 0.0048591294}
+--- !u!54 &1247002703588122904
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3201412510284406765}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &2632579290752813820
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -421,7 +451,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ac9dd964a0b8c47eb9856ca3374d1574, type: 3}
       propertyPath: m_Name
-      value: model (3)
+      value: Plant Rack 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -524,7 +554,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ac9dd964a0b8c47eb9856ca3374d1574, type: 3}
       propertyPath: m_Name
-      value: model (4)
+      value: Plant Rack 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -730,7 +760,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ac9dd964a0b8c47eb9856ca3374d1574, type: 3}
       propertyPath: m_Name
-      value: model (1)
+      value: Plant Rack 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1039,7 +1069,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ac9dd964a0b8c47eb9856ca3374d1574, type: 3}
       propertyPath: m_Name
-      value: model
+      value: Plant Rack 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
