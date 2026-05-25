@@ -268,10 +268,80 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ae627b7f3ec654c2794c1ee59e10ba24, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3755150938757991598}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ae627b7f3ec654c2794c1ee59e10ba24, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 497625170026765083}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ae627b7f3ec654c2794c1ee59e10ba24, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7100424416289034605}
   m_SourcePrefab: {fileID: 100100000, guid: ae627b7f3ec654c2794c1ee59e10ba24, type: 3}
 --- !u!4 &194074196948018974 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ae627b7f3ec654c2794c1ee59e10ba24, type: 3}
   m_PrefabInstance: {fileID: 377110538084843765}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &719078236622405028 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: ae627b7f3ec654c2794c1ee59e10ba24, type: 3}
+  m_PrefabInstance: {fileID: 377110538084843765}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3755150938757991598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 719078236622405028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6fff556c4bae8a6e93563a4fb999082, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RotatingPlatform
+  rotationSpeed: {x: 0, y: 30, z: 0}
+--- !u!54 &497625170026765083
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 719078236622405028}
+  serializedVersion: 5
+  m_Mass: 0.0000001
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &7100424416289034605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 719078236622405028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 197de433b0ede297ead157889b658e02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
+  localPointA: {x: 0, y: -0.3, z: 0}
+  localPointB: {x: 0, y: 0.3, z: 0}
+  speed: 0.5
+  useEasing: 1
