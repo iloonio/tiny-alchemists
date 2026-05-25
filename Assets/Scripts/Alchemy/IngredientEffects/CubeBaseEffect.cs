@@ -16,5 +16,11 @@ public class CubeBaseEffect : BaseEffect
         {
             renderer.material.SetColor("_BaseColor", effect.Color);
         }
+
+    }
+
+    public override void OnEffectStart(PotionEffect effect)
+    {
+        effect.GetComponentInChildren<AudioPlayer>().Play("CubeBaseStart");
     }
 }

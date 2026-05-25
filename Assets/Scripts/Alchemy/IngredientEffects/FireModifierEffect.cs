@@ -27,6 +27,12 @@ public class FireModifierEffect : ModifierEffect
 
     // ── Cloud base ──────────────────────────────────────────────
     // Affected players/objects/miasma set on fire
+
+    public override void OnEffectStart(PotionEffect effect, CloudBaseEffect baseEffect, List<ModifierEffect> modifierEffects)
+    {
+        effect.GetComponentInChildren<AudioPlayer>().Play("FireModifierLoop");
+    }
+
     public override void OnEffectUpdate(PotionEffect effect, CloudBaseEffect cloudBaseEffect, List<ModifierEffect> modifierEffects)
     {
         foreach (Collider collider in cloudBaseEffect.Affected)
@@ -40,6 +46,11 @@ public class FireModifierEffect : ModifierEffect
 
     // ── Cube base ──────────────────────────────────────────────
     // Players/objects/miasma inside aura set on fire
+    public override void OnEffectStart(PotionEffect effect, CubeBaseEffect baseEffect, List<ModifierEffect> modifierEffects)
+    {
+        effect.GetComponentInChildren<AudioPlayer>().Play("FireModifierLoop");
+    }
+
     public override void OnEffectUpdate(PotionEffect effect, CubeBaseEffect cubeBaseEffect, List<ModifierEffect> modifierEffects)
     {   
         Vector3 halfExtents = effect.GetComponent<Collider>().bounds.size / 2 + Vector3.one * cubeBaseEffect.AuraRadius;
@@ -55,6 +66,12 @@ public class FireModifierEffect : ModifierEffect
 
     // ── Puddle base ──────────────────────────────────────────────
     // Players/objects/miasma inside aura set on fire
+
+    public override void OnEffectStart(PotionEffect effect, PuddleBaseEffect baseEffect, List<ModifierEffect> modifierEffects)
+    {
+        effect.GetComponentInChildren<AudioPlayer>().Play("FireModifierLoop");
+    }
+
     public override void OnEffectUpdate(PotionEffect effect, PuddleBaseEffect puddleBaseEffect, List<ModifierEffect> modifierEffects)
     {
         foreach (Collider collider in Physics.OverlapSphere(effect.transform.position, puddleBaseEffect.AuraRadius))

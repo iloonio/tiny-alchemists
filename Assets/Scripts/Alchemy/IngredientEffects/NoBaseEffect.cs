@@ -14,6 +14,8 @@ public class NoBaseEffect : BaseEffect
 
     public override void OnEffectStart(PotionEffect effect)
     {
+        effect.GetComponentInChildren<AudioPlayer>().Play("NoBaseStart");
+
         foreach (var collider in Physics.OverlapSphere(effect.transform.position, Radius))
         {
             // Apply explosion force to affected players and objects

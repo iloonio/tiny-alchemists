@@ -16,4 +16,9 @@ public class PuddleBaseEffect : BaseEffect
     {
         effect.GetComponentInChildren<Renderer>().material.SetColor("_Color", effect.Color);
     }
+
+    public override void OnEffectStart(PotionEffect effect)
+    {
+        effect.GetComponentInChildren<AudioPlayer>().Play("PuddleBaseStart");
+    }
 }
