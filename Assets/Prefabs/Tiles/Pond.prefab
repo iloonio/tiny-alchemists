@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6185469582770600372}
   - component: {fileID: 2593304020331860668}
   - component: {fileID: 5970910060726380326}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 1395788261804357553}
   - component: {fileID: 2700350872700885666}
   - component: {fileID: 3263846680256251620}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -236,7 +236,7 @@ GameObject:
   - component: {fileID: 5655623677422307203}
   - component: {fileID: 2345035331319205996}
   - component: {fileID: 4408856836234598487}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -347,7 +347,7 @@ GameObject:
   - component: {fileID: 908669913245954437}
   - component: {fileID: 281638317904342370}
   - component: {fileID: 4058066924891121864}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -438,7 +438,7 @@ GameObject:
   - component: {fileID: 6291563828511346205}
   - component: {fileID: 2354917443958277885}
   - component: {fileID: 7888347205775396649}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -576,11 +576,7 @@ Transform:
   - {fileID: 1079954592114591719}
   - {fileID: 908669913245954437}
   - {fileID: 2507584115274867982}
-  - {fileID: 1162323846395795977}
-  - {fileID: 5151651122485147968}
-  - {fileID: 782951701901220319}
-  - {fileID: 8101311610805288316}
-  - {fileID: 3894080963905257499}
+  - {fileID: 2839745244787457079}
   - {fileID: 6747097697901041980}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -596,7 +592,7 @@ GameObject:
   - component: {fileID: 5171636130406770954}
   - component: {fileID: 2346795977404100457}
   - component: {fileID: 2047412669419357319}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -708,7 +704,7 @@ GameObject:
   - component: {fileID: 577565076959628150}
   - component: {fileID: 5187407346977474532}
   - component: {fileID: 7651480336802455771}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -819,7 +815,7 @@ GameObject:
   - component: {fileID: 2507584115274867982}
   - component: {fileID: 4072084917504408521}
   - component: {fileID: 2074872857759423964}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -910,7 +906,7 @@ GameObject:
   - component: {fileID: 6191097647140737630}
   - component: {fileID: 7928083532553475279}
   - component: {fileID: 6884335874871622861}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1010,6 +1006,42 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &7827202635842911243
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2839745244787457079}
+  m_Layer: 0
+  m_Name: Platforms
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2839745244787457079
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7827202635842911243}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1162323846395795977}
+  - {fileID: 5151651122485147968}
+  - {fileID: 782951701901220319}
+  - {fileID: 8101311610805288316}
+  - {fileID: 3894080963905257499}
+  m_Father: {fileID: 8932101089575813366}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &947261881854148723
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1078,7 +1110,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 8932101089575813366}
+    m_TransformParent: {fileID: 2839745244787457079}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalScale.x
@@ -1094,7 +1126,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.94
+      value: 0.94000053
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1102,7 +1134,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 8.53
+      value: 8.529999
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1132,9 +1164,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 216944288764953548, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_Name
       value: GiantWaterLilies (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1217,7 +1257,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
   localPointA: {x: -2.999997, y: 0, z: -0.0000035017727}
   localPointB: {x: 35.97649, y: 0, z: -5.033836}
-  speed: 3
+  speed: 1
   useEasing: 1
 --- !u!4 &782951701901220319 stripped
 Transform:
@@ -1230,7 +1270,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 8932101089575813366}
+    m_TransformParent: {fileID: 2839745244787457079}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalScale.x
@@ -1246,7 +1286,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.7
+      value: -5.699999
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1284,9 +1324,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 216944288764953548, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_Name
       value: GiantWaterLilies
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1333,11 +1381,11 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 8932101089575813366}
+    m_TransformParent: {fileID: 2839745244787457079}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.099999994
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalScale.y
@@ -1345,11 +1393,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.099999994
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.0923185
+      value: 5.0923176
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1387,9 +1435,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 216944288764953548, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_Name
       value: GiantWaterLilies (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1436,7 +1492,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 8932101089575813366}
+    m_TransformParent: {fileID: 2839745244787457079}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalScale.x
@@ -1452,7 +1508,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.04
+      value: -0.040000916
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1460,7 +1516,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 10.86
+      value: 10.860001
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1490,9 +1546,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 216944288764953548, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_Name
       value: GiantWaterLilies (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1580,7 +1644,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
   localPointA: {x: -44.58307, y: 0, z: -30.451826}
   localPointB: {x: 2.9999974, y: 0, z: 0.000003650784}
-  speed: 3
+  speed: 1
   useEasing: 1
 --- !u!1001 &8639903554547915415
 PrefabInstance:
@@ -1588,11 +1652,11 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 8932101089575813366}
+    m_TransformParent: {fileID: 2839745244787457079}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.099999994
+      value: 0.09999998
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalScale.y
@@ -1600,7 +1664,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.099999994
+      value: 0.09999998
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1612,7 +1676,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.89
+      value: 4.8899994
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1642,9 +1706,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 216944288764953548, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
       propertyPath: m_Name
       value: GiantWaterLilies (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 564cd597837ba457c93dd110c20ace6e, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1732,5 +1804,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
   localPointA: {x: -2.9999993, y: 0, z: -0.00000044703484}
   localPointB: {x: 0.4649806, y: 0, z: 44.047684}
-  speed: 3
+  speed: 1
   useEasing: 1
