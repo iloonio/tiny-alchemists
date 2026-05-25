@@ -27,6 +27,8 @@ public class MiasmaStatus : Status
                 playerMove.JumpForceMultiplier -= _jumpForceMultiplierDecreasePerSecond * Time.fixedDeltaTime;
                 playerMove.JumpForceMultiplier = Mathf.Min(playerMove.JumpForceMultiplier, _jumpForceMultiplierMax);
             }
+        
+            target.GetComponentInChildren<AudioPlayer>().Play("MiasmaStatusLoop");
         }
     }
 
@@ -40,6 +42,8 @@ public class MiasmaStatus : Status
             {
                 playerMove.MoveSpeedMultiplier = 1f;
             }
+
+            target.GetComponentInChildren<AudioPlayer>().Stop("MiasmaStatusLoop");
         }
     }
 }

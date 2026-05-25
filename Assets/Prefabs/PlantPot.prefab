@@ -32,6 +32,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8846447188341971811}
+  - {fileID: 5982317496896761461}
   - {fileID: 1234670125113851380}
   m_Father: {fileID: 8975923696890765432}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -76,6 +77,77 @@ MonoBehaviour:
   _harvestSpawnHorizontalForce: 3
   _harvestSpawnInterval: 0.5
   _cooldownAfterHarvest: 1
+--- !u!1 &1646614900927766217
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5982317496896761461}
+  - component: {fileID: 89556585365971333}
+  m_Layer: 6
+  m_Name: Audio
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5982317496896761461
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1646614900927766217}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2872464640752297079}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &89556585365971333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1646614900927766217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fe2a686fd5a40a4e89a21e649125577, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioPlayer
+  ShowTopMostFoldoutHeaderGroup: 1
+  _sounds:
+  - Name: FireStatusLoop
+    Clip: {fileID: 8300000, guid: 5cd9fe7fe88160644a9ab32122236a54, type: 3}
+    Volume: 0.05
+    Loop: 1
+    Spatial: 1
+  - Name: FloatStatusLoop
+    Clip: {fileID: 8300000, guid: 76caf3272ffbf654aaecaff424176688, type: 3}
+    Volume: 0.05
+    Loop: 1
+    Spatial: 1
+  - Name: IngredientPlant
+    Clip: {fileID: 8300000, guid: 00c26e71e8c55de46936c97b5f3e25b9, type: 3}
+    Volume: 0.3
+    Loop: 0
+    Spatial: 1
+  - Name: IngredientHarvest
+    Clip: {fileID: 8300000, guid: 70c494da0665bfa4b8bf0dce2fbbf604, type: 3}
+    Volume: 0.5
+    Loop: 0
+    Spatial: 1
+  - Name: PlantPotGrow
+    Clip: {fileID: 8300000, guid: 6f15dafdcccf67e4b8fd489f4a6853b3, type: 3}
+    Volume: 0.3
+    Loop: 0
+    Spatial: 1
 --- !u!1 &2838587713435855066
 GameObject:
   m_ObjectHideFlags: 0

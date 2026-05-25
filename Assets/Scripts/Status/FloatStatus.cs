@@ -7,11 +7,15 @@ public class FloatStatus : Status
     {
         if (target.TryGetComponent(out Rigidbody rb))
             rb.useGravity = false;
+
+        target.GetComponentInChildren<AudioPlayer>().Play("FloatStatusLoop");
     }
 
     public override void OnStatusEnd(GameObject target)
     {
         if (target.TryGetComponent(out Rigidbody rb))
             rb.useGravity = true;
+        
+        target.GetComponentInChildren<AudioPlayer>().Stop("FloatStatusLoop");
     }
 }

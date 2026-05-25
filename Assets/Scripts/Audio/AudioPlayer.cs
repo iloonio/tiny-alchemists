@@ -7,6 +7,7 @@ public class AudioPlayer : NetworkBehaviour
     [SerializeField] private List<SoundEffect> _sounds;
 
     private Dictionary<string, SoundEffect> _soundMap;
+    private List<GameObject> _activeAudioObjects = new();
 
     private void Awake()
     {
@@ -62,13 +63,48 @@ public class AudioPlayer : NetworkBehaviour
         source.clip = sound.Clip;
         source.volume = sound.Volume;
         source.loop = sound.Loop;
-        source.spatialBlend = 1f;
+        source.spatialBlend = sound.Spatial ? 1f : 0f;
 
         source.Play();
+        _activeAudioObjects.Add(audioObject);
 
         if (!sound.Loop)
         {
             Destroy(audioObject, sound.Clip.length);
+        }
+    }
+
+    public void Stop(string soundName)
+    {
+        StopClientRpc(soundName);
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void StopClientRpc(string soundName)
+    {
+        if (!_soundMap.TryGetValue(soundName, out SoundEffect sound))
+        {
+            Debug.LogWarning($"Sound not found: {soundName}");
+            return;
+        }
+
+        if (sound == null || sound.Clip == null)
+            return;
+
+        foreach (GameObject audioObject in new List<GameObject>(_activeAudioObjects))
+        {
+            if (audioObject == null)
+            {
+                _activeAudioObjects.Remove(audioObject);
+                continue;    
+            }
+
+            AudioSource source = audioObject.GetComponent<AudioSource>();
+            if (source != null && source.clip == sound.Clip)
+            {
+                source.Stop();
+                Destroy(audioObject);
+            }
         }
     }
 }
@@ -83,4 +119,5 @@ public class SoundEffect
     public float Volume = 1f;
 
     public bool Loop = false;
+    public bool Spatial = true;
 }

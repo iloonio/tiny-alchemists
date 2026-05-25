@@ -37,8 +37,22 @@ public class Cauldron : NetworkBehaviour, IInteractable
 
     private List<int> _contents = new();
     private bool _isBrewing;
+    private AudioPlayer _audioPlayer;
 
     private Dictionary<PlayerPush, float> _playersInside = new();
+
+    private void Awake()
+    {
+        _audioPlayer = GetComponentInChildren<AudioPlayer>();
+    }
+
+    private void Start()
+    {
+        if (IsServer)
+        {
+            _audioPlayer.Play("CauldronBubble");
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -48,6 +62,7 @@ public class Cauldron : NetworkBehaviour, IInteractable
         {
             _contents.Add((int)ingredient.Type);
             ingredient.NetworkObject.Despawn();
+            _audioPlayer.Play("IngredientSplash");
             return;
         }
 
@@ -186,6 +201,7 @@ public class Cauldron : NetworkBehaviour, IInteractable
     private IEnumerator SpawnPotions(int baseIngredientId, List<int> modifierIngredientIds)
     {
         _isBrewing = true;
+        _audioPlayer.Play("CauldronBoil");
 
         for (int i = 0; i < _potionSpawnCount; i++)
         {
@@ -193,6 +209,7 @@ public class Cauldron : NetworkBehaviour, IInteractable
             potion.Initialize(baseIngredientId, modifierIngredientIds);
 
             potion.NetworkObject.Spawn();
+            _audioPlayer.Play("PotionPop");
 
             Vector2 randomCircle = UnityEngine.Random.insideUnitCircle.normalized;
             Vector3 horizontalDirection = new Vector3(randomCircle.x, 0f, randomCircle.y);
@@ -217,6 +234,9 @@ public class Cauldron : NetworkBehaviour, IInteractable
     private void Explode()
     {
         if (!IsServer) return;
+
+        _audioPlayer.Play("CauldronExplode");
+        _audioPlayer.Play("CauldronBoil");
 
         foreach (var collider in Physics.OverlapSphere(_potionSpawnPoint.position, _explosionRadius))
         {

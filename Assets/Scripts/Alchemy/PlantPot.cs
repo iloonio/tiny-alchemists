@@ -21,6 +21,12 @@ public class PlantPot : NetworkBehaviour
     public bool IsGrowing => _plantedIngredientId.Value != 0;
     private bool _isPaused = false;
     private float _growProgress = 0f;
+    private AudioPlayer _audioPlayer;
+
+    private void Awake()
+    {
+        _audioPlayer = GetComponentInChildren<AudioPlayer>();
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -30,6 +36,7 @@ public class PlantPot : NetworkBehaviour
 
         _plantedIngredientId.Value = (int) ingredient.Type;
         ingredient.NetworkObject.Despawn();
+        _audioPlayer.Play("IngredientPlant");
 
         GrowServerRpc();
     }
@@ -58,14 +65,16 @@ public class PlantPot : NetworkBehaviour
 
     private IEnumerator SpawnIngredients()
     {
-        IngredientType plantedIngredient = (IngredientType) _plantedIngredientId.Value;   
+        IngredientType plantedIngredient = (IngredientType) _plantedIngredientId.Value; 
+        _audioPlayer.Play("PlantPotGrow");  
 
         for (int i = 0; i < _harvestSpawnCount; i++)
         {
             yield return new WaitForSeconds(_harvestSpawnInterval);
 
-            GameObject ingredient = Instantiate(plantedIngredient.IngredientPrefab, _harvestSpawnPoint.position, Quaternion.identity);
+            _audioPlayer.Play("IngredientHarvest");
 
+            GameObject ingredient = Instantiate(plantedIngredient.IngredientPrefab, _harvestSpawnPoint.position, Quaternion.identity);
             ingredient.GetComponent<NetworkObject>().Spawn(); 
             
             Vector2 randomCircle = Random.insideUnitCircle.normalized;

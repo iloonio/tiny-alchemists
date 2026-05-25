@@ -19,12 +19,14 @@ public class PlayerMove : MonoBehaviour
 
     private Rigidbody _rb;
     private NetworkClient _networkClient;
+    private AudioPlayer _audioPlayer;
     private Vector2 _moveInput;
     private RaycastHit _groundHit;
     private Vector3 _platformVelocity; // velocity sampled from a MovingPlatform when standing on one
     private Transform _currentPlatform;
     private bool _isInputOverridden = false;
     private Vector2 _inputOverride = Vector2.zero;
+    private bool _moveAudioPlaying = false;
 
     [HideInInspector] public float MoveSpeedMultiplier = 1f;
     [HideInInspector] public float JumpForceMultiplier = 1f;
@@ -33,6 +35,7 @@ public class PlayerMove : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         _networkClient = GetComponent<NetworkClient>();
+        _audioPlayer = GetComponentInChildren<AudioPlayer>();
     }
 
     private void FixedUpdate()
@@ -54,6 +57,15 @@ public class PlayerMove : MonoBehaviour
 
         _networkClient.IsMoving.Value = IsMoving();
         _networkClient.IsGrounded.Value = IsGrounded(); 
+
+        if (IsGrounded() && IsMoving() && !_moveAudioPlaying) {
+            _audioPlayer.Play("Move");
+            _moveAudioPlaying = true;
+        }
+        else if ((!IsGrounded() || !IsMoving()) && _moveAudioPlaying) {
+            _audioPlayer.Stop("Move");
+            _moveAudioPlaying = false;
+        }
     }
 
     private void OnMove(InputValue value)
@@ -108,6 +120,7 @@ public class PlayerMove : MonoBehaviour
     private void Jump()
     {
         if (!IsGrounded()) return;
+        _audioPlayer.Play("Jump");
         _rb.AddForce(_baseJumpForce * JumpForceMultiplier * Vector3.up, ForceMode.Impulse);
     }
 

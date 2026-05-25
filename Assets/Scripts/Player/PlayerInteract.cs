@@ -21,13 +21,14 @@ public class PlayerInteract : NetworkBehaviour
     public bool IsHolding => _held != null;
     private Collider _heldCollider;
     private Collider _collider;
-
     private PlayerUI _playerUI;
+    private AudioPlayer _audioPlayer;
 
     private void Awake()
     {
         _collider = GetComponent<Collider>();
         _playerUI = GetComponent<PlayerUI>();
+        _audioPlayer = GetComponentInChildren<AudioPlayer>();
     }
 
     private void Update()
@@ -93,6 +94,7 @@ public class PlayerInteract : NetworkBehaviour
         ThrowServerRpc(_held.NetworkObject, _playerCamera.forward * _throwForce);
         Physics.IgnoreCollision(_collider, _heldCollider, false);
         RemoveOwnershipServerRpc(_held.NetworkObject, NetworkObject);
+        _audioPlayer.Play("Throw");
         _held = null;
         _heldCollider = null;
     }

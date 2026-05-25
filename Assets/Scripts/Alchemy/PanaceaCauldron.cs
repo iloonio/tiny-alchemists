@@ -14,6 +14,20 @@ public class PanaceaCauldron : NetworkBehaviour
 
     private List<int> _contents = new();
     private Dictionary<PlayerPush, float> _playersInside = new();
+    private AudioPlayer _audioPlayer;
+
+    private void Awake()
+    {
+        _audioPlayer = GetComponentInChildren<AudioPlayer>();
+    }
+
+    private void Start()
+    {
+        if (IsServer)
+        {
+            _audioPlayer.Play("CauldronBubble");
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -24,9 +38,11 @@ public class PanaceaCauldron : NetworkBehaviour
         {
             _contents.Add((int)ingredient.Type);
             ingredient.NetworkObject.Despawn();
+            _audioPlayer.Play("IngredientSplash");
 
             if (_contents.Count == _victoryIngredientCount)
             {
+                _audioPlayer.Play("Victory");
                 VictoryClientRpc();
                 FindAnyObjectByType<NetworkSceneManager>().Shutdown();
             }
@@ -58,6 +74,8 @@ public class PanaceaCauldron : NetworkBehaviour
     {
         if (_playersInside.Count == 0) return;
 
+        _audioPlayer.Play("CauldronBoil");
+        _audioPlayer.Play("CauldronExplode");
         foreach (var key in new List<PlayerPush>(_playersInside.Keys))
         {
             _playersInside[key] += Time.deltaTime;

@@ -472,6 +472,7 @@ Transform:
   - {fileID: 8406232763841149042}
   - {fileID: 3998428015643916026}
   - {fileID: 2983796501308078933}
+  - {fileID: 9074399909164207909}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &4470771613325480202
@@ -755,6 +756,82 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &6116691407697226138
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9074399909164207909}
+  - component: {fileID: 8654524715028832614}
+  m_Layer: 6
+  m_Name: Audio
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9074399909164207909
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6116691407697226138}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5475370442558850855}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8654524715028832614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6116691407697226138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fe2a686fd5a40a4e89a21e649125577, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioPlayer
+  ShowTopMostFoldoutHeaderGroup: 1
+  _sounds:
+  - Name: Move
+    Clip: {fileID: 8300000, guid: b870cf95c7c975249bd698b23016f0a3, type: 3}
+    Volume: 0.03
+    Loop: 1
+    Spatial: 1
+  - Name: Jump
+    Clip: {fileID: 8300000, guid: 1c5eed96c2ffc7d4394906276cc5925d, type: 3}
+    Volume: 0.2
+    Loop: 0
+    Spatial: 1
+  - Name: FireStatusLoop
+    Clip: {fileID: 8300000, guid: 5cd9fe7fe88160644a9ab32122236a54, type: 3}
+    Volume: 0.1
+    Loop: 1
+    Spatial: 1
+  - Name: FloatStatusLoop
+    Clip: {fileID: 8300000, guid: 76caf3272ffbf654aaecaff424176688, type: 3}
+    Volume: 0.1
+    Loop: 1
+    Spatial: 1
+  - Name: MiasmaStatusLoop
+    Clip: {fileID: 8300000, guid: 02dcd15c2bee92944935714751c63b49, type: 3}
+    Volume: 0.01
+    Loop: 1
+    Spatial: 1
+  - Name: Throw
+    Clip: {fileID: 8300000, guid: dda915224838a1846bf9dd272f8f8d63, type: 3}
+    Volume: 0.2
+    Loop: 0
+    Spatial: 1
 --- !u!1 &6238399612091387915
 GameObject:
   m_ObjectHideFlags: 0

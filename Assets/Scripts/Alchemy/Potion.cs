@@ -88,7 +88,7 @@ public class Potion : NetworkBehaviour
         }
 
         _color = sum / (1f + _modifierIngredientIds.Count);
-        _renderer.material.color = _color;
+        _renderer.materials[2].color = _color;
     }
 
     /// OnCollisionEnter
@@ -104,6 +104,8 @@ public class Potion : NetworkBehaviour
         if (!IsServer) return;
 
         if (collision.relativeVelocity.magnitude < _breakSpeed) return;
+
+        GetComponentInChildren<AudioPlayer>().Play("PotionBreak");
 
         ContactPoint contact = collision.GetContact(0);
         Quaternion rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(transform.forward, contact.normal), contact.normal);

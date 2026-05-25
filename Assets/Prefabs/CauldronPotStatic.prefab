@@ -1,5 +1,76 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &17256805207910248
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7539929181601129476}
+  - component: {fileID: 2232596630233831889}
+  m_Layer: 8
+  m_Name: Audio
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7539929181601129476
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 17256805207910248}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8796876197712833351}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2232596630233831889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 17256805207910248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fe2a686fd5a40a4e89a21e649125577, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioPlayer
+  ShowTopMostFoldoutHeaderGroup: 1
+  _sounds:
+  - Name: CauldronBubble
+    Clip: {fileID: 8300000, guid: 22f7adec2d7ff734f8950052bd7ed79a, type: 3}
+    Volume: 0.2
+    Loop: 1
+    Spatial: 1
+  - Name: IngredientSplash
+    Clip: {fileID: 8300000, guid: 9f6f2c670653ec540b20ddde9d8a5e4d, type: 3}
+    Volume: 0.5
+    Loop: 0
+    Spatial: 1
+  - Name: CauldronBoil
+    Clip: {fileID: 8300000, guid: 66604c885d8486941b583639008ad452, type: 3}
+    Volume: 1
+    Loop: 0
+    Spatial: 1
+  - Name: CauldronExplode
+    Clip: {fileID: 8300000, guid: 81c79e277e3e68d74a52f5ef75624d51, type: 3}
+    Volume: 0.5
+    Loop: 0
+    Spatial: 1
+  - Name: PotionPop
+    Clip: {fileID: 8300000, guid: 81f591a2f0b29e24daf35f070f4a468f, type: 3}
+    Volume: 0.5
+    Loop: 0
+    Spatial: 1
 --- !u!1 &2590756329034107729
 GameObject:
   m_ObjectHideFlags: 0
@@ -32,6 +103,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3198215170397119549}
+  - {fileID: 7539929181601129476}
   m_Father: {fileID: 8963053024639898551}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4867372325764029620
@@ -138,7 +210,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a9660d3938999f245b81a896fbfea96a, type: 2}
+  - {fileID: 2100000, guid: dfe28104d0ab8f248a5d7fd8a7a6283c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -316,7 +388,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1589435306
+  GlobalObjectIdHash: 3286562551
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1

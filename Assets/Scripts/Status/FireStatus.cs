@@ -12,6 +12,12 @@ public class FireStatus : Status
         {
             playerMove.MoveSpeedMultiplier = _speedMultiplier;
             playerMove.OverrideInput(_inputOverride);
+            target.GetComponentInChildren<AudioPlayer>().Play("FireStatusLoop");
+        }
+
+        if (target.TryGetComponent(out Flammable _))
+        {
+            target.GetComponentInChildren<AudioPlayer>().Play("FireStatusLoop");
         }
     }
 
@@ -29,6 +35,12 @@ public class FireStatus : Status
         {
             playerMove.MoveSpeedMultiplier = 1f;
             playerMove.ClearInputOverride();
+            target.GetComponentInChildren<AudioPlayer>().Stop("FireStatusLoop");
+        }
+
+        if (target.TryGetComponent(out Flammable _))
+        {
+            target.GetComponentInChildren<AudioPlayer>().Stop("FireStatusLoop");
         }
     }
 }

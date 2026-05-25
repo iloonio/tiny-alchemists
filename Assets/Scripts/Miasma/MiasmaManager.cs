@@ -253,6 +253,7 @@ public class MiasmaManager : NetworkBehaviour
         _lossTimer += Time.deltaTime;
         if (_lossTimer >= _lossTimeThreshold)
         {
+            GetComponentInChildren<AudioPlayer>().Play("Defeat");
             LoseClientRpc();
             FindAnyObjectByType<NetworkSceneManager>().Shutdown();
             return;
