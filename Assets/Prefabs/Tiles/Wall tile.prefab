@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3975901159523656259}
   m_Layer: 0
-  m_Name: Old Fence
+  m_Name: Wall tile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,7 +46,7 @@ GameObject:
   - component: {fileID: 2706246853405925734}
   - component: {fileID: 262925655803215632}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
