@@ -38,7 +38,6 @@ public class PlayerInteract : NetworkBehaviour
 
     private void UpdateHint()
     {
-        // don't show hints while holding something
         if (IsHolding)
         {
             _playerUI.Hide();
@@ -54,7 +53,11 @@ public class PlayerInteract : NetworkBehaviour
 
         if (hit.collider.TryGetComponent(out Holdable holdable) && !holdable.IsHeld)
         {
-            string objectName = holdable.gameObject.name.Replace("(Clone)", "").Trim();
+            // Use DisplayName if set, otherwise fall back to cleaned GameObject name
+            string objectName = !string.IsNullOrEmpty(holdable.DisplayName)
+                ? holdable.DisplayName
+                : holdable.gameObject.name.Replace("(Clone)", "").Trim();
+
             string hint = holdable.GetComponent<Ingredient>() != null
                 ? $"[LMB] Pick up {objectName} (ingredient)"
                 : $"[LMB] Pick up {objectName}";
