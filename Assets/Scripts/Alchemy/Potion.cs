@@ -17,6 +17,7 @@ public class Potion : NetworkBehaviour
 
     private int _baseIngredientId;
     private List<int> _modifierIngredientIds = new();
+    private Color _color;
     private Renderer _renderer;
     private Rigidbody _rb;
     public Rigidbody Rb => _rb;
@@ -86,7 +87,8 @@ public class Potion : NetworkBehaviour
             sum += ((IngredientType)modifierIngredientId).Color;
         }
 
-        _renderer.material.color = sum / (1f + _modifierIngredientIds.Count);
+        _color = sum / (1f + _modifierIngredientIds.Count);
+        _renderer.material.color = _color;
     }
 
     /// OnCollisionEnter
@@ -108,7 +110,7 @@ public class Potion : NetworkBehaviour
 
         PotionEffect effect = Instantiate(((BaseIngredientType)_baseIngredientId).PotionEffectPrefab, contact.point, rotation);
 
-        effect.Initialize(_baseIngredientId, _modifierIngredientIds);
+        effect.Initialize(_baseIngredientId, _modifierIngredientIds, _color);
         effect.NetworkObject.Spawn();
 
         NetworkObject.Despawn();

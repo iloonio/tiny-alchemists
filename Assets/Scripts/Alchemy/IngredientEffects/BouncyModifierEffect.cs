@@ -29,12 +29,10 @@ public class BouncyModifierEffect : ModifierEffect
 
     public override void OnEffectUpdate(PotionEffect effect, CloudBaseEffect cloudBase, List<ModifierEffect> modifierEffects)
     {
-        if (!effect.IsServer) return;
-
         foreach (Collider collider in cloudBase.Affected)
         {
             if (collider != null && collider.TryGetComponent(out StatusAffectable statusAffectable))
-                statusAffectable.AddStatus(BouncyStatus, StatusDuration);
+                statusAffectable.AddStatus(BouncyStatus, 0.1f);
         }
     }
 

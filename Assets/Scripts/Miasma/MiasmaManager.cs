@@ -1,13 +1,15 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Unity.Netcode;
 using Random = UnityEngine.Random;
+using System;
 
 public class MiasmaManager : NetworkBehaviour
 {
 
     public static MiasmaManager Instance;
+
+    public event EventHandler OnUpdate;
 
     [Header("Grid")]
     [SerializeField] private float _cellSize = 0.5f;
@@ -25,7 +27,7 @@ public class MiasmaManager : NetworkBehaviour
 
     [Header("Status")]
     [SerializeField] private Status _status;
-    [SerializeField] private CapsuleCollider _playerCollider;
+    [SerializeField] private Collider _playerCollider;
     [SerializeField] private float _lossTimeThreshold = 5f;
 
     [Header("Debug")]
@@ -38,13 +40,12 @@ public class MiasmaManager : NetworkBehaviour
     private Node[,,] _grid;
     private HashSet<Node> _allNodes;
     private HashSet<Node> _activeNodes;
+    private bool _activeNodesDirty;
     private Vector3Int _playerCellExtents;
     private float _lossTimer = 0f;
 
     private NetworkList<Vector3Int> _activeCells;
     public NetworkList<Vector3Int> ActiveCells => _activeCells;
-    private NetworkVariable<bool> _isBatchUpdate;
-    public NetworkVariable<bool> IsBatchUpdate => _isBatchUpdate;
 
     private void Awake()
     {
@@ -53,7 +54,6 @@ public class MiasmaManager : NetworkBehaviour
         _allNodes = new();
         _activeNodes = new();
         _activeCells = new NetworkList<Vector3Int>();
-        _isBatchUpdate = new();
         _playerCellExtents = CalculatePlayerCellExtents();
     }
 
@@ -71,23 +71,8 @@ public class MiasmaManager : NetworkBehaviour
     {
         _activeCells.OnListChanged += OnActiveCellsChanged;
 
-        foreach (Vector3Int coord in _activeCells)
-        {
-            _activeNodes.Add(GetNode(coord));
-        }
-
         if (IsServer)
-        {    
-            foreach (Node node in _allNodes)
-            {
-                if (node.startActive)
-                {
-                    ActivateNode(node);   
-                }
-            }
-            
-            _isBatchUpdate.Value = false;        
-
+        {
             InvokeRepeating(nameof(Grow), _growthInterval, _growthInterval);  
         }
     }
@@ -102,7 +87,11 @@ public class MiasmaManager : NetworkBehaviour
         switch (changeEvent.Type)
         {
             case NetworkListEvent<Vector3Int>.EventType.Add:
-                _activeNodes.Add(GetNode(changeEvent.Value));
+                Node node = GetNode(changeEvent.Value);
+                if (_allNodes.Contains(node))
+                {
+                    _activeNodes.Add(node);
+                }
                 break;
 
             case NetworkListEvent<Vector3Int>.EventType.Remove:
@@ -113,6 +102,8 @@ public class MiasmaManager : NetworkBehaviour
                 _activeNodes.Clear();
                 break;
         }
+
+        _activeNodesDirty = true;
     }
 
     public void AddNode(Node node)
@@ -125,10 +116,22 @@ public class MiasmaManager : NetworkBehaviour
         {
             _grid[coord.x, coord.y, coord.z] = node;
             _allNodes.Add(node);
+
+            if (node.startActive || _activeCells.Contains(node.coord))
+            {
+                _activeNodes.Add(node);
+                ActivateNode(node);
+            }
         }
         else
         {
             MergeNodes(currentNode, node);
+
+            if ((node.startActive || _activeCells.Contains(node.coord)) && !_activeNodes.Contains(currentNode))
+            {
+                _activeNodes.Add(currentNode);
+                ActivateNode(currentNode);
+            }
         }
     }
 
@@ -212,24 +215,10 @@ public class MiasmaManager : NetworkBehaviour
             }
         }
 
-        BatchUpdate(nodesToActivate);
-    }
-
-    private void BatchUpdate(List<Node> nodesToActivate)
-    {
-        if (nodesToActivate.Count == 0) return;
-
-        _isBatchUpdate.Value = true;
-        Node firstNode = nodesToActivate.First();
-        nodesToActivate.Remove(firstNode);
-
         foreach (Node node in nodesToActivate)
         {
             ActivateNode(node);
         }
-
-        _isBatchUpdate.Value = false;
-        ActivateNode(firstNode);
     }
 
     public Vector3Int WorldToGrid(Vector3 worldPos)
@@ -293,12 +282,47 @@ public class MiasmaManager : NetworkBehaviour
         }       
     }
 
+    private void LateUpdate()
+    {
+        if (_activeNodesDirty)
+        {
+            OnUpdate?.Invoke(this, EventArgs.Empty);
+            _activeNodesDirty = false;
+        }
+    }
+
     [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone)]
     private void LoseClientRpc()
     {
         foreach (NetworkClient client in NetworkClient.Players)
         {
             client.GetComponent<PlayerUI>().ShowMajor("DEFEAT!");
+        }
+    }
+
+    public void DestroySphere(Vector3 worldPos, float radius)
+    {
+        DestroySphereRpc(worldPos, radius);
+    }
+
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    private void DestroySphereRpc(Vector3 worldPos, float radius)
+    {
+        Vector3Int center = WorldToGrid(worldPos);
+        int cellRadius = Mathf.CeilToInt(radius / CellSize);
+
+        for (int x = -cellRadius; x <= cellRadius; x++)
+        for (int y = -cellRadius; y <= cellRadius; y++)
+        for (int z = -cellRadius; z <= cellRadius; z++)
+        {
+            Vector3Int coord = center + new Vector3Int(x, y, z);
+            if (!InBounds(coord)) continue;
+
+            Node node = GetNode(coord);
+            if (IsNodeActive(node))
+            {
+                DeactivateNode(node);
+            }
         }
     }
 

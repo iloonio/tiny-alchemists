@@ -46,7 +46,7 @@ public class StatusAffectable : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        foreach (Status status in _statuses)
+        foreach (Status status in new List<Status>(_statuses))
         {
             status.OnStatusFixedUpdate(gameObject);
         }
@@ -103,5 +103,10 @@ public class StatusAffectable : NetworkBehaviour
     {
         _statusIds.Remove(statusId);
         _durations.Remove(statusId);
+    }
+
+    public bool HasStatus(Status status)
+    {
+        return _statusIds.Contains((int) status);
     }
 }

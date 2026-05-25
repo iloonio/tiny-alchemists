@@ -4,12 +4,22 @@ using UnityEngine;
 public class FireStatus : Status
 {
     [SerializeField] private float _speedMultiplier = 1.5f;
+    [SerializeField] private Vector2 _inputOverride = Vector2.up;
 
     public override void OnStatusStart(GameObject target)
     {
         if (target.TryGetComponent(out PlayerMove playerMove))
         {
-            playerMove.MoveSpeedMultiplier *= _speedMultiplier;
+            playerMove.MoveSpeedMultiplier = _speedMultiplier;
+            playerMove.OverrideInput(_inputOverride);
+        }
+    }
+
+    public override void OnStatusFixedUpdate(GameObject target)
+    {
+        if (target.TryGetComponent(out Flammable flammable))
+        {
+            flammable.Burn(Time.fixedDeltaTime);
         }
     }
 
@@ -17,7 +27,8 @@ public class FireStatus : Status
     {
         if (target.TryGetComponent(out PlayerMove playerMove))
         {
-            playerMove.MoveSpeedMultiplier *= 1f / _speedMultiplier;
+            playerMove.MoveSpeedMultiplier = 1f;
+            playerMove.ClearInputOverride();
         }
     }
 }

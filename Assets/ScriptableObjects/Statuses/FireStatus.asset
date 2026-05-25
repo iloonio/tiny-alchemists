@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FireStatus
   _id: 1
   _speedMultiplier: 1.5
+  _miasmaStatus: {fileID: 11400000, guid: 19afbb7df7c25cf4c851796fd27bd8d9, type: 2}

@@ -37,18 +37,16 @@ public class PlayerPush : NetworkBehaviour
     }
 
     [Rpc(SendTo.Owner, InvokePermission = RpcInvokePermission.Everyone)]
-    public void ApplyForceToPlayerClientRpc(float ExplosionForce, Vector3 ForceOrigin, float ExplosionRadius)
+    public void AddExplosionForceClientRpc(float explosionForce, Vector3 forceOrigin, float explosionRadius)
     {
-        // THIS SHOULD WORK?
-        gameObject.GetComponent<Rigidbody>().AddExplosionForce(ExplosionForce, ForceOrigin, ExplosionRadius, 1f, ForceMode.Impulse);
-        Debug.Log($"Applied {ExplosionForce} force to player on the client-side from the point: {ForceOrigin}");
+        _rb.AddExplosionForce(explosionForce, forceOrigin, explosionRadius, 1f, ForceMode.Impulse);
+        Debug.Log($"Applied {explosionForce} force to player on the client-side from the point: {forceOrigin}");
     }
 
     [Rpc(SendTo.Owner, InvokePermission = RpcInvokePermission.Everyone)]
-    public void LaunchPlayerClientRpc(Vector3 force)
+    public void AddForceClientRpc(Vector3 force, ForceMode mode = ForceMode.Impulse)
     {
-        _rb.linearVelocity = new Vector3(_rb.linearVelocity.x, 0f, _rb.linearVelocity.z);
-        _rb.AddForce(force, ForceMode.Impulse);
+        _rb.AddForce(force, mode);
         Debug.Log($"[Cauldron] Launched player with force: {force}");
     }
 }

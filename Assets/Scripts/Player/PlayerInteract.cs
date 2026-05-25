@@ -52,14 +52,13 @@ public class PlayerInteract : NetworkBehaviour
             return;
         }
 
-        if (hit.collider.TryGetComponent(out Holdable holdable) && !holdable.IsHeld)
+        if (hit.collider.TryGetComponent(out IInteractable interactable))
         {
-            string objectName = holdable.gameObject.name.Replace("(Clone)", "").Trim();
-            string hint = holdable.GetComponent<Ingredient>() != null
-                ? $"[LMB] Pick up {objectName} (ingredient)"
-                : $"[LMB] Pick up {objectName}";
-
-            _playerUI.Show(hint);
+            _playerUI.Show($"{interactable.Hint()}");
+        }
+        else if (hit.collider.TryGetComponent(out Holdable holdable))
+        {
+            _playerUI.Show($"Pick up {holdable.HintName}");
         }
         else
         {

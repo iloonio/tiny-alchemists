@@ -10,6 +10,11 @@ public class CloudBaseEffect : BaseEffect
         
     }
 
+    public override void OnEffectSetup(PotionEffect effect)
+    {
+        effect.GetComponentInChildren<Renderer>().material.SetColor("_Color", effect.Color);
+    }
+
     public override void OnEffectTriggerEnter(Collider other, PotionEffect effect)
     {
         Affected.Add(other);
