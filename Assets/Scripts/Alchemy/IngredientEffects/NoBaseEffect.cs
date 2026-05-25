@@ -16,10 +16,10 @@ public class NoBaseEffect : BaseEffect
     {
         foreach (var collider in Physics.OverlapSphere(effect.transform.position, Radius))
         {
-            // Check to see if we hit a player first, if its owned by the server, we don't need to go through the ClientRpc I think?
-            if (collider.CompareTag("Player") && !collider.GetComponent<NetworkObject>().IsOwnedByServer)
+            // Apply explosion force to affected players and objects
+            if (collider.TryGetComponent(out PlayerPush playerPush))
             {
-                collider.GetComponent<PlayerPush>().ApplyForceToPlayerClientRpc(ExplosionForce, effect.transform.position, Radius);
+                playerPush.AddExplosionForceClientRpc(ExplosionForce, effect.transform.position, Radius);
             }
             else if (collider.TryGetComponent(out Rigidbody rb)) // Then handle server Authoritative parts
             {

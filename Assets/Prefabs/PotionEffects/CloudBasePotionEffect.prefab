@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 9155846370348866075}
   - component: {fileID: 5535828820224488313}
   - component: {fileID: 2447820062570008582}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CloudBasePotionEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -152,7 +152,7 @@ GameObject:
   - component: {fileID: 1427152477237292674}
   - component: {fileID: 5386639946044758723}
   - component: {fileID: 2692654945523034495}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}

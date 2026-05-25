@@ -9,27 +9,23 @@ public class MiasmaStatus : Status
     [SerializeField] private float _jumpForceMultiplierDecreasePerSecond = 0.1f;
     [SerializeField] private float _jumpForceMultiplierMin = 0.1f;
     [SerializeField] private float _jumpForceMultiplierMax = 0.5f;
-
-    public override void OnStatusStart(GameObject target)
-    {
-        if (target.TryGetComponent(out PlayerMove playerMove))
-        {
-            playerMove.MoveSpeedMultiplier = _moveSpeedMultiplierMax;
-            playerMove.JumpForceMultiplier = _jumpForceMultiplierMax;
-        }
-    }
+    [SerializeField] private Status _fireStatus;
 
     public override void OnStatusFixedUpdate(GameObject target)
     {
+        if (target.GetComponent<StatusAffectable>().HasStatus(_fireStatus)) return;
+
         if (target.TryGetComponent(out PlayerMove playerMove))
         {
             if (playerMove.MoveSpeedMultiplier > _moveSpeedMultiplierMin)
             {            
                 playerMove.MoveSpeedMultiplier -= _moveSpeedMultiplierDecreasePerSecond * Time.fixedDeltaTime;
+                playerMove.MoveSpeedMultiplier = Mathf.Max(playerMove.MoveSpeedMultiplier, _moveSpeedMultiplierMin);
             }
             if (playerMove.JumpForceMultiplier > _jumpForceMultiplierMin)
             {
                 playerMove.JumpForceMultiplier -= _jumpForceMultiplierDecreasePerSecond * Time.fixedDeltaTime;
+                playerMove.JumpForceMultiplier = Mathf.Max(playerMove.JumpForceMultiplier, _jumpForceMultiplierMin);
             }
         }
     }
@@ -38,8 +34,12 @@ public class MiasmaStatus : Status
     {
         if (target.TryGetComponent(out PlayerMove playerMove))
         {
-            playerMove.MoveSpeedMultiplier = 1f;
             playerMove.JumpForceMultiplier = 1f;
+
+            if (!target.GetComponent<StatusAffectable>().HasStatus(_fireStatus)) 
+            {
+                playerMove.MoveSpeedMultiplier = 1f;
+            }
         }
     }
 }

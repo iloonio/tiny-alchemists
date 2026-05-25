@@ -51,7 +51,7 @@ public class PlayerInteract : NetworkBehaviour
             return;
         }
 
-        if (hit.collider.TryGetComponent(out Holdable holdable) && !holdable.IsHeld)
+        if (hit.collider.TryGetComponent(out IInteractable interactable))
         {
             // Use DisplayName if set, otherwise fall back to cleaned GameObject name
             string objectName = !string.IsNullOrEmpty(holdable.DisplayName)

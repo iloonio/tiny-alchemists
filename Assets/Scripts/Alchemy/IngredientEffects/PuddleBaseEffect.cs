@@ -4,8 +4,16 @@ using UnityEngine;
 
 public class PuddleBaseEffect : BaseEffect
 {
-    public PuddleBaseEffect(float duration) : base(duration)
+
+    public float AuraRadius;
+
+    public PuddleBaseEffect(float duration, float auraRadius) : base(duration)
     {
+        AuraRadius = auraRadius;
     }
 
+    public override void OnEffectSetup(PotionEffect effect)
+    {
+        effect.GetComponentInChildren<Renderer>().material.SetColor("_Color", effect.Color);
+    }
 }

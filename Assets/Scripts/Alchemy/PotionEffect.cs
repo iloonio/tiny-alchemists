@@ -9,17 +9,20 @@ public class PotionEffect : NetworkBehaviour
     private List<int> _modifierEffectIds = new();
     private BaseEffect _baseEffect;
     private List<ModifierEffect> _modifierEffects = new();
+    private Color _color;
+    public Color Color => _color;
 
     private NetworkVariable<int> _baseEffectIdNetwork = new();
     private NetworkList<int> _modifierEffectIdsNetwork = new();
 
-    public void Initialize(int baseIngredientId, List<int> modifierEffectIds)
+    public void Initialize(int baseIngredientId, List<int> modifierEffectIds, Color color)
     {
         _baseEffectId = baseIngredientId;
         foreach (var modifierEffectId in modifierEffectIds)
         {
             _modifierEffectIds.Add(modifierEffectId);
         }
+        _color = color;
     }
 
     public override void OnNetworkSpawn()
