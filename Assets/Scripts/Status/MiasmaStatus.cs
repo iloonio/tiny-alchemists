@@ -11,6 +11,14 @@ public class MiasmaStatus : Status
     [SerializeField] private float _jumpForceMultiplierMax = 0.5f;
     [SerializeField] private Status _fireStatus;
 
+    public override void OnStatusStart(GameObject target)
+    {
+        if (target.TryGetComponent(out PlayerMove _))
+        {
+            target.GetComponentInChildren<AudioPlayer>().Play("MiasmaStatusLoop");
+        }
+    }
+
     public override void OnStatusFixedUpdate(GameObject target)
     {
         if (target.GetComponent<StatusAffectable>().HasStatus(_fireStatus)) return;
@@ -26,9 +34,7 @@ public class MiasmaStatus : Status
             {
                 playerMove.JumpForceMultiplier -= _jumpForceMultiplierDecreasePerSecond * Time.fixedDeltaTime;
                 playerMove.JumpForceMultiplier = Mathf.Min(playerMove.JumpForceMultiplier, _jumpForceMultiplierMax);
-            }
-        
-            target.GetComponentInChildren<AudioPlayer>().Play("MiasmaStatusLoop");
+            }        
         }
     }
 
