@@ -54,7 +54,7 @@ public class BouncyModifierEffect : ModifierEffect
 
     public override void OnEffectStart(PotionEffect effect, CubeBaseEffect cubeBase, List<ModifierEffect> modifierEffects)
     {
-        effect.GetComponentInChildren<ParticlePlayer>().Play("BouncyFX");
+        effect.GetComponentInChildren<ParticlePlayer>().Play("BounceFX");
     }
 
     // ── Puddle base ──────────────────────────────────────────

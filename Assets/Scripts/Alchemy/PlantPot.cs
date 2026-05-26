@@ -8,6 +8,7 @@ public class PlantPot : NetworkBehaviour
 
     [Header("Growth")]
     [SerializeField] private float growTime = 15f;
+    [SerializeField] private Renderer _sprout;
 
     [Header("Harvest")]
     [SerializeField] private Transform _harvestSpawnPoint;
@@ -26,6 +27,7 @@ public class PlantPot : NetworkBehaviour
     private void Awake()
     {
         _audioPlayer = GetComponentInChildren<AudioPlayer>();
+        _sprout.enabled = false;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -35,6 +37,7 @@ public class PlantPot : NetworkBehaviour
         if (!other.TryGetComponent(out Ingredient ingredient)) return;
 
         _plantedIngredientId.Value = (int) ingredient.Type;
+        _sprout.enabled = true;
         ingredient.NetworkObject.Despawn();
         _audioPlayer.Play("IngredientPlant");
 
@@ -55,6 +58,7 @@ public class PlantPot : NetworkBehaviour
             if (!_isPaused) _growProgress += Time.deltaTime;
         }
 
+        _sprout.enabled = false;
         yield return StartCoroutine(SpawnIngredients());
 
         yield return new WaitForSeconds(_cooldownAfterHarvest);

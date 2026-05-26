@@ -216,6 +216,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 5708456107230002660}
   - {fileID: 3415440811468831878}
   - {fileID: 2020721975739879872}
   - {fileID: 687093145209632409}
@@ -438,10 +439,17 @@ MonoBehaviour:
     Clip: {fileID: 8300000, guid: 89c51e0e638d1e3419c6ccb2246b63d7, type: 3}
     Volume: 1
     Loop: 0
+    Spatial: 1
   - Name: FireModifierLoop
     Clip: {fileID: 8300000, guid: 5cd9fe7fe88160644a9ab32122236a54, type: 3}
     Volume: 0.3
     Loop: 1
+    Spatial: 1
+  - Name: FloatModifierLoop
+    Clip: {fileID: 8300000, guid: 76caf3272ffbf654aaecaff424176688, type: 3}
+    Volume: 0.3
+    Loop: 1
+    Spatial: 1
 --- !u!1 &3819744709565348537
 GameObject:
   m_ObjectHideFlags: 0
@@ -892,3 +900,52 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8998793646383138715}
   m_Mesh: {fileID: -9158669005730079536, guid: 3ede24733ba2e4f6982a967cad70bf15, type: 3}
+--- !u!1 &9087250106365211776
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5708456107230002660}
+  - component: {fileID: 3095560782107276939}
+  m_Layer: 6
+  m_Name: Particles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5708456107230002660
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9087250106365211776}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7844460446896280652}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3095560782107276939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9087250106365211776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 278fafcf2af04c54fb0454165d16b502, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ParticlePlayer
+  ShowTopMostFoldoutHeaderGroup: 1
+  _particles:
+  - {fileID: 2680803822344808849, guid: dec7054cfd7f15bdf926d9cd2efe258c, type: 3}
+  - {fileID: 2680803822344808849, guid: 0cfea9f7041c846798b5fce4ef217d10, type: 3}
+  - {fileID: 2680803822344808849, guid: eb5804e6afad9aa418898fff46edd30c, type: 3}

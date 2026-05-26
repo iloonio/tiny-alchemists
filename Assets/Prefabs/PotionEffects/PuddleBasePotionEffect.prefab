@@ -33,6 +33,7 @@ Transform:
   m_LocalScale: {x: 2, y: 0.1, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 660052512129726352}
   - {fileID: 4401897981003379190}
   - {fileID: 9047077457014407119}
   m_Father: {fileID: 0}
@@ -193,10 +194,66 @@ MonoBehaviour:
     Clip: {fileID: 8300000, guid: 5923f6a958efd4542ab5bd5db204668e, type: 3}
     Volume: 1
     Loop: 0
+    Spatial: 1
   - Name: FireModifierLoop
     Clip: {fileID: 8300000, guid: 5cd9fe7fe88160644a9ab32122236a54, type: 3}
     Volume: 0.3
     Loop: 1
+    Spatial: 1
+  - Name: FloatModifierLoop
+    Clip: {fileID: 8300000, guid: 76caf3272ffbf654aaecaff424176688, type: 3}
+    Volume: 0.3
+    Loop: 1
+    Spatial: 1
+--- !u!1 &7266979909071278428
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 660052512129726352}
+  - component: {fileID: 1230365940980863682}
+  m_Layer: 6
+  m_Name: Particles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &660052512129726352
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7266979909071278428}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 10, z: 0.5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 689857732435006186}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1230365940980863682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7266979909071278428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 278fafcf2af04c54fb0454165d16b502, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ParticlePlayer
+  ShowTopMostFoldoutHeaderGroup: 1
+  _particles:
+  - {fileID: 2680803822344808849, guid: dec7054cfd7f15bdf926d9cd2efe258c, type: 3}
+  - {fileID: 2680803822344808849, guid: 0cfea9f7041c846798b5fce4ef217d10, type: 3}
+  - {fileID: 2680803822344808849, guid: eb5804e6afad9aa418898fff46edd30c, type: 3}
 --- !u!1 &8280087967624297427
 GameObject:
   m_ObjectHideFlags: 0

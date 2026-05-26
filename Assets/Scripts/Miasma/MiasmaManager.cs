@@ -250,14 +250,14 @@ public class MiasmaManager : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        _lossTimer += Time.deltaTime;
-        if (_lossTimer >= _lossTimeThreshold)
-        {
-            GetComponentInChildren<AudioPlayer>().Play("Defeat");
-            LoseClientRpc();
-            FindAnyObjectByType<NetworkSceneManager>().Shutdown();
-            return;
-        }
+        // _lossTimer += Time.deltaTime;
+        // if (_lossTimer >= _lossTimeThreshold)
+        // {
+        //     GetComponentInChildren<AudioPlayer>().Play("Defeat");
+        //     LoseClientRpc();
+        //     FindAnyObjectByType<NetworkSceneManager>().Shutdown();
+        //     return;
+        // }
 
         foreach (NetworkClient player in NetworkClient.Players)
         {

@@ -16,7 +16,7 @@ public class BouncyStatus : Status
             };
             col.material = mat;
 
-            target.GetComponentInChildren<AudioPlayer>().Play("BouncyFX");
+            target.GetComponentInChildren<ParticlePlayer>().Play("BounceFX");
         }
     }
 
@@ -25,7 +25,7 @@ public class BouncyStatus : Status
         if (target.TryGetComponent(out Collider col)) 
         {
             col.material = null;
-            target.GetComponentInChildren<AudioPlayer>().Stop("BouncyFX");
+            target.GetComponentInChildren<ParticlePlayer>().Stop("BounceFX");
         }
     }
 }

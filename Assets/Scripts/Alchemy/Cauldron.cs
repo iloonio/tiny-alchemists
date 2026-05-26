@@ -53,7 +53,6 @@ public class Cauldron : NetworkBehaviour, IInteractable
         if (IsServer)
         {
             _audioPlayer.Play("CauldronBubble");
-            _particlePlayer.Play("CauldronCookFX");
         }
     }
 
@@ -108,7 +107,10 @@ public class Cauldron : NetworkBehaviour, IInteractable
 
         if (toExplode == null) return;
 
-        Explode();
+        _audioPlayer.Play("CauldronExplode");
+        _audioPlayer.Play("CauldronBoil");
+        _particlePlayer.Play("CauldronExplosionFX");
+
 
         foreach (var playerPush in toExplode)
         {
@@ -205,7 +207,7 @@ public class Cauldron : NetworkBehaviour, IInteractable
     {
         _isBrewing = true;
         _audioPlayer.Play("CauldronBoil");
-
+        _particlePlayer.Play("CauldronCookFX");
 
         for (int i = 0; i < _potionSpawnCount; i++)
         {

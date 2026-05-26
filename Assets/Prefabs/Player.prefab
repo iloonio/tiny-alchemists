@@ -1475,6 +1475,9 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _particles:
   - {fileID: 2680803822344808849, guid: 0cfea9f7041c846798b5fce4ef217d10, type: 3}
+  - {fileID: 2680803822344808849, guid: 946e9087aabb26ccab1fbf218b52374c, type: 3}
+  - {fileID: 2680803822344808849, guid: dec7054cfd7f15bdf926d9cd2efe258c, type: 3}
+  - {fileID: 2680803822344808849, guid: eb5804e6afad9aa418898fff46edd30c, type: 3}
 --- !u!1 &8722273037456446809
 GameObject:
   m_ObjectHideFlags: 0

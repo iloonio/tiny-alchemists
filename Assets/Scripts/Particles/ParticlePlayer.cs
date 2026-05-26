@@ -15,7 +15,7 @@ public class ParticlePlayer : NetworkBehaviour
 
         foreach (GameObject particle in _particles)
         {
-            if (particle == null || particle.GetComponent<ParticleSystem>() == null)
+            if (particle == null)
             {
                 Debug.LogError($"Invalid particle: {particle}");
                 continue;
@@ -52,13 +52,14 @@ public class ParticlePlayer : NetworkBehaviour
         Follow follow = particleObject.AddComponent<Follow>();
         follow.Initialize(transform);
 
-        ParticleSystem particleSystem = particleObject.GetComponent<ParticleSystem>();
-
         _activeParticleObjects.Add(particleObject);
 
-        if (!particleSystem.main.loop)
+        if (particleObject.TryGetComponent(out ParticleSystem particleSystem))
         {
-            Destroy(particleObject, particleSystem.main.duration);
+            if (!particleSystem.main.loop)
+            {
+                Destroy(particleObject, particleSystem.main.duration);
+            }
         }
     }
 
