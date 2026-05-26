@@ -12,4 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ec69ae45d25d1d7ab51d71044e8e50f, type: 3}
   m_Name: StatusEffectList
   m_EditorClassIdentifier: Assembly-CSharp::StatusEffectList
-  _entries: []
+  _entries:
+  - Status: {fileID: 11400000, guid: 8c9187f08bab6b849a3fcea0b44e8e6e, type: 2}
+    Prefab: {fileID: 2680803822344808849, guid: dec7054cfd7f15bdf926d9cd2efe258c, type: 3}
+  - Status: {fileID: 11400000, guid: 4fec010c417574a43a0a16eac6fe4a07, type: 2}
+    Prefab: {fileID: 2680803822344808849, guid: 0cfea9f7041c846798b5fce4ef217d10, type: 3}
+  - Status: {fileID: 11400000, guid: 409053307b6189744823b0a2f6d675fc, type: 2}
+    Prefab: {fileID: 2680803822344808849, guid: 0cfea9f7041c846798b5fce4ef217d10, type: 3}
+  - Status: {fileID: 11400000, guid: 513f13c4b9a3d1f4c97f3c625587d168, type: 2}
+    Prefab: {fileID: 2680803822344808849, guid: dec7054cfd7f15bdf926d9cd2efe258c, type: 3}
+  - Status: {fileID: 11400000, guid: 19afbb7df7c25cf4c851796fd27bd8d9, type: 2}
+    Prefab: {fileID: 2680803822344808849, guid: 946e9087aabb26ccab1fbf218b52374c, type: 3}
+  - Status: {fileID: 11400000, guid: c90d0b9e0651a7241ad9624e2517181f, type: 2}
+    Prefab: {fileID: 2680803822344808849, guid: 0cfea9f7041c846798b5fce4ef217d10, type: 3}
