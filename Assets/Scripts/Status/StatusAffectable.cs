@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
@@ -5,11 +6,11 @@ using UnityEngine;
 
 public class StatusAffectable : NetworkBehaviour
 {
-
     private List<Status> _statuses = new();
     private NetworkList<int> _statusIds = new();
     private Dictionary<int, float> _durations = new();
 
+    private Dictionary<int, GameObject> _spawnedFx = new();
 
     public override void OnNetworkSpawn()
     {
@@ -23,12 +24,12 @@ public class StatusAffectable : NetworkBehaviour
 
     private void OnStatusChanged(NetworkListEvent<int> changeEvent)
     {
-        Status status = (Status) changeEvent.Value;
+        Status status = (Status)changeEvent.Value;
 
-        switch (changeEvent.Type) 
+        switch (changeEvent.Type)
         {
             case NetworkListEvent<int>.EventType.Add:
-                status.OnStatusStart(gameObject);   
+                status.OnStatusStart(gameObject);
                 _statuses.Add(status);
                 Debug.Log("Added status " + status.name + " to " + gameObject.name);
                 break;
@@ -38,7 +39,7 @@ public class StatusAffectable : NetworkBehaviour
                 _statuses.Remove(status);
                 Debug.Log("Removed status " + status.name + " from " + gameObject.name);
                 break;
-            
+
             default:
                 break;
         }
@@ -54,7 +55,7 @@ public class StatusAffectable : NetworkBehaviour
 
     public void AddStatus(Status status, float duration)
     {
-        AddStatusRpc((int) status, duration);
+        AddStatusRpc((int)status, duration);
     }
 
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
@@ -70,7 +71,7 @@ public class StatusAffectable : NetworkBehaviour
             _durations[statusId] = Mathf.Max(_durations[statusId], duration);
         }
     }
-    
+
     private void Update()
     {
         if (!IsServer) return;
@@ -95,7 +96,7 @@ public class StatusAffectable : NetworkBehaviour
 
     public void RemoveStatus(Status status)
     {
-        RemoveStatusRpc((int) status);
+        RemoveStatusRpc((int)status);
     }
 
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
@@ -103,10 +104,13 @@ public class StatusAffectable : NetworkBehaviour
     {
         _statusIds.Remove(statusId);
         _durations.Remove(statusId);
+
+        // Server: Broadcast FX destroy to all clients
+
     }
 
     public bool HasStatus(Status status)
     {
-        return _statusIds.Contains((int) status);
+        return _statusIds.Contains((int)status);
     }
 }
