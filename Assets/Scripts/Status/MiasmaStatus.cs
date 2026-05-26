@@ -16,6 +16,7 @@ public class MiasmaStatus : Status
         if (target.TryGetComponent(out PlayerMove _))
         {
             target.GetComponentInChildren<AudioPlayer>().Play("MiasmaStatusLoop");
+            target.GetComponentInChildren<ParticlePlayer>().Play("MiasmaFX");
         }
     }
 
@@ -50,6 +51,7 @@ public class MiasmaStatus : Status
             }
 
             target.GetComponentInChildren<AudioPlayer>().Stop("MiasmaStatusLoop");
+            target.GetComponentInChildren<ParticlePlayer>().Stop("MiasmaFX");
         }
     }
 }

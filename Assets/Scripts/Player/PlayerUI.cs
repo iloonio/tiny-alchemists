@@ -5,6 +5,7 @@ public class PlayerUI : MonoBehaviour
 {
     [SerializeField] private Canvas _canvas;
     [SerializeField] private TextMeshProUGUI _text;
+    [SerializeField] private TextMeshProUGUI _textOutline;
     [SerializeField] private TextMeshProUGUI _majorText;
 
     public Canvas Canvas => _canvas;
@@ -13,6 +14,7 @@ public class PlayerUI : MonoBehaviour
     {
         if (_canvas != null) {
             _text.enabled = false;
+            _textOutline.enabled = false;
             _majorText.enabled = false;
         }
     }
@@ -21,12 +23,16 @@ public class PlayerUI : MonoBehaviour
     {
         _text.text = message;
         _text.enabled = true;
+        _textOutline.text = message;
+        _textOutline.enabled = true;
     }
 
     public void Hide()
     {
-        if (_canvas != null && _text.enabled)
+        if (_canvas != null && _text.enabled) {
             _text.enabled = false;
+            _textOutline.enabled = false;
+        }
     }
 
     public void ShowMajor(string message)

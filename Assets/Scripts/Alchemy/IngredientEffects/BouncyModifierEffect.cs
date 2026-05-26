@@ -52,6 +52,11 @@ public class BouncyModifierEffect : ModifierEffect
         }
     }
 
+    public override void OnEffectStart(PotionEffect effect, CubeBaseEffect cubeBase, List<ModifierEffect> modifierEffects)
+    {
+        effect.GetComponentInChildren<ParticlePlayer>().Play("BouncyFX");
+    }
+
     // ── Puddle base ──────────────────────────────────────────
     // Surface is bouncy
 

@@ -33,6 +33,11 @@ public class FloatModifierEffect : ModifierEffect
     // ── Cloud base ───────────────────────────────────────────
     // Affected players are continuously unaffected by gravity
 
+    public override void OnEffectStart(PotionEffect effect, CloudBaseEffect cloudBase, List<ModifierEffect> modifierEffects)
+    {
+        effect.GetComponentInChildren<AudioPlayer>().Play("FloatModifierLoop");
+    }
+
     public override void OnEffectUpdate(PotionEffect effect, CloudBaseEffect cloudBase, List<ModifierEffect> modifierEffects)
     {
         if (!effect.IsServer) return;
@@ -56,8 +61,20 @@ public class FloatModifierEffect : ModifierEffect
         }
     }
 
+    public override void OnEffectStart(PotionEffect effect, CubeBaseEffect cubeBase, List<ModifierEffect> modifierEffects)
+    {
+        effect.GetComponentInChildren<AudioPlayer>().Play("FloatModifierLoop");
+        effect.GetComponentInChildren<ParticlePlayer>().Play("FloatFX");
+    }
+
     // ── Puddle base ──────────────────────────────────────────
     // Continuous upward force pushing away from puddle
+
+    public override void OnEffectStart(PotionEffect effect, PuddleBaseEffect puddleBase, List<ModifierEffect> modifierEffects)
+    {
+        effect.GetComponentInChildren<AudioPlayer>().Play("FloatModifierLoop");
+        effect.GetComponentInChildren<ParticlePlayer>().Play("FloatFX");
+    }
 
     public override void OnEffectUpdate(PotionEffect effect, PuddleBaseEffect puddleBase, List<ModifierEffect> modifierEffects)
     {
