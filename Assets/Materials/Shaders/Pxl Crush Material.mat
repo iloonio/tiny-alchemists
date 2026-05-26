@@ -60,9 +60,9 @@ Material:
     - _StencilWriteMask: 255
     - _UIMaskSoftnessX: 1
     - _UIMaskSoftnessY: 1
-    - _tint_opacity: 0.478
+    - _tint_opacity: 0
     m_Colors:
     - _ClipRect: {r: 0, g: 0, b: 0, a: 0}
-    - _Color_Tint: {r: 1, g: 0.9404471, b: 0.87735844, a: 1}
+    - _Color_Tint: {r: 0.24900903, g: 0, b: 0.31132078, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

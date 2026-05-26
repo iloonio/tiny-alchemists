@@ -6,9 +6,6 @@ using UnityEngine;
 
 public class StatusAffectable : NetworkBehaviour
 {
-    [Header("Status FX prefab list")]
-    [SerializeField] private StatusEffectList _statusEffectList;
-
     private List<Status> _statuses = new();
     private NetworkList<int> _statusIds = new();
     private Dictionary<int, float> _durations = new();
@@ -68,9 +65,6 @@ public class StatusAffectable : NetworkBehaviour
         {
             _statusIds.Add(statusId);
             _durations[statusId] = duration;
-
-            //Server broadcast FX spawn on all clients
-            InstatiateFXPrefabRpc(statusId);
         }
         else
         {
@@ -112,35 +106,7 @@ public class StatusAffectable : NetworkBehaviour
         _durations.Remove(statusId);
 
         // Server: Broadcast FX destroy to all clients
-        DestroyFXPrefabRpc(statusId);
-    }
 
-    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Server)]
-    public void InstatiateFXPrefabRpc(int statusId)
-    {
-        if ((Status)statusId == null) return;
-        if (_statusEffectList == null) return;
-
-        var prefab = _statusEffectList.GetPrefabForStatus((Status)statusId);
-        if (prefab == null) return; //dont spawn anything in if a prefab is missing.
-
-        // avoid spawning duplicate effects
-        if (_spawnedFx.ContainsKey(statusId) && _spawnedFx[statusId] != null) return;
-
-        var gameObj = Instantiate(prefab, transform.position, Quaternion.identity, transform);
-        gameObj.name = prefab.name + "_fx";
-        gameObj.transform.parent = gameObject.transform; //parent FX to the status-Affected
-        _spawnedFx[statusId] = gameObj;
-    }
-
-    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Server)]
-    public void DestroyFXPrefabRpc(int statusId)
-    {
-        if (_spawnedFx.TryGetValue(statusId, out var fx) && fx != null)
-        {
-            Destroy(fx);
-            _spawnedFx.Remove(statusId);
-        }
     }
 
     public bool HasStatus(Status status)
