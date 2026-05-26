@@ -20,7 +20,6 @@ public class PlayerMove : MonoBehaviour
     private Rigidbody _rb;
     private NetworkClient _networkClient;
     private AudioPlayer _audioPlayer;
-    private Transform _model;
     private Vector2 _moveInput;
     private RaycastHit _groundHit;
     private Vector3 _platformVelocity; // velocity sampled from a MovingPlatform when standing on one
@@ -37,7 +36,6 @@ public class PlayerMove : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         _networkClient = GetComponent<NetworkClient>();
         _audioPlayer = GetComponentInChildren<AudioPlayer>();
-        _model = GetComponentInChildren<Animator>().transform;
     }
 
     private void FixedUpdate()
@@ -62,12 +60,10 @@ public class PlayerMove : MonoBehaviour
 
         if (IsGrounded() && IsMoving() && !_moveAudioPlaying) {
             _audioPlayer.Play("Move");
-            _model.transform.localPosition = -0.36f * Vector3.up; // TODO: remove once model is fixed
             _moveAudioPlaying = true;
         }
         else if ((!IsGrounded() || !IsMoving()) && _moveAudioPlaying) {
             _audioPlayer.Stop("Move");
-            _model.transform.localPosition = -1.06f * Vector3.up;
             _moveAudioPlaying = false;
         }
     }
