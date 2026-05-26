@@ -78,6 +78,16 @@ public class PlayerMove : MonoBehaviour
         Jump();
     }
 
+    private void OnRespawn()
+    {
+        SpawnPoint[] spawnPoints = FindObjectsByType<SpawnPoint>(FindObjectsSortMode.None);
+        if (spawnPoints.Length == 0) return;
+
+        _rb.position = spawnPoints[0].Position;
+        _rb.linearVelocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
+    }
+
     private void Move()
     {
         if (_isInputOverridden)

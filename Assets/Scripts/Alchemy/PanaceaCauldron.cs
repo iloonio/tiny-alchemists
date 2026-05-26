@@ -15,10 +15,12 @@ public class PanaceaCauldron : NetworkBehaviour
     private List<int> _contents = new();
     private Dictionary<PlayerPush, float> _playersInside = new();
     private AudioPlayer _audioPlayer;
+    private ParticlePlayer _particlePlayer;
 
     private void Awake()
     {
         _audioPlayer = GetComponentInChildren<AudioPlayer>();
+        _particlePlayer = GetComponentInChildren<ParticlePlayer>();
     }
 
     private void Start()
@@ -76,6 +78,7 @@ public class PanaceaCauldron : NetworkBehaviour
 
         _audioPlayer.Play("CauldronBoil");
         _audioPlayer.Play("CauldronExplode");
+        _particlePlayer.Play("CauldronExplosionFX");
         foreach (var key in new List<PlayerPush>(_playersInside.Keys))
         {
             _playersInside[key] += Time.deltaTime;

@@ -9,6 +9,7 @@ public class FloatStatus : Status
             rb.useGravity = false;
 
         target.GetComponentInChildren<AudioPlayer>().Play("FloatStatusLoop");
+        target.GetComponentInChildren<AudioPlayer>().Play("FloatFX");
     }
 
     public override void OnStatusEnd(GameObject target)
@@ -17,5 +18,6 @@ public class FloatStatus : Status
             rb.useGravity = true;
         
         target.GetComponentInChildren<AudioPlayer>().Stop("FloatStatusLoop");
+        target.GetComponentInChildren<AudioPlayer>().Stop("FloatFX");
     }
 }
