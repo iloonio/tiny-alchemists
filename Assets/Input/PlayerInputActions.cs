@@ -163,6 +163,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Respawn"",
+                    ""type"": ""Button"",
+                    ""id"": ""a1b2c3d4-e5f6-7890-abcd-ef1234567890"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -297,6 +306,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Inventory3"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f1e2d3c4-b5a6-7890-fedc-ba0987654321"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Respawn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -313,6 +333,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Game_Inventory1 = m_Game.FindAction("Inventory1", throwIfNotFound: true);
         m_Game_Inventory2 = m_Game.FindAction("Inventory2", throwIfNotFound: true);
         m_Game_Inventory3 = m_Game.FindAction("Inventory3", throwIfNotFound: true);
+        m_Game_Respawn = m_Game.FindAction("Respawn", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
@@ -401,6 +422,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Game_Inventory1;
     private readonly InputAction m_Game_Inventory2;
     private readonly InputAction m_Game_Inventory3;
+    private readonly InputAction m_Game_Respawn;
     /// <summary>
     /// Provides access to input actions defined in input action map "Game".
     /// </summary>
@@ -444,6 +466,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Game/Inventory3".
         /// </summary>
         public InputAction @Inventory3 => m_Wrapper.m_Game_Inventory3;
+        /// <summary>
+        /// Provides access to the underlying input action "Game/Respawn".
+        /// </summary>
+        public InputAction @Respawn => m_Wrapper.m_Game_Respawn;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -494,6 +520,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Inventory3.started += instance.OnInventory3;
             @Inventory3.performed += instance.OnInventory3;
             @Inventory3.canceled += instance.OnInventory3;
+            @Respawn.started += instance.OnRespawn;
+            @Respawn.performed += instance.OnRespawn;
+            @Respawn.canceled += instance.OnRespawn;
         }
 
         /// <summary>
@@ -529,6 +558,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Inventory3.started -= instance.OnInventory3;
             @Inventory3.performed -= instance.OnInventory3;
             @Inventory3.canceled -= instance.OnInventory3;
+            @Respawn.started -= instance.OnRespawn;
+            @Respawn.performed -= instance.OnRespawn;
+            @Respawn.canceled -= instance.OnRespawn;
         }
 
         /// <summary>
@@ -625,5 +657,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnInventory3(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Respawn" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRespawn(InputAction.CallbackContext context);
     }
 }
