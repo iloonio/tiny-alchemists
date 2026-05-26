@@ -556,7 +556,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3796659742
+  GlobalObjectIdHash: 2226496259
   InScenePlacedSourceGlobalObjectIdHash: 2226496259
   DeferredDespawnTick: 0
   Ownership: 1
@@ -816,17 +816,17 @@ MonoBehaviour:
     Spatial: 1
   - Name: FireStatusLoop
     Clip: {fileID: 8300000, guid: 5cd9fe7fe88160644a9ab32122236a54, type: 3}
-    Volume: 0.1
+    Volume: 0.4
     Loop: 1
     Spatial: 1
   - Name: FloatStatusLoop
     Clip: {fileID: 8300000, guid: 76caf3272ffbf654aaecaff424176688, type: 3}
-    Volume: 0.1
+    Volume: 0.2
     Loop: 1
     Spatial: 1
   - Name: MiasmaStatusLoop
     Clip: {fileID: 8300000, guid: 02dcd15c2bee92944935714751c63b49, type: 3}
-    Volume: 0.01
+    Volume: 0.5
     Loop: 1
     Spatial: 1
   - Name: Throw
