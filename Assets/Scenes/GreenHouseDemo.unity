@@ -526,7 +526,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
   ShowTopMostFoldoutHeaderGroup: 1
-  _statusEffectList: {fileID: 0}
 --- !u!1001 &44824089
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -906,7 +905,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
   ShowTopMostFoldoutHeaderGroup: 1
-  _statusEffectList: {fileID: 0}
 --- !u!1 &89460431
 GameObject:
   m_ObjectHideFlags: 0
@@ -1324,7 +1322,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
   ShowTopMostFoldoutHeaderGroup: 1
-  _statusEffectList: {fileID: 0}
 --- !u!1001 &184031536
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2447,7 +2444,7 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: 4f09b9dafb280774b91b0347935c0e28, type: 3}
 --- !u!4 &265807124 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 3029774497341070683, guid: 4f09b9dafb280774b91b0347935c0e28, type: 3}
+  m_CorrespondingSourceObject: {fileID: 2872464640752297079, guid: 4f09b9dafb280774b91b0347935c0e28, type: 3}
   m_PrefabInstance: {fileID: 265807123}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &268843586
@@ -3036,12 +3033,12 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1089109806}
   - {fileID: 1175843497}
   - {fileID: 551449387}
   - {fileID: 536831338}
   - {fileID: 1458503536}
   - {fileID: 1031942613}
+  - {fileID: 1089109806}
   m_Father: {fileID: 1382937066}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &362600721
@@ -3707,7 +3704,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
   ShowTopMostFoldoutHeaderGroup: 1
-  _statusEffectList: {fileID: 0}
 --- !u!114 &435988581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3735,7 +3731,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
   ShowTopMostFoldoutHeaderGroup: 1
-  _statusEffectList: {fileID: 0}
 --- !u!114 &435988583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3763,7 +3758,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
   ShowTopMostFoldoutHeaderGroup: 1
-  _statusEffectList: {fileID: 0}
 --- !u!114 &435988585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4528,7 +4522,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
   ShowTopMostFoldoutHeaderGroup: 1
-  _statusEffectList: {fileID: 0}
 --- !u!1001 &536831337
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5710,7 +5703,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
   ShowTopMostFoldoutHeaderGroup: 1
-  _statusEffectList: {fileID: 0}
 --- !u!1 &651415132
 GameObject:
   m_ObjectHideFlags: 0
@@ -6602,6 +6594,57 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3975901159523656259, guid: 272c7af5e1fa343179de40ab2e91fb6c, type: 3}
   m_PrefabInstance: {fileID: 748105950}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &769164236
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 769164237}
+  - component: {fileID: 769164238}
+  m_Layer: 0
+  m_Name: Audio
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &769164237
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 769164236}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1817033540}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &769164238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 769164236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fe2a686fd5a40a4e89a21e649125577, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioPlayer
+  ShowTopMostFoldoutHeaderGroup: 1
+  _sounds:
+  - Name: Defeat
+    Clip: {fileID: 8300000, guid: ddf5f78bddafc8d4eb276ad518d25dbc, type: 3}
+    Volume: 1
+    Loop: 0
+    Spatial: 0
 --- !u!1001 &782849231
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7891,7 +7934,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
   ShowTopMostFoldoutHeaderGroup: 1
-  _statusEffectList: {fileID: 0}
 --- !u!1001 &941890598
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8655,7 +8697,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
   ShowTopMostFoldoutHeaderGroup: 1
-  _statusEffectList: {fileID: 0}
 --- !u!1001 &1003277586
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9034,7 +9075,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
   ShowTopMostFoldoutHeaderGroup: 1
-  _statusEffectList: {fileID: 0}
 --- !u!1001 &1089109805
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9146,7 +9186,7 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: 4f09b9dafb280774b91b0347935c0e28, type: 3}
 --- !u!4 &1089109806 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 3029774497341070683, guid: 4f09b9dafb280774b91b0347935c0e28, type: 3}
+  m_CorrespondingSourceObject: {fileID: 2872464640752297079, guid: 4f09b9dafb280774b91b0347935c0e28, type: 3}
   m_PrefabInstance: {fileID: 1089109805}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1092286572
@@ -11304,7 +11344,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
   ShowTopMostFoldoutHeaderGroup: 1
-  _statusEffectList: {fileID: 0}
 --- !u!1 &1244975126
 GameObject:
   m_ObjectHideFlags: 0
@@ -11907,7 +11946,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
   ShowTopMostFoldoutHeaderGroup: 1
-  _statusEffectList: {fileID: 0}
 --- !u!114 &1261414083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11935,7 +11973,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
   ShowTopMostFoldoutHeaderGroup: 1
-  _statusEffectList: {fileID: 0}
 --- !u!114 &1264925636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11963,7 +12000,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
   ShowTopMostFoldoutHeaderGroup: 1
-  _statusEffectList: {fileID: 0}
 --- !u!114 &1264925638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13953,7 +13989,7 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: 4f09b9dafb280774b91b0347935c0e28, type: 3}
 --- !u!4 &1451395338 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 3029774497341070683, guid: 4f09b9dafb280774b91b0347935c0e28, type: 3}
+  m_CorrespondingSourceObject: {fileID: 2872464640752297079, guid: 4f09b9dafb280774b91b0347935c0e28, type: 3}
   m_PrefabInstance: {fileID: 1451395337}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1451554001
@@ -14824,7 +14860,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
   ShowTopMostFoldoutHeaderGroup: 1
-  _statusEffectList: {fileID: 0}
 --- !u!1001 &1498950573
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14968,7 +15003,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
   ShowTopMostFoldoutHeaderGroup: 1
-  _statusEffectList: {fileID: 0}
 --- !u!114 &1510673442
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16803,7 +16837,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
   ShowTopMostFoldoutHeaderGroup: 1
-  _statusEffectList: {fileID: 0}
 --- !u!1001 &1743924977
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17764,7 +17797,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 769164237}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1830626418
@@ -19063,7 +19097,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
   ShowTopMostFoldoutHeaderGroup: 1
-  _statusEffectList: {fileID: 0}
 --- !u!1 &1979848093
 GameObject:
   m_ObjectHideFlags: 0
@@ -19294,7 +19327,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
   ShowTopMostFoldoutHeaderGroup: 1
-  _statusEffectList: {fileID: 0}
 --- !u!114 &1985850416
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19380,7 +19412,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
   ShowTopMostFoldoutHeaderGroup: 1
-  _statusEffectList: {fileID: 0}
 --- !u!114 &1988950889
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19624,7 +19655,7 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: 4f09b9dafb280774b91b0347935c0e28, type: 3}
 --- !u!4 &2000474095 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 3029774497341070683, guid: 4f09b9dafb280774b91b0347935c0e28, type: 3}
+  m_CorrespondingSourceObject: {fileID: 2872464640752297079, guid: 4f09b9dafb280774b91b0347935c0e28, type: 3}
   m_PrefabInstance: {fileID: 2000474094}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2005857775
@@ -21284,10 +21315,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2000474095}
   - {fileID: 782849232}
   - {fileID: 985136571}
   - {fileID: 979211696}
+  - {fileID: 2000474095}
   m_Father: {fileID: 1382937066}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2115599350
