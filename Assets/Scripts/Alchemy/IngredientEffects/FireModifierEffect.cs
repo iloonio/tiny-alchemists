@@ -49,6 +49,7 @@ public class FireModifierEffect : ModifierEffect
     public override void OnEffectStart(PotionEffect effect, CubeBaseEffect baseEffect, List<ModifierEffect> modifierEffects)
     {
         effect.GetComponentInChildren<AudioPlayer>().Play("FireModifierLoop");
+        effect.GetComponentInChildren<ParticlePlayer>().Play("FireFX");
     }
 
     public override void OnEffectUpdate(PotionEffect effect, CubeBaseEffect cubeBaseEffect, List<ModifierEffect> modifierEffects)
@@ -70,6 +71,7 @@ public class FireModifierEffect : ModifierEffect
     public override void OnEffectStart(PotionEffect effect, PuddleBaseEffect baseEffect, List<ModifierEffect> modifierEffects)
     {
         effect.GetComponentInChildren<AudioPlayer>().Play("FireModifierLoop");
+        effect.GetComponentInChildren<ParticlePlayer>().Play("FireFX");
     }
 
     public override void OnEffectUpdate(PotionEffect effect, PuddleBaseEffect puddleBaseEffect, List<ModifierEffect> modifierEffects)

@@ -15,12 +15,17 @@ public class BouncyStatus : Status
                 bounceCombine = PhysicsMaterialCombine.Maximum
             };
             col.material = mat;
+
+            target.GetComponentInChildren<AudioPlayer>().Play("BouncyFX");
         }
     }
 
     public override void OnStatusEnd(GameObject target)
     {
-        if (target.TryGetComponent(out Collider col))
+        if (target.TryGetComponent(out Collider col)) 
+        {
             col.material = null;
+            target.GetComponentInChildren<AudioPlayer>().Stop("BouncyFX");
+        }
     }
 }
