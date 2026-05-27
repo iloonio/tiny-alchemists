@@ -27,6 +27,9 @@ public class PlayerPush : NetworkBehaviour
 
         if (pushDir.sqrMagnitude < 0.01f) return;
 
+        if (Vector3.Dot(collision.GetContact(0).normal, Vector3.up) > 0.5f)
+            return;
+
         float dot = Vector3.Dot(_rb.linearVelocity.normalized, pushDir);
         if (dot < 0.3f) return;
 

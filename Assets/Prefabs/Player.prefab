@@ -814,7 +814,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerPush
   ShowTopMostFoldoutHeaderGroup: 1
-  _pushForce: 8
+  _pushForce: 20
 --- !u!114 &4991892091454183797
 MonoBehaviour:
   m_ObjectHideFlags: 0
