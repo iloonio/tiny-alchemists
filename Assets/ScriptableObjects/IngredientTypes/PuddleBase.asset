@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: PuddleBase
   m_EditorClassIdentifier: Assembly-CSharp::PuddleBaseIngredientType
   _id: 3
-  _color: {r: 1, g: 0, b: 0.90511465, a: 0}
+  _color: {r: 0.5281912, g: 0.754717, b: 0.26699895, a: 0}
   _ingredientPrefab: {fileID: 9196376099781582157, guid: 99f57f198e40cbe4280025b3e02ac13d, type: 3}
   _potionEffectPrefab: {fileID: 1944947861877657522, guid: 6bd4366d5b525f24aafbb47152128f1a, type: 3}
   _duration: 120
+  _auraRadius: 1

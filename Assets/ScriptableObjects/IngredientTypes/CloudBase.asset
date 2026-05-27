@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CloudBase
   m_EditorClassIdentifier: Assembly-CSharp::CloudBaseIngredientType
   _id: 1
-  _color: {r: 0, g: 0.98000383, b: 1, a: 0}
+  _color: {r: 0.5121039, g: 0.7875344, b: 0.7924528, a: 0}
   _ingredientPrefab: {fileID: 9196376099781582157, guid: 5d04ee90ca0eb234c828dd5d3b008524, type: 3}
   _potionEffectPrefab: {fileID: 5535828820224488313, guid: be5abf13ef3fe724f8e08eac70169b37, type: 3}
   _duration: 120

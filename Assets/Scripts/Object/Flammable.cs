@@ -9,6 +9,8 @@ public class Flammable : NetworkBehaviour
 
     public void Burn(float duration)
     {
+        if (!IsServer) return;
+
         durability -= duration;
 
         if (durability <= 0f)
