@@ -121,6 +121,7 @@ GameObject:
   - component: {fileID: 7048312572333856761}
   - component: {fileID: 1357258421107590579}
   - component: {fileID: 3325197152410463699}
+  - component: {fileID: 7059321354126680543}
   m_Layer: 8
   m_Name: FloatModifierIngredient
   m_TagString: Untagged
@@ -306,6 +307,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Ingredient
   ShowTopMostFoldoutHeaderGroup: 1
   _type: {fileID: 11400000, guid: 7f46b55ed2c91aa46aa20558cf64d660, type: 2}
+--- !u!114 &7059321354126680543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9196376099781582157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b7bcf61377355543a7fd7286e420628, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatusAffectable
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!1001 &3898841631488964980
 PrefabInstance:
   m_ObjectHideFlags: 0

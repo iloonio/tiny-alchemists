@@ -18,4 +18,4 @@ MonoBehaviour:
   _bouncyStatus: {fileID: 11400000, guid: 8c9187f08bab6b849a3fcea0b44e8e6e, type: 2}
   _statusDuration: 5
   _knockbackMultiplier: 2
-  _bounciness: 0.8
+  _bounciness: 1.05
