@@ -106,6 +106,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
+    - _Dither_Scale: 1
     - _DstBlend: 10
     - _DstBlendAlpha: 10
     - _EnvironmentReflections: 1
@@ -113,7 +114,7 @@ Material:
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _Metallic: 0.23
-    - _Min_value_for_Dither: 0.3
+    - _Min_value_for_Dither: 1
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
@@ -131,6 +132,7 @@ Material:
     - _ZWrite: 0
     - _dither_minimum_value: 0.2
     m_Colors:
+    - _Alpha_Culling_Interval: {r: 0, g: 0, b: 0, a: 0}
     - _BaseColor: {r: 0.4641511, g: 0.11863652, b: 0.5849056, a: 0.7411765}
     - _Color: {r: 0.990566, g: 0, b: 0.90086514, a: 0.7411765}
     - _Direction: {r: 0.05, g: 0.01, b: 0, a: 0}
